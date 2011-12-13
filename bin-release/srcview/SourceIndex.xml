@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index>
+	<title>Source of Primitives_AS</title>
+	<nodes>
+		<node label="html-template">
+			<node label="history">
+				<node icon="cssIcon" label="history.css" url="source/html-template/history/history.css.html"/>
+				<node label="history.js" url="source/html-template/history/history.js.txt"/>
+				<node icon="htmlIcon" label="historyFrame.html" url="source/html-template/history/historyFrame.html"/>
+			</node>
+			<node icon="htmlIcon" label="index.template.html" url="source/html-template/index.template.html"/>
+			<node icon="swfIcon" label="playerProductInstall.swf" url="source/html-template/playerProductInstall.swf"/>
+			<node label="swfobject.js" url="source/html-template/swfobject.js.txt"/>
+		</node>
+		<node label="src">
+			<node icon="packageIcon" label="com.jonrowe.away3d.productFactory" expanded="true">
+				<node icon="actionScriptIcon" label="ProductFactory.as" url="source/com/jonrowe/away3d/productFactory/ProductFactory.as.html"/>
+				<node icon="actionScriptIcon" label="ProductType.as" url="source/com/jonrowe/away3d/productFactory/ProductType.as.html"/>
+				<node icon="actionScriptIcon" label="ProductTypeMap.as" url="source/com/jonrowe/away3d/productFactory/ProductTypeMap.as.html"/>
+			</node>
+			<node icon="packageIcon" label="com.jonrowe.away3d.productFactory.interfaces" expanded="true">
+				<node icon="actionScriptIcon" label="IProduct.as" url="source/com/jonrowe/away3d/productFactory/interfaces/IProduct.as.html"/>
+				<node icon="actionScriptIcon" label="IProductFactory.as" url="source/com/jonrowe/away3d/productFactory/interfaces/IProductFactory.as.html"/>
+				<node icon="actionScriptIcon" label="IProductTypeMap.as" url="source/com/jonrowe/away3d/productFactory/interfaces/IProductTypeMap.as.html"/>
+			</node>
+			<node icon="packageIcon" label="com.jonrowe.away3d.productFactory.onjects" expanded="true">
+				<node icon="actionScriptIcon" label="OnAxes.as" url="source/com/jonrowe/away3d/productFactory/onjects/OnAxes.as.html"/>
+				<node icon="actionScriptIcon" label="OnCapsule.as" url="source/com/jonrowe/away3d/productFactory/onjects/OnCapsule.as.html"/>
+				<node icon="actionScriptIcon" label="OnCone.as" url="source/com/jonrowe/away3d/productFactory/onjects/OnCone.as.html"/>
+				<node icon="actionScriptIcon" label="Onject.as" url="source/com/jonrowe/away3d/productFactory/onjects/Onject.as.html"/>
+				<node icon="actionScriptIcon" label="OnTrident.as" url="source/com/jonrowe/away3d/productFactory/onjects/OnTrident.as.html"/>
+				<node icon="actionScriptIcon" label="OnWireCube.as" url="source/com/jonrowe/away3d/productFactory/onjects/OnWireCube.as.html"/>
+				<node icon="actionScriptIcon" label="OnWirePlane.as" url="source/com/jonrowe/away3d/productFactory/onjects/OnWirePlane.as.html"/>
+				<node icon="actionScriptIcon" label="WireSphere.as" url="source/com/jonrowe/away3d/productFactory/onjects/WireSphere.as.html"/>
+			</node>
+			<node icon="packageIcon" label="com.jonrowe.away3d.utils" expanded="true">
+				<node icon="actionScriptIcon" label="HoverDragController.as" url="source/com/jonrowe/away3d/utils/HoverDragController.as.html"/>
+			</node>
+			<node icon="packageIcon" label="com.jonrowe.away3d.view" expanded="true">
+				<node icon="actionScriptIcon" label="SpriteView3D.as" url="source/com/jonrowe/away3d/view/SpriteView3D.as.html"/>
+			</node>
+			<node icon="actionScriptIcon" label="ASView3D.as" url="source/ASView3D.as.html"/>
+			<node icon="mxmlAppIcon" selected="true" label="Main.as" url="source/Main.as.html"/>
+		</node>
+	</nodes>
+	<zipfile label="Download source (ZIP, 30K)" url="Primitives_AS.zip">
+	</zipfile>
+	<sdklink label="Download Flex SDK" url="http://www.adobe.com/go/flex451_sdk_download">
+	</sdklink>
+</index>

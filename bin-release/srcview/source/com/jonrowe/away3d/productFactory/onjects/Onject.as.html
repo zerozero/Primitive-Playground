@@ -1,0 +1,85 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Onject.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">jonrowe</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">productFactory</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">onjects</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">containers</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ObjectContainer3D</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">core</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">base</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Object3D</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">debug</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Trident</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">entities</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Entity</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">entities</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Mesh</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">events</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">MouseEvent3D</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">materials</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">MaterialBase</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">primitives</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">WireframeSphere</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">jonrowe</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">productFactory</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ProductFactory</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">jonrowe</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">productFactory</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ProductType</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">jonrowe</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">productFactory</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ProductTypeMap</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">jonrowe</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">productFactory</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">interfaces</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IProduct</span>;
+    
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">Onject</span> <span class="ActionScriptReserved">implements</span> <span class="ActionScriptDefault_Text">IProduct</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">trident</span> :<span class="ActionScriptDefault_Text">Trident</span>;
+        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_object3D</span>:<span class="ActionScriptDefault_Text">ObjectContainer3D</span>;
+        
+        <span class="ActionScriptComment">/*        STATIC        */</span>
+        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">create</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">type</span> :<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IProduct</span><span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">ProductFactory</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">ProductTypeMap</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getProduct</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">type</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        <span class="ActionScriptComment">/*        GET/SET        */</span>
+        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">set</span> <span class="ActionScriptDefault_Text">object3D</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">obj</span> :<span class="ActionScriptDefault_Text">ObjectContainer3D</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span><span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_object3D</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">obj</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">object3D</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">ObjectContainer3D</span><span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">_object3D</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptComment">/*        PUBLIC        */</span>
+        
+        
+        <span class="ActionScriptComment">/*        CONSTRUCT        */</span>
+        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">Onject</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">ontrident</span> :<span class="ActionScriptDefault_Text">OnTrident</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Onject</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">create</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">ProductType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TRIDENT</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">OnTrident</span>;
+            <span class="ActionScriptDefault_Text">trident</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">ontrident</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">object3D</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">Trident</span>;
+            
+            <span class="ActionScriptDefault_Text">Entity</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">object3D</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">mouseEnabled</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">true</span>;
+            <span class="ActionScriptDefault_Text">Entity</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">object3D</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addEventListener</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">MouseEvent3D</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">CLICK</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">onClickEntity</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptComment">/*        IMPLEMENT        */</span>
+        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">init</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">select</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span><span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">object3D</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addChild</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">trident</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">light</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">lights</span> :<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span><span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">mat</span> :<span class="ActionScriptDefault_Text">MaterialBase</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Mesh</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">object3D</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">material</span>;
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">mat</span><span class="ActionScriptBracket/Brace">)</span>
+                <span class="ActionScriptDefault_Text">mat</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">lights</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">lights</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        
+        <span class="ActionScriptComment">/*        EVENT        */</span>
+        
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">onClickEntity</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">e</span>:<span class="ActionScriptDefault_Text">MouseEvent3D</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span><span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">Entity</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">object3D</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">showBounds</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptOperator">!</span><span class="ActionScriptDefault_Text">Entity</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">object3D</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">showBounds</span>; 
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

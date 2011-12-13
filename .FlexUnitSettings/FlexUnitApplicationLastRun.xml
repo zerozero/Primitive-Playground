@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testrun name="" >
+<testsuite  name="Default Test Suite" project="Primitives_AS">
+<testsuite name="testSuite.tests:TestAsync" type="testcaseclass">
+<testcase name="timerShortWay" classname="testSuite.tests:TestAsync"/>
+<testcase name="testAsyncFail" classname="testSuite.tests:TestAsync"/>
+<testcase name="timerLongWay" classname="testSuite.tests:TestAsync"/>
+<testcase name="timerCount" classname="testSuite.tests:TestAsync"/>
+</testsuite>
+<testsuite name="testSuite.tests:TestCase1" type="testcaseclass">
+<testcase name="fails2" classname="testSuite.tests:TestCase1"/>
+<testcase name="simpleAdd" classname="testSuite.tests:TestCase1"/>
+<testcase name="subtraction" classname="testSuite.tests:TestCase1"/>
+</testsuite>
+</testsuite>
+</testrun>

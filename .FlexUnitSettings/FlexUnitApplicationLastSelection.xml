@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testrun name="" >
+<testsuite  name="Default Test Suite" project="Primitives_AS">
+<testsuite name="testSuite:SampleSuite" type="testsuiteclass"/>
+<testsuite name="testSuite.tests:TestCase1" type="testcaseclass"/>
+</testsuite>
+</testrun>
