@@ -143,6 +143,11 @@ package com.jonrowe.away3d.productFactory.primitives
 			trident.position = pivot;
 		}
 		
+		public function deleteObject():Boolean{
+			this.parent.removeChild( this );
+			return this.parent == null;
+		}
+		
 		
 		/*		EVENT		*/
 		

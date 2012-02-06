@@ -26,6 +26,11 @@
 			<locationURI>DOCUMENTS/libs/away3d-away3d-core-fp11-f71921f/src</locationURI>
 		</link>
 		<link>
+			<name>[source path] fluint4</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/libs/fluint4</locationURI>
+		</link>
+		<link>
 			<name>[source path] minimalcomps-src</name>
 			<type>2</type>
 			<locationURI>DOCUMENTS/libs/minimalcomps/src</locationURI>

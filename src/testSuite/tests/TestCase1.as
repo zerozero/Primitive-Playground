@@ -9,7 +9,6 @@ package testSuite.tests
 		[Before]
 		public function runBeforeEveryTest():void{
 			count = 10;
-			trace("runBeforeEveryTest",count);
 		}
 		
 		[After]

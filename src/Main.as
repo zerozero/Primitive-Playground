@@ -15,25 +15,31 @@ package
 	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
 	import com.jonrowe.away3d.productFactory.primitives.Primitive;
 	import com.jonrowe.away3d.productFactory.primitives.PrimitiveObjectBase;
+	import com.jonrowe.away3d.view.component.Canvas3D;
 	import com.jonrowe.away3d.view.component.EditView;
 	
+	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
+	import flash.text.TextFormat;
+	
+	import flashx.textLayout.formats.TextAlign;
 	
 	import org.robotlegs.base.ContextEvent;
 	import org.robotlegs.mvcs.Context;
 	
 	import uk.co.soulwire.gui.SimpleGUI;
-	import com.jonrowe.away3d.view.component.Canvas3D;
 	
 	[SWF(width="800", height="600", frameRate="60", backgroundColor="0x727272")]
 	public class Main extends Sprite
 	{
 		public static const RESIZE :String = "stage_resize"; 
+		
+		public static const VERSION_STRING :String = "version 0.0.1";
 		
 		
 		private var context :PrimitivesContext;
@@ -51,26 +57,35 @@ package
 			createChildren();
 		}
 		
+		
+		public function get params():Object{
+			return LoaderInfo(this.root.loaderInfo).parameters;
+		}
+		
+		
 		//called from the applicationMediator
 		public function createChildren():void{
-			create3DView();
 			createGUI();
-			createDefaultObject();
+			create3DView();
 			ViewSource.addMenuItem(this, "srcview/index.html"); 
 			onStageResize();
 			visible = true;
 		}
 		
-		
+		/*
 		public function duplicate( primitive :IPrimitive ):void{
 			
 			var dupe :IPrimitive = asView3D.duplicateObject( primitive );
 			context.createMediator(Primitive(dupe));
-		}
+		}*/
 		
+		/**
+		 * we call asView3D to create the object here so we can get a refernce for it to pass to the context 
+		 * @param init
+		 * 
+		 */		
 		public function create( init:PrimitiveInit ):void{
-			var primitive :IPrimitive = asView3D.createObject(ProductType.PRIMITIVE, init);
-			context.createMediator(Primitive(primitive));
+			
 		}
 		
 		/*			PRIVATE			*/
@@ -85,12 +100,12 @@ package
 		}
 		
 		
-		private function createDefaultObject():void{
+		/*private function createDefaultObject():void{
 			
-			var primitiveInit :PrimitiveInit = new PrimitiveInit(Cube,PrimitiveObjectBase.DEFAULT_MATERIAL ,{});
+			var primitiveInit :PrimitiveInit = new PrimitiveInit("Cube","Default Cube",Cube,PrimitiveObjectBase.DEFAULT_MATERIAL ,{});
 			var cube :IPrimitive = asView3D.createObject( ProductType.PRIMITIVE, primitiveInit );
 			context.createMediator(Primitive(cube));
-		}
+		}*/
 		
 		
 		private function create3DView():void{

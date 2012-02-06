@@ -25,6 +25,7 @@ package com.jonrowe.away3d.view.component
 		
 		public var gui :SimpleGUI;
 		
+		public static const SCENE_READY :String = 'scene_ready';
 		public static const SELECTION_CHANGE :String = 'selection_change';
 		
 		/*		PRIVATE PROPERTIES		*/
@@ -76,27 +77,19 @@ package com.jonrowe.away3d.view.component
 		
 		/*		PUBLIC		*/
 		
-		public function createObject( type :String, initObj :PrimitiveInit ):IPrimitive{
-			var primitive :IPrimitive = PrimitiveObjectBase.create( type );
-			primitive.init( type, initObj );
-			ObjectContainer3D(primitive).addEventListener( MouseEvent3D.MOUSE_DOWN, onMouseDownEntity );
-			ObjectContainer3D(primitive).addEventListener( MouseEvent3D.MOUSE_UP, onMouseUpEntity );
+		public function displayPrimitive( primitive :IPrimitive ):void{
 			_view.scene.addChild(primitive as ObjectContainer3D);
 			
 			//tempoarily - light the primitive
 //			primitive.light([directionalLight]);
 			primitive.light([pointLight]);
 			
-			return primitive;
 		}
 		
-		public function duplicateObject( primitive :IPrimitive ):IPrimitive{
-			var type :String = primitive.type;
-			var newPrimitive :IPrimitive = PrimitiveObjectBase.create( type );
-			newPrimitive.init(type, primitive.object3D.clone());
-			_view.scene.addChild(newPrimitive as ObjectContainer3D);
-			return newPrimitive;
+		public function removePrimitive( primitive :IPrimitive ):void{
+			_view.scene.removeChild( primitive as ObjectContainer3D );
 		}
+		
 		
 		public function setSize(w:int, h:int):void{
 			_view.width = w;
@@ -161,6 +154,7 @@ package com.jonrowe.away3d.view.component
 			initLights();
 			initScene();
 			initCamController();
+			dispatchEvent( new Event(SCENE_READY));
 		}
 		
 		private function onEnterFrame(ev : Event) : void {

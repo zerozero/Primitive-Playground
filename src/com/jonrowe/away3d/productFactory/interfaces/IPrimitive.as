@@ -19,6 +19,8 @@ package com.jonrowe.away3d.productFactory.interfaces
 		function get primitiveName( ):String;
 		function set type( name :String ):void;
 		function get type( ):String;
-		
+		function set selected( trueOrFalse :Boolean):void;
+		function get selected( ):Boolean;
+		function deleteObject():Boolean;
 	}
 }

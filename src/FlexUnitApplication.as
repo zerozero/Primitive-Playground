@@ -6,10 +6,8 @@ package
 	
 	import flexunit.flexui.FlexUnitTestRunnerUIAS;
 	
-	import org.flexunit.runner.Request;
-	
-	import testSuite.tests.TestAsync;
-	import testSuite.tests.TestCase1;
+	import testSuite.AutoCreatedSuite;
+	import testSuite.tests.PrimitiveModelTest;
 	
 	public class FlexUnitApplication extends Sprite
 	{
@@ -28,15 +26,8 @@ package
 		public function currentRunTestSuite():Array
 		{
 			var testsToRun:Array = new Array();
-			testsToRun.push(Request.methods(testSuite.tests.TestAsync,["timerShortWay",
-				"testAsyncFail",
-				"timerLongWay",
-				"timerCount"]));
-			
-			testsToRun.push(Request.methods(testSuite.tests.TestCase1,["fails2",
-				"simpleAdd",
-				"subtraction"]));
-			
+			testsToRun.push(testSuite.AutoCreatedSuite);
+			testsToRun.push(testSuite.tests.PrimitiveModelTest);
 			return testsToRun;
 		}
 	}

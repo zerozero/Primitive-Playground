@@ -3,6 +3,7 @@ package com.jonrowe.away3d.view
 	import away3d.entities.Entity;
 	import away3d.events.MouseEvent3D;
 	
+	import com.jonrowe.away3d.model.SceneProxy;
 	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
 	import com.jonrowe.away3d.productFactory.primitives.Primitive;
 	import com.jonrowe.away3d.productFactory.primitives.PrimitiveObjectBase;
@@ -18,6 +19,9 @@ package com.jonrowe.away3d.view
 		
 		[Inject]
 		public var _view :Primitive;
+
+		[Inject]
+		public var sceneProxy :SceneProxy;
 		
 		public function PrimitiveMediator()
 		{
@@ -25,17 +29,18 @@ package com.jonrowe.away3d.view
 		}
 		
 		override public function onRegister():void{
-			trace("primitive registered");
+			
 			view.addEventListener(PrimitiveObjectBase.ENTITY_SELECT, onClickEntity);
 			view.selected = true;
-			
+			//add a listener for other entities being selected - will need to move to proxy to manage selection rules when remote clients can select
 			addContextListener(EntitySelectEvent.ENTITY_SELECT, onEntitySelect);
+			dispatch(new EntitySelectEvent(EntitySelectEvent.ENTITY_SELECT, view as IPrimitive ));
 		}
 		
 		
 		
 		protected function onClickEntity( e:Event ):void{
-			
+			sceneProxy.selectedPrimitive = e.currentTarget as IPrimitive;
 			dispatch(new EntitySelectEvent(EntitySelectEvent.ENTITY_SELECT, e.currentTarget as IPrimitive ));
 		}
 		

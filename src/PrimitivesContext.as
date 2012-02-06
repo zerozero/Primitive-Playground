@@ -1,8 +1,15 @@
 package
 {
+	import com.jonrowe.away3d.controller.CreateObjectCommand;
+	import com.jonrowe.away3d.controller.NewMemberCommand;
+	import com.jonrowe.away3d.model.SceneProxy;
+	import com.jonrowe.away3d.model.event.*;
 	import com.jonrowe.away3d.productFactory.primitives.*;
+	import com.jonrowe.away3d.services.*;
+	import com.jonrowe.away3d.services.event.*;
 	import com.jonrowe.away3d.view.*;
 	import com.jonrowe.away3d.view.component.*;
+	import com.jonrowe.away3d.view.component.gui.*;
 	
 	import flash.display.DisplayObjectContainer;
 	
@@ -17,9 +24,20 @@ package
 		
 		override public function startup():void{
 			//primitives
+			
+			commandMap.mapEvent(SocketServiceEvent.NEW_MEMBER, NewMemberCommand, SocketServiceEvent, true);
+			//commandMap.mapEvent(CreatePrimitiveEvent.CREATE, CreateObjectCommand, CreatePrimitiveEvent, true);
+				
+			injector.mapSingletonOf(ISocketService,SocketService);
+			
 			mediatorMap.mapView(EditView, EditViewMediator);
-			mediatorMap.mapView(Main,ApplicationMediator);
 			mediatorMap.mapView(Primitive,PrimitiveMediator);
+			mediatorMap.mapView(CreatePrimitive,CreatePrimitiveMediator,ICreatePrimitveComponent);
+			mediatorMap.mapView(Canvas3D,Canvas3DMediator);
+			
+			mediatorMap.mapView(Main,ApplicationMediator);
+			
+			injector.mapSingleton(SceneProxy);
 			super.startup();
 			//gui
 		}

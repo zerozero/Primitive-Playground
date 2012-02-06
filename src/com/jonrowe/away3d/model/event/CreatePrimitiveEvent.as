@@ -1,4 +1,4 @@
-package com.jonrowe.away3d.view.event
+package com.jonrowe.away3d.model.event
 {
 	import com.jonrowe.away3d.productFactory.PrimitiveInit;
 	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;

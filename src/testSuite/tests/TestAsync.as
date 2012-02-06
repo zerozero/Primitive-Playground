@@ -38,6 +38,7 @@ package testSuite.tests
 			Assert.fail( "Timeout reached before event");	
 		}
 		
+		[Ignore]
 		[Test(async, description="An async test that will fail")]
 		public function testAsyncFail() : void {
 			timer.delay = 1000;

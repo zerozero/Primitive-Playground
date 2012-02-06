@@ -12,48 +12,52 @@ package com.jonrowe.away3d.view.component.gui
 	
 	import uk.co.soulwire.gui.SimpleGUI;
 	
-	public class CreatePrimitive extends Sprite
+	public class CreatePrimitive extends BaseGUI implements ICreatePrimitveComponent
 	{
 		
 		public static const MAKE :String = "makePrimitive";
 		public static const DUPLICATE :String = "duplicatePrimitive";
 		public static const DELETE :String = "deletePrimitive";
 		
-		private var gui :SimpleGUI;
+		private static const NAME :String = "CreatePrimitive";
 		
-		public var _selected :Object;
-		public var primitives :Array = [
-			
-			{label:"Capsule",data:new PrimitiveInit(Capsule,PrimitiveObjectBase.DEFAULT_MATERIAL ,{})},	
-			{label:"Cone",data:new PrimitiveInit(Cone,PrimitiveObjectBase.DEFAULT_MATERIAL ,{})},	
-			{label:"Cube",data:new PrimitiveInit(Cube,PrimitiveObjectBase.DEFAULT_MATERIAL ,{})},	
-			{label:"Sphere",data:new PrimitiveInit(Sphere,PrimitiveObjectBase.DEFAULT_MATERIAL ,{})},	
-			{label:"Plane",data:new PrimitiveInit(Plane,PrimitiveObjectBase.DEFAULT_MATERIAL ,{})},	
-			{label:"Cylinder",data:new PrimitiveInit(Cylinder,PrimitiveObjectBase.DEFAULT_MATERIAL ,{})}	
-			
-		];
+		private var gui :SimpleGUI;
+		private var dataProvider :Array = [];
+		
+		private var _selectedPrimitiveToCreate :Object;
+		
 		
 		
 		public function CreatePrimitive()
 		{
 			super();
-			createChildren();
 		}
 		
 		public function set selected(obj:Object):void{
-			_selected = obj;
+			_selectedPrimitiveToCreate = obj;
 		}
 		
 		public function get selected():Object{
-			return _selected;
+			return _selectedPrimitiveToCreate;
+		}
+		
+		public function getName():String{
+			return NAME;
+		}
+		
+		public function initialize(primitives:Object):void{
+			
+			for (var obj :String in primitives)
+				dataProvider.push({label:obj,data:obj});
+			this.hasInitialized = true;
 		}
 		
 		public function createChildren():void{
 			
 			//top level gui - object select and make
-			gui = new SimpleGUI(this,"PRIMITIVE PLAYGROUND","P");
+			gui = new SimpleGUI(this,"PP "+Main.VERSION_STRING,"P");
 			gui.addGroup("Add");
-			gui.addComboBox("selected",primitives,{label:"Primitive:"});
+			gui.addComboBox("selected",dataProvider,{label:"Primitive:"});
 			gui.addButton("Make", {callback:onMake});
 			gui.addButton("Duplicate", {callback:onDuplicate});
 			gui.addButton("Delete", {callback:onDelete});
