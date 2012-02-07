@@ -1,0 +1,145 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>ErrorReportingRunner.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Description</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IDescription</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IRunner</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notification</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Failure</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notification</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IRunNotifier</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">token</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AsyncTestToken</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">token</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IAsyncTestToken</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * Runner responsible for reproting errors encountered when attempting to initialize a class instead of running tests
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">ErrorReportingRunner</span> <span class="ActionScriptReserved">implements</span> <span class="ActionScriptDefault_Text">IRunner</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_causes</span>:<span class="ActionScriptDefault_Text">Array</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_testClass</span>:<span class="ActionScriptDefault_Text">Class</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Constructor.
+         * 
+         * @param testClass The test class that generated the error
+         * @param cause The error that was generated when attempting to find a 
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">ErrorReportingRunner</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">cause</span>:<span class="ActionScriptDefault_Text">Error</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_testClass</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">testClass</span>;
+            <span class="ActionScriptDefault_Text">_causes</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">getCauses</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">cause</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptASDoc">/**
+         * Describe the test class and add a child to it for each cause that was associated with the Error
+         * 
+         * @return an &lt;code&gt;IDescription&lt;/code&gt; describing the provided test class with the causes of error associated
+         * with the test class
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">description</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">createSuiteDescription</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">_testClass</span> <span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptReserved">for</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">i</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">=</span>0; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">&lt;</span><span class="ActionScriptDefault_Text">_causes</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span>; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">++</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptDefault_Text">description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addChild</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">describeCause</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">_causes</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">description</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Informs the notifier about each potential cause Error for the test class
+         * 
+         * @param notifier The notifer to notify about the cause Errors
+         * @param token A token that will be alerted when the notifer has been notified for each cause Error
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">run</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">notifier</span>:<span class="ActionScriptDefault_Text">IRunNotifier</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">previousToken</span>:<span class="ActionScriptDefault_Text">IAsyncTestToken</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">for</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">i</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">=</span>0; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">&lt;</span><span class="ActionScriptDefault_Text">_causes</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span>; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">++</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptDefault_Text">description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addChild</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">describeCause</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">_causes</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">runCause</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">_causes</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">notifier</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            
+            <span class="ActionScriptComment">//notify our parent that we are good to continue
+</span>            <span class="ActionScriptDefault_Text">previousToken</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">sendResult</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Determines the causes that generated the provided error
+         * 
+         * @param cause The Error to inspect for its cause
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getCauses</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">cause</span>:<span class="ActionScriptDefault_Text">Error</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptComment">/*
+            TODO: Figure this whole mess out
+            if (cause instanceof InvocationTargetException)
+                return getCauses(cause.getCause());
+            if (cause instanceof InitializationError)
+                return ((InitializationError) cause).getCauses();
+            if (cause instanceof org.junit.internal.runners.InitializationError)
+                return ((org.junit.internal.runners.InitializationError) cause)
+                        .getCauses();
+            return Arrays.asList(cause);
+            */</span>
+            
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">cause</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">InitializationError</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">InitializationError</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">cause</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getCauses</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">cause</span> <span class="ActionScriptBracket/Brace">]</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">describeCause</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">child</span>:<span class="ActionScriptDefault_Text">Error</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">Description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">createTestDescription</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">_testClass</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptString">"initializationError"</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Report to the notifier about the specific cause Error
+         * 
+         * @param child The cause Error to report to the notifier
+         * @param notifier The notifier that is notified about the cause Error
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">runCause</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">child</span>:<span class="ActionScriptDefault_Text">Error</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">notifier</span>:<span class="ActionScriptDefault_Text">IRunNotifier</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">describeCause</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">child</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fireTestStarted</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fireTestFailure</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Failure</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">description</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">child</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fireTestFinished</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

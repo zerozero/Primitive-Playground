@@ -1,0 +1,262 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>MetaDataBuilder.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">builders</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">utils</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getDefinitionByName</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">lang</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">reflect</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Klass</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">lang</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">reflect</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">metadata</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">MetaDataAnnotation</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">InitializationError</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IRunner</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">model</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IRunnerBuilder</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">model</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">RunnerBuilderBase</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * The &lt;code&gt;MetaDataBuilder&lt;/code&gt; potentially builds an &lt;code&gt;IRunner&lt;/code&gt; runner that is specificed
+     * in the metadata tag for a specific test class.  If no metadata tag is present or the &lt;code&gt;IRunner&lt;/code&gt;
+     * fails to build, no &lt;code&gt;IRunner&lt;/code&gt; will be generated.  If a test class wants to use a defined
+     * &lt;code&gt;IRunner&lt;/code&gt;, it should include the [RunWith] tag that lists the full class name of
+     * the &lt;code&gt;IRunner&lt;/code&gt;.&lt;br/&gt;
+     * 
+     * The &lt;code&gt;MetaDataBuilder&lt;/code&gt; provides a hug hook for extensibility, allowing many different types of
+     * &lt;code&gt;IRunner&lt;/code&gt;s to be created and used to run tests.&lt;br/&gt;
+     * 
+     * &lt;pre&gt;&lt;code&gt;
+     * [RunWith("org.flexunit.runners.Suite")]
+     * public class testSuite {
+     *     [Test]
+     *     public function testMe():void { ...
+     *     }
+     * }&lt;/code&gt;&lt;/pre&gt;&lt;br/&gt;
+     * 
+     * The &lt;code&gt;IRunner&lt;/code&gt; that is to be built by the &lt;code&gt;MetaDataBuilder&lt;/code&gt; should have a constructor 
+     * implemented in one of the two following manners:&lt;br/&gt;
+     * 
+     * &lt;pre&gt;&lt;code&gt;
+     * public function RunnerClass( testClass:Object ) { ...
+     * }
+     * &lt;/code&gt;&lt;/pre&gt;&lt;br/&gt;
+     * 
+     * Where testClass is the class to be run.&lt;br/&gt;
+     * 
+     * &lt;pre&gt;&lt;code&gt;
+     * public function RunnerClass( testClass:Object, suiteBuilder:IRunnerBuilder ) { ...
+     * }
+     * &lt;/code&gt;&lt;/pre&gt;&lt;br/&gt;
+     * 
+     * Where testClass is the class to be run and suiteBuilder is an &lt;code&gt;IRunnerBuilder&lt;/code&gt;.
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">MetaDataBuilder</span> <span class="ActionScriptReserved">extends</span> <span class="ActionScriptDefault_Text">RunnerBuilderBase</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptReserved">const</span> <span class="ActionScriptDefault_Text">RUN_WITH</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">"RunWith"</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptReserved">const</span> <span class="ActionScriptDefault_Text">CLASS_NOT_FOUND</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">"classNotFound"</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptReserved">const</span> <span class="ActionScriptDefault_Text">INVALID_CONSTRUCTOR_ARGS</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">"invalidConstructorArguments"</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptReserved">const</span> <span class="ActionScriptDefault_Text">UNSPECIFIED</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">"unspecified"</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">suiteBuilder</span>:<span class="ActionScriptDefault_Text">IRunnerBuilder</span>;
+        
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">lookForMetaDataThroughInheritance</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">metadata</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">MetaDataAnnotation</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">klassInfo</span>:<span class="ActionScriptDefault_Text">Klass</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Klass</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">ancestorInfo</span>:<span class="ActionScriptDefault_Text">Klass</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">annotation</span>:<span class="ActionScriptDefault_Text">MetaDataAnnotation</span>;
+
+            <span class="ActionScriptDefault_Text">annotation</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">klassInfo</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getMetaData</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">metadata</span> <span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptOperator">!</span><span class="ActionScriptDefault_Text">annotation</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">inheritance</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">klassInfo</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">classInheritance</span>;
+
+                <span class="ActionScriptReserved">for</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">i</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">=</span>0; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">&lt;</span><span class="ActionScriptDefault_Text">inheritance</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span>; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">++</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                    <span class="ActionScriptDefault_Text">ancestorInfo</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Klass</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">inheritance</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptDefault_Text">annotation</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">ancestorInfo</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getMetaData</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">metadata</span> <span class="ActionScriptBracket/Brace">)</span>;
+                    
+                    <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">annotation</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptReserved">break</span>;
+                    <span class="ActionScriptBracket/Brace">}</span>
+                <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptBracket/Brace">}</span>
+            
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">annotation</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptReserved">override</span> <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">canHandleClass</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">Class</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">annotation</span>:<span class="ActionScriptDefault_Text">MetaDataAnnotation</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">lookForMetaDataThroughInheritance</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">RUN_WITH</span> <span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">annotation</span> <span class="ActionScriptOperator">!=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns an &lt;code&gt;IRunner&lt;/code&gt; based on the metadata of the provided &lt;code&gt;testClass&lt;/code&gt;.
+         * 
+         * @param testClass The test class for which to find an &lt;code&gt;IRunner&lt;/code&gt;.
+         * 
+         * @return an &lt;code&gt;IRunner&lt;/code&gt; for the provided &lt;code&gt;testClass&lt;/code&gt; if it has proper metadata and is 
+         * successfully built; otherwise, returns a value of &lt;code&gt;null&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">override</span> <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">runnerForClass</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">Class</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IRunner</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">klassInfo</span>:<span class="ActionScriptDefault_Text">Klass</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Klass</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span> <span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptComment">//Determine if the testClass references a runner in its metadata
+</span>            <span class="ActionScriptComment">//Get the definition for the runner class
+</span>            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">runWithValue</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">""</span>; 
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">runWithAnnotation</span>:<span class="ActionScriptDefault_Text">MetaDataAnnotation</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">lookForMetaDataThroughInheritance</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">RUN_WITH</span> <span class="ActionScriptBracket/Brace">)</span>;
+                
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">runWithAnnotation</span> <span class="ActionScriptOperator">&amp;&amp;</span> <span class="ActionScriptDefault_Text">runWithAnnotation</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">defaultArgument</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptDefault_Text">runWithValue</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">runWithAnnotation</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">defaultArgument</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">key</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">buildRunner</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">runWithValue</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">testClass</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Builds an &lt;code&gt;IRunner&lt;/code&gt; based on a &lt;code&gt;runnerClassName&lt;/code&gt; for the provided &lt;code&gt;testClass&lt;/code&gt;.
+         * 
+         * @param runnerClassName The name of the runner to be used for the provided &lt;code&gt;testClass&lt;/code&gt;.
+         * @param testClass The test class to provide to the builder.
+         * 
+         * @return an &lt;code&gt;IRunner&lt;/code&gt; for the provided &lt;code&gt;testClass&lt;/code&gt; if it has proper metadata and is 
+         * successfully built; otherwise, returns a value of &lt;code&gt;null&lt;/code&gt;.
+         * 
+         * @throws org.flexunit.internals.runners.InitializationError Thrown if there is an issue when building the 
+         * &lt;code&gt;IRunner&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">buildRunner</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">runnerClassName</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">Class</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IRunner</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">try</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptComment">//Need to check if it actually implements IRunner
+</span>                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">runnerClass</span>:<span class="ActionScriptDefault_Text">Class</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">getDefinitionByName</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">runnerClassName</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">Class</span>;
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">runnerClass</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">catch</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">e</span>:<span class="ActionScriptDefault_Text">Error</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">e</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">InitializationError</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                    <span class="ActionScriptReserved">throw</span> <span class="ActionScriptDefault_Text">e</span>;
+                <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">e</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">ReferenceError</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                    <span class="ActionScriptReserved">throw</span> <span class="ActionScriptDefault_Text">createInitializationError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">CLASS_NOT_FOUND</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">runnerClassName</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">e</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">TypeError</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptOperator">||</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">e</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">ArgumentError</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                    <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">e</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">errorID</span> <span class="ActionScriptOperator">==</span> 1007 <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptOperator">||</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">e</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">errorID</span> <span class="ActionScriptOperator">==</span> 1063 <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptComment">//our constructor params may be different, give it one more whirl
+</span>                        <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">buildWithSecondSignature</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">runnerClass</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">testClass</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">runnerClassName</span> <span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptReserved">throw</span> <span class="ActionScriptDefault_Text">createInitializationError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">INVALID_CONSTRUCTOR_ARGS</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">runnerClassName</span> <span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptBracket/Brace">}</span>
+                <span class="ActionScriptBracket/Brace">}</span>
+                
+                <span class="ActionScriptReserved">throw</span> <span class="ActionScriptDefault_Text">createInitializationError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">UNSPECIFIED</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">runnerClassName</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+ 
+             <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">null</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Builds an &lt;code&gt;IRunner&lt;/code&gt; based on a &lt;code&gt;runnerClass&lt;/code&gt; for the provided &lt;code&gt;testClass&lt;/code&gt;.  
+         * This method is typically called if the runner did not successfully build with its first signature.
+         * 
+         * @param runnerClass The runner class used to run the provided &lt;code&gt;testClass&lt;/code&gt;.
+         * @param testClass The test class to provide to the builder.
+         * @param runnerClassName The name of the runner to be used for the provided &lt;code&gt;testClass&lt;/code&gt;.
+         * 
+         * @return an &lt;code&gt;IRunner&lt;/code&gt; for the provided &lt;code&gt;testClass&lt;/code&gt; if it has proper metadata and is 
+         * successfully built; otherwise, returns a value of &lt;code&gt;null&lt;/code&gt;.
+         * 
+         * @throws org.flexunit.internals.runners.InitializationError Thrown if there is an issue when building the 
+         * &lt;code&gt;IRunner&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">buildWithSecondSignature</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">runnerClass</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">runnerClassName</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IRunner</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">try</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">runnerClass</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">suiteBuilder</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">catch</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">e</span>:<span class="ActionScriptDefault_Text">Error</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">e</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">InitializationError</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                    <span class="ActionScriptReserved">throw</span> <span class="ActionScriptDefault_Text">e</span>;
+                <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptBracket/Brace">{</span>
+                    <span class="ActionScriptReserved">throw</span> <span class="ActionScriptDefault_Text">createInitializationError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">UNSPECIFIED</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">runnerClassName</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptBracket/Brace">}</span>
+            
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">null</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Creates an &lt;code&gt;InitializationError&lt;/code&gt; for a specific &lt;code&gt;reason&lt;/code&gt; caused by the attempted initialization
+         * of an &lt;code&gt;IRunner&lt;/code&gt; that is named &lt;code&gt;runnerClassName&lt;/code&gt;.
+         * 
+         * @param reason The reason that the initialization error occured.
+         * @param runnerClassName The name of the runner class that caused the initialization issue.
+         * 
+         * @return an &lt;code&gt;InitializationError&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">createInitializationError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">reason</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">runnerClassName</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">InitializationError</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">error</span>:<span class="ActionScriptDefault_Text">InitializationError</span>;
+            
+            <span class="ActionScriptComment">//Determine why the runner failed to correctly build
+</span>            <span class="ActionScriptReserved">switch</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">reason</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptDefault_Text">CLASS_NOT_FOUND</span>: 
+                    <span class="ActionScriptDefault_Text">error</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">InitializationError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptString">"Custom runner class "</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">runnerClassName</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">" should be linked into project and implement IRunner. Further it needs to have a constructor which either just accepts the class, or the class and a builder."</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">break</span>;
+                
+                <span class="ActionScriptReserved">case</span> <span class="ActionScriptDefault_Text">INVALID_CONSTRUCTOR_ARGS</span>:
+                    <span class="ActionScriptDefault_Text">error</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">InitializationError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptString">"Custom runner class "</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">runnerClassName</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">" cannot be built with the specified constructor arguments."</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">break</span>;
+
+                <span class="ActionScriptReserved">default</span>:
+                    <span class="ActionScriptDefault_Text">error</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">InitializationError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptString">"Custom runner class "</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">runnerClassName</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">" cannot be instantiated"</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">break</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">error</span>;    
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/** 
+         * Constructor. 
+         * 
+         * @param suiteBuilder An &lt;code&gt;IRunnerBuilder&lt;/code&gt; to use to build the runner if the runner expects
+         * the test class as its first argument and a &lt;code&gt;IRunnerBuilder&lt;/code&gt; as its second argument.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">MetaDataBuilder</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">suiteBuilder</span>:<span class="ActionScriptDefault_Text">IRunnerBuilder</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">super</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">suiteBuilder</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">suiteBuilder</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

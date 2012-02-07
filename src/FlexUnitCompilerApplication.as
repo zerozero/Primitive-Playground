@@ -9,6 +9,7 @@ package
 	
 	import testSuite.AutoCreatedSuite;
 	import testSuite.SampleSuite;
+	import testSuite.tests.FileServiceTests;
 	import testSuite.tests.PrimitiveModelTest;
 	import testSuite.tests.SocketServiceTests;
 	import testSuite.tests.TestAsync;
@@ -19,12 +20,13 @@ package
 	public class FlexUnitCompilerApplication extends Sprite
 	{
 		
-		private var testSuite_tests_PrimitiveModelTest_obj:testSuite.tests.PrimitiveModelTest;
-		private var testSuite_tests_SocketServiceTests_obj:testSuite.tests.SocketServiceTests;
-		private var testSuite_tests_TestCase1_obj:testSuite.tests.TestCase1;
 		private var testSuite_tests_TestAsyncSetup_obj:testSuite.tests.TestAsyncSetup;
 		private var testSuite_tests_TestSequences_obj:testSuite.tests.TestSequences;
+		private var testSuite_tests_PrimitiveModelTest_obj:testSuite.tests.PrimitiveModelTest;
+		private var testSuite_tests_TestCase1_obj:testSuite.tests.TestCase1;
 		private var testSuite_tests_TestAsync_obj:testSuite.tests.TestAsync;
+		private var testSuite_tests_FileServiceTests_obj:testSuite.tests.FileServiceTests;
+		private var testSuite_tests_SocketServiceTests_obj:testSuite.tests.SocketServiceTests;
 		private var testSuite_SampleSuite_obj:testSuite.SampleSuite;
 		private var testSuite_AutoCreatedSuite_obj:testSuite.AutoCreatedSuite;
 	}

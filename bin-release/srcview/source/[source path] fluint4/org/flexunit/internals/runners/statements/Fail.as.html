@@ -1,0 +1,75 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Fail.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">statements</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">statements</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AsyncStatementBase</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">statements</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IAsyncStatement</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">token</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AsyncTestToken</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * The &lt;code&gt;Fail&lt;/code&gt; class is responsible for throwing a failure error when it
+     * is evaluated.  A &lt;code&gt;Fail&lt;/code&gt; is often created if a critical piece of infomration
+     * is missing and another statement could not be properly generated.
+     * 
+     * @see org.flexunit.runners.BlockFlexUnit4ClassRunner
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">Fail</span> <span class="ActionScriptReserved">extends</span> <span class="ActionScriptDefault_Text">AsyncStatementBase</span> <span class="ActionScriptReserved">implements</span> <span class="ActionScriptDefault_Text">IAsyncStatement</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">error</span>:<span class="ActionScriptDefault_Text">Error</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Constructor.
+         * 
+         * @param error The &lt;code&gt;Error&lt;/code&gt; to be thrown when this statement is evalutated.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">Fail</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">error</span>:<span class="ActionScriptDefault_Text">Error</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">error</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">error</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Throws the error that was initially provided to &lt;code&gt;Fail&lt;/code&gt;.
+         * 
+         * @param previousToken AsyncTestToken - Passed in, but not used in this method.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">evaluate</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">previousToken</span>:<span class="ActionScriptDefault_Text">AsyncTestToken</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">throw</span> <span class="ActionScriptDefault_Text">error</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span>
+</pre></body>
+</html>

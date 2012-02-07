@@ -1,0 +1,421 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>FlexUnit1ClassRunner.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">events</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TimerEvent</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">utils</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Timer</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">utils</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getDefinitionByName</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">utils</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getQualifiedClassName</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">lang</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">reflect</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Klass</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">lang</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">reflect</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Method</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">framework</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Test</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">framework</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TestCase</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">framework</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TestListener</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">framework</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TestResult</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">framework</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TestSuite</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Description</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IDescribable</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IDescription</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IRunner</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">manipulation</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IFilter</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">manipulation</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IFilterable</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notification</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IRunNotifier</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">model</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">FrameworkMethod</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">token</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AsyncTestToken</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">token</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ChildResult</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">token</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IAsyncTestToken</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">utils</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ClassNameUtil</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * The &lt;code&gt;FlexUnit1ClassRunner&lt;/code&gt; is responsible for running FlexUnit1 classes.
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">FlexUnit1ClassRunner</span> <span class="ActionScriptReserved">implements</span> <span class="ActionScriptDefault_Text">IRunner</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">IFilterable</span> <span class="ActionScriptBracket/Brace">{</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">test</span>:<span class="ActionScriptDefault_Text">Test</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">klassOrTest</span>:<span class="ActionScriptOperator">*</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">totalTestCount</span>:<span class="ActionScriptDefault_Text">int</span> <span class="ActionScriptOperator">=</span> 0;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">numTestsRun</span>:<span class="ActionScriptDefault_Text">int</span> <span class="ActionScriptOperator">=</span> 0;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">filterRef</span>:<span class="ActionScriptDefault_Text">IFilter</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">testCompletedToken</span> : <span class="ActionScriptDefault_Text">AsyncTestToken</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Constructor.
+         * 
+         * @param klassOrTest The class or test to run.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">FlexUnit1ClassRunner</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">klassOrTest</span>:<span class="ActionScriptOperator">*</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">super</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">klassOrTest</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">klassOrTest</span>;
+
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">klassOrTest</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">Test</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">klassOrTest</span>;
+            <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptComment">//in this case, we need to make a suite
+</span>                <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">createTestSuiteWithFilter</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">filterRef</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">klassOrTest</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">TestSuite</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">TestSuite</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">klassOrTest</span> <span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">testArrayList</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">isEmpty</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                    <span class="ActionScriptReserved">throw</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">InitializationError</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"Empty test Suite!"</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptBracket/Brace">}</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns an &lt;code&gt;IDescription&lt;/code&gt; for &lt;code&gt;child&lt;/code&gt;.
+         * 
+         * @param child The child to describe.
+         * 
+         * @return an &lt;code&gt;IDescription&lt;/code&gt; of the provided &lt;code&gt;child&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">describeChild</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">child</span>:<span class="ActionScriptOperator">*</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">method</span>:<span class="ActionScriptDefault_Text">FrameworkMethod</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">FrameworkMethod</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">child</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">Description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">createTestDescription</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">klassOrTest</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">method</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">name</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">method</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">metadata</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns a Boolean value indicating whether the &lt;code&gt;item&lt;/code&gt; should run.
+         * 
+         * @param item The item to check to see if it should run.
+         * 
+         * @return a Boolean value indicating whether the &lt;code&gt;item&lt;/code&gt; should run.
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">shouldRun</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">item</span>:<span class="ActionScriptOperator">*</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">filterRef</span> <span class="ActionScriptOperator">==</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptOperator">||</span> <span class="ActionScriptDefault_Text">filterRef</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shouldRun</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">describeChild</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">item</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns an &lt;code&gt;Array&lt;/code&gt; of methods that should run that are contained in
+         * &lt;code&gt;klassInfo&lt;/code&gt;.
+         * 
+         * @param klassInfo The &lt;code&gt;Klass&lt;/code&gt; used to find methods.
+         * @param filter
+         * 
+         * @return an &lt;code&gt;Array&lt;/code&gt; of methods that should run.
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getMethodListFromFilter</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">klassInfo</span>:<span class="ActionScriptDefault_Text">Klass</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">filter</span>:<span class="ActionScriptDefault_Text">IFilter</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">list</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> [];
+
+            <span class="ActionScriptReserved">for</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">i</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">=</span>0; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">&lt;</span><span class="ActionScriptDefault_Text">klassInfo</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">methods</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span>; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">++</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">method</span>:<span class="ActionScriptDefault_Text">Method</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">klassInfo</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">methods</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">Method</span>;
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">frameworkMethod</span>:<span class="ActionScriptDefault_Text">FrameworkMethod</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">FrameworkMethod</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">method</span> <span class="ActionScriptBracket/Brace">)</span>;
+                
+                <span class="ActionScriptComment">//Determine if the method should run
+</span>                <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">shouldRun</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">frameworkMethod</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                    <span class="ActionScriptDefault_Text">list</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">push</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">method</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">name</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptBracket/Brace">}</span>  
+            <span class="ActionScriptBracket/Brace">}</span>
+
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">list</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Creates a &lt;code&gt;TestSuite&lt;/code&gt; that is filtered based on the provided &lt;code&gt;Filter&lt;/code&gt;.
+         * 
+         * @param filter The &lt;code&gt;Filter&lt;/code&gt; to apply to the class or test.
+         * 
+         * @return a &lt;code&gt;TestSuite&lt;/code&gt; that is filtered based on the provided &lt;code&gt;Filter&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">createTestSuiteWithFilter</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">filter</span>:<span class="ActionScriptDefault_Text">IFilter</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Test</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptOperator">!</span><span class="ActionScriptDefault_Text">filter</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">TestSuite</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">klassOrTest</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">suite</span>:<span class="ActionScriptDefault_Text">TestSuite</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">TestSuite</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">klassInfo</span>:<span class="ActionScriptDefault_Text">Klass</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Klass</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">klassOrTest</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">methodList</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">getMethodListFromFilter</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">klassInfo</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">filter</span> <span class="ActionScriptBracket/Brace">)</span>;
+
+                <span class="ActionScriptReserved">for</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">i</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">=</span>0; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">&lt;</span><span class="ActionScriptDefault_Text">methodList</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span>; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">++</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                    <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">numConstructorArgs</span>:<span class="ActionScriptDefault_Text">int</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">klassInfo</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">constructor</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">parameterTypes</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span>;
+                    <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">test</span>:<span class="ActionScriptDefault_Text">Test</span>;
+                    
+                    <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">numConstructorArgs</span> <span class="ActionScriptOperator">==</span> 0 <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">klassInfo</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">constructor</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">newInstance</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">Test</span>;
+                        <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">TestCase</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                            <span class="ActionScriptComment">//If this is a testCase &amp;&amp; it does not take a constructor argument
+</span>                            <span class="ActionScriptComment">//then we try to pass it into methodName
+</span>                            <span class="ActionScriptDefault_Text">TestCase</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">methodName</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">methodList</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptBracket/Brace">]</span>;
+                        <span class="ActionScriptBracket/Brace">}</span>
+                    <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">numConstructorArgs</span> <span class="ActionScriptOperator">==</span> 1 <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">klassInfo</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">constructor</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">newInstance</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">methodList</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">Test</span>;
+                    <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptReserved">throw</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">InitializationError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptString">"Asking to instatiate TestClass with unknown number of arguments"</span> <span class="ActionScriptBracket/Brace">)</span>;
+                    <span class="ActionScriptBracket/Brace">}</span>
+
+                    <span class="ActionScriptDefault_Text">suite</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptBracket/Brace">}</span>
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">suite</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns the &lt;code&gt;Class&lt;/code&gt; for a provided &lt;code&gt;Test&lt;/code&gt;.
+         * 
+         * @param test The &lt;code&gt;Test&lt;/code&gt; for which to obtain the &lt;code&gt;Class&lt;/code&gt;.
+         * 
+         * @return the &lt;code&gt;Class&lt;/code&gt; for a provided &lt;code&gt;Test&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getClassFromTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span>:<span class="ActionScriptDefault_Text">Test</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Class</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">name</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">getQualifiedClassName</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">getDefinitionByName</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">name</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">Class</span>;        
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Runs the test class and updates the &lt;code&gt;notifier&lt;/code&gt; on the status of running the tests.
+         * 
+         * @param notifier The notifier that is notified about issues encountered during the execution of the test class.
+         * @param previousToken The token that is to be notified when the runner has finished execution of the test class.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">run</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">notifier</span>:<span class="ActionScriptDefault_Text">IRunNotifier</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">previousToken</span>:<span class="ActionScriptDefault_Text">IAsyncTestToken</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">token</span>:<span class="ActionScriptDefault_Text">AsyncTestToken</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">AsyncTestToken</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">ClassNameUtil</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getLoggerFriendlyClassName</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">this</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">token</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">parentToken</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">previousToken</span>;
+            <span class="ActionScriptDefault_Text">token</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addNotificationMethod</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">handleTestComplete</span> <span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">result</span>:<span class="ActionScriptDefault_Text">TestResult</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">TestResult</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">result</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">createAdaptingListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">token</span> <span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptDefault_Text">totalTestCount</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">test</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">countTestCases</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptDefault_Text">test</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runWithResult</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">result</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Handles the results of a single test completing.
+         * 
+         * @param result The results of the running test.
+         */</span>
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">handleTestComplete</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">result</span>:<span class="ActionScriptDefault_Text">ChildResult</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptComment">//trace( numTestsRun + ' ' + totalTestCount );
+</span>            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptOperator">++</span><span class="ActionScriptDefault_Text">numTestsRun</span> <span class="ActionScriptOperator">==</span> <span class="ActionScriptDefault_Text">totalTestCount</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptDefault_Text">testCompletedToken</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">result</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">token</span>;
+                
+                <span class="ActionScriptComment">// FlexUnit 0.9 has a timer set up in TestSuiteTestListener executed 
+</span>                <span class="ActionScriptComment">// 5ms after each test execution to clean up the static property listenerStack.
+</span>                <span class="ActionScriptComment">// We have to add this 100ms delay here as well otherwise the parentToken would be executed
+</span>                <span class="ActionScriptComment">// before the TestSuiteTestListener timer and would mess things up.
+</span>                <span class="ActionScriptComment">// We are delaying 100ms and not less since this might be ~2 frames. Since this timer is
+</span>                <span class="ActionScriptComment">// created before than the timer in TestSuiteTestListener, due to Flash Player behaviour,
+</span>                <span class="ActionScriptComment">// if the timers are executed in the same frame and even thouh the time of the second one is 
+</span>                <span class="ActionScriptComment">// smaller the first added timer will be executed first
+</span>                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">timer</span> : <span class="ActionScriptDefault_Text">Timer</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Timer</span> <span class="ActionScriptBracket/Brace">(</span> 100<span class="ActionScriptOperator">,</span> 1 <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">timer</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addEventListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">TimerEvent</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TIMER</span><span class="ActionScriptOperator">,</span><span class="ActionScriptDefault_Text">handleAllTestsComplete</span><span class="ActionScriptOperator">,</span><span class="ActionScriptReserved">false</span><span class="ActionScriptOperator">,</span> 0<span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">false</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">timer</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">start</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Handles the results of the test class completing.
+         * 
+         * @param event
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">handleAllTestsComplete</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">event</span> : <span class="ActionScriptDefault_Text">TimerEvent</span> <span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">event</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">target</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">Timer</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">removeEventListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">TimerEvent</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TIMER</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">handleAllTestsComplete</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">testCompletedToken</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">parentToken</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">sendResult</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Creates a &lt;code&gt;TestListener&lt;/code&gt; using a provided &lt;code&gt;notifier&lt;/code&gt; and
+         * &lt;code&gt;token&lt;/code&gt;.
+         * 
+         * @param notifier The notifier to notify about the status of the test.
+         * @param token The token to nofity when the test has finished.
+         * 
+         * @return a &lt;code&gt;TestListener&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">createAdaptingListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">notifier</span>:<span class="ActionScriptDefault_Text">IRunNotifier</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">token</span>:<span class="ActionScriptDefault_Text">AsyncTestToken</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">TestListener</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">OldTestClassAdaptingListener</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">token</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">cachedDescription</span>:<span class="ActionScriptDefault_Text">IDescription</span>;
+        <span class="ActionScriptASDoc">/**
+         * Returns an &lt;code&gt;IDescription&lt;/code&gt; of the test class that the runner is running.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">description</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptComment">//Determine if a description has already been created
+</span>            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptOperator">!</span><span class="ActionScriptDefault_Text">cachedDescription</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptDefault_Text">cachedDescription</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">makeDescription</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">cachedDescription</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Generates an &lt;code&gt;IDescription&lt;/code&gt; for the provided &lt;code&gt;Test&lt;/code&gt;.
+         * 
+         * @param test The &lt;code&gt;Test&lt;/code&gt; ufor which to generate the &lt;code&gt;IDescription&lt;/code&gt;.
+         * 
+         * @return an &lt;code&gt;IDescription&lt;/code&gt; for the provided &lt;code&gt;Test&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">makeDescription</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span>:<span class="ActionScriptDefault_Text">Test</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">name</span>:<span class="ActionScriptDefault_Text">String</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">n</span>:<span class="ActionScriptDefault_Text">int</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">tests</span>:<span class="ActionScriptDefault_Text">Array</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">Class</span>;
+            
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">TestCase</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">tc</span>:<span class="ActionScriptDefault_Text">TestCase</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">TestCase</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptBracket/Brace">)</span>;
+
+                <span class="ActionScriptDefault_Text">testClass</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">getClassFromTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">tc</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">description</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">createTestDescription</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">testClass</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">tc</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">methodName</span> <span class="ActionScriptBracket/Brace">)</span>;
+                
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">description</span>;
+            <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">TestSuite</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">ts</span>:<span class="ActionScriptDefault_Text">TestSuite</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">TestSuite</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">name</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">ts</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">className</span> <span class="ActionScriptOperator">==</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptOperator">?</span> <span class="ActionScriptString">""</span> : <span class="ActionScriptDefault_Text">ts</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">className</span>;
+                <span class="ActionScriptDefault_Text">description</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">createSuiteDescription</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">name</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">n</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">ts</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">testCount</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">tests</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">ts</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getTests</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">for</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">i</span>:<span class="ActionScriptDefault_Text">int</span> <span class="ActionScriptOperator">=</span> 0; <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptOperator">&lt;</span> <span class="ActionScriptDefault_Text">n</span>; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">++</span><span class="ActionScriptBracket/Brace">)</span>
+                    <span class="ActionScriptDefault_Text">description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addChild</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">makeDescription</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">tests</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span>;
+
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">description</span>;
+            <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">IDescribable</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">adapter</span>:<span class="ActionScriptDefault_Text">IDescribable</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">IDescribable</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">adapter</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">description</span>;
+<span class="ActionScriptComment">//// not currently supporting this as the old flex unit didn't have it
+</span><span class="ActionScriptComment">/*             } else if (test is TestDecorator) {
+                TestDecorator decorator= (TestDecorator) test;
+                return makeDescription(decorator.getTest());
+ */</span>            <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptComment">// This is the best we can do in this case
+</span>                <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">Description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">createSuiteDescription</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">className</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Will apply a &lt;code&gt;Filter&lt;/code&gt; to the test object.
+         * @param filter Filter
+         * @see org.flexunit.runner.manipulation.Filter
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">filter</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">filter</span>:<span class="ActionScriptDefault_Text">IFilter</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">IFilterable</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">adapter</span>:<span class="ActionScriptDefault_Text">IFilterable</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">IFilterable</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">adapter</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">filter</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">filter</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">filterRef</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">filter</span>;
+            <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">createTestSuiteWithFilter</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">filterRef</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+<span class="ActionScriptComment">/*         public void sort(Sorter sorter) {
+            if (fTest instanceof Sortable) {
+                Sortable adapter= (Sortable) fTest;
+                adapter.sort(sorter);
+            }
+        }        
+ */</span>    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">framework</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TestListener</span>;
+<span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notification</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">RunNotifier</span>;
+<span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">framework</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Test</span>;
+<span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Description</span>;
+<span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notification</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Failure</span>;
+<span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">framework</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TestCase</span>;
+<span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IDescribable</span>;
+<span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">framework</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AssertionFailedError</span>;
+<span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">FlexUnit1ClassRunner</span>;
+<span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">token</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AsyncTestToken</span>;
+<span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notification</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IRunNotifier</span>;
+<span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IDescription</span>;    
+
+<span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">OldTestClassAdaptingListener</span> <span class="ActionScriptReserved">implements</span> <span class="ActionScriptDefault_Text">TestListener</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">notifier</span>:<span class="ActionScriptDefault_Text">IRunNotifier</span>;
+    <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">token</span>:<span class="ActionScriptDefault_Text">AsyncTestToken</span>;
+
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">OldTestClassAdaptingListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">notifier</span>:<span class="ActionScriptDefault_Text">IRunNotifier</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">token</span>:<span class="ActionScriptDefault_Text">AsyncTestToken</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notifier</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">notifier</span>;
+        <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">token</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">token</span>;
+    <span class="ActionScriptBracket/Brace">}</span>
+
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">endTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span>:<span class="ActionScriptDefault_Text">Test</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fireTestFinished</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">asDescription</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">test</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptDefault_Text">token</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">sendResult</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+    <span class="ActionScriptBracket/Brace">}</span>
+
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">startTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span>:<span class="ActionScriptDefault_Text">Test</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fireTestStarted</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">asDescription</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">test</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">)</span>;
+    <span class="ActionScriptBracket/Brace">}</span>
+
+    <span class="ActionScriptComment">// Implement junit.framework.TestListener
+</span>    <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">addError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span>:<span class="ActionScriptDefault_Text">Test</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">error</span>:<span class="ActionScriptDefault_Text">Error</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">failure</span>:<span class="ActionScriptDefault_Text">Failure</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Failure</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">asDescription</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">test</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">error</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fireTestFailure</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">failure</span><span class="ActionScriptBracket/Brace">)</span>;
+    <span class="ActionScriptBracket/Brace">}</span>
+
+    <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">asDescription</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span>:<span class="ActionScriptDefault_Text">Test</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">IDescribable</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">facade</span>:<span class="ActionScriptDefault_Text">IDescribable</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">IDescribable</span>;
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">facade</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">description</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">Description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">createTestDescription</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">FlexUnit1ClassRunner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getClassFromTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">getName</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">test</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span>;
+    <span class="ActionScriptBracket/Brace">}</span>
+
+    <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getName</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span>:<span class="ActionScriptDefault_Text">Test</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">TestCase</span> <span class="ActionScriptBracket/Brace">)</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">TestCase</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> <span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">methodName</span>;
+        <span class="ActionScriptReserved">else</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">test</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">toString</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+    <span class="ActionScriptBracket/Brace">}</span>
+
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">addFailure</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span> : <span class="ActionScriptDefault_Text">Test</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">error</span> : <span class="ActionScriptDefault_Text">AssertionFailedError</span> <span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptDefault_Text">addError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">test</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">error</span> <span class="ActionScriptBracket/Brace">)</span>;
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

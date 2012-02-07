@@ -11,7 +11,7 @@ package com.jonrowe.away3d.view
 	import com.jonrowe.away3d.services.ISocketService;
 	import com.jonrowe.away3d.services.SocketService;
 	import com.jonrowe.away3d.view.event.DuplicatePrimitiveEvent;
-	import com.jonrowe.away3d.view.event.EntitySelectEvent;
+	import com.jonrowe.away3d.view.event.EntityEvent;
 	import com.jonrowe.away3d.view.event.StageResizeEvent;
 	
 	import flash.events.Event;
@@ -34,12 +34,9 @@ package com.jonrowe.away3d.view
 		}
 		
 		override public function onRegister():void{
-			//??why does eventMap not work??
-			//eventMap.mapListener(view,DuplicatePrimitiveEvent.DUPLICATE, onDuplicateObject);
-			
 			addContextListener(SocketService.CONNECTED, onConnected);
 			view.addEventListener(Main.RESIZE, onResize);
-			//socketService.connect();
+			view.createChildren();
 		}
 		
 		

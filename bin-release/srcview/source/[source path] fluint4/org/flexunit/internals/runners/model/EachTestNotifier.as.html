@@ -1,0 +1,122 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>EachTestNotifier.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">model</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IDescription</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notification</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Failure</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notification</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IRunNotifier</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * The &lt;code&gt;EachTestNotifier&lt;/code&gt; is responsible for instructing a provided
+     * &lt;code&gt;IRunNotifier&lt;/code&gt; about the execution of a specific test.  The 
+     * &lt;code&gt;EachTestNotifier&lt;/code&gt; is provided with an &lt;code&gt;IRunNotifier&lt;/code&gt;
+     * and a corresponding &lt;code&gt;IDescription&lt;/code&gt; of the test that is to be
+     * executed.  It will report to the &lt;code&gt;IRunNotifier&lt;/code&gt; as it is notified
+     * about the execution of the test, providing the necessary description or failure
+     * to the &lt;code&gt;IRunNotifier&lt;/code&gt;.
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">EachTestNotifier</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">notifier</span>:<span class="ActionScriptDefault_Text">IRunNotifier</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span>;
+        
+        <span class="ActionScriptASDoc">/** 
+         * Constructor. 
+         * 
+         * @param notifier The &lt;code&gt;IRunNotifier&lt;/code&gt; to notify regarding the execution of a specific test.
+         * @param description An &lt;code&gt;IDescription&lt;/code&gt; of the current test.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">EachTestNotifier</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">notifier</span>:<span class="ActionScriptDefault_Text">IRunNotifier</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notifier</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">notifier</span>;
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">description</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">description</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/** 
+         * Instructs the notifier that the test method has encountered a failure.
+         * 
+         * @param targetException The exception that was thrown when running the test method.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">addFailure</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">targetException</span>:<span class="ActionScriptDefault_Text">Error</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptComment">//If the targetException is a MultipleFailureException, notify the notifier for each failure
+</span>            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">targetException</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">MultipleFailureException</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptvar">var</span>  <span class="ActionScriptDefault_Text">mfe</span>:<span class="ActionScriptDefault_Text">MultipleFailureException</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">MultipleFailureException</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">targetException</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">failures</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">mfe</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">failures</span>;
+                <span class="ActionScriptReserved">for</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">i</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">=</span>0; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">&lt;</span><span class="ActionScriptDefault_Text">failures</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span>; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">++</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                    <span class="ActionScriptDefault_Text">addFailure</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">failures</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptBracket/Brace">}</span>
+                <span class="ActionScriptReserved">return</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fireTestFailure</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Failure</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">targetException</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptComment">//TODO: THis needs to be an AssumptionViolatedException... but I need to get Hamcrest in there for that...so it needs to wait
+</span>        <span class="ActionScriptASDoc">/** 
+         * Instructs the notifier that the test method has failed an assumption.
+         * 
+         * @param error The assumption that was violated when running the test method.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">addFailedAssumption</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">error</span>:<span class="ActionScriptDefault_Text">Error</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fireTestAssumptionFailed</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Failure</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">error</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/** 
+         * Instructs the notifier that the test method has finished running.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">fireTestFinished</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fireTestFinished</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">description</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/** 
+         * Instructs the notifier that the test method has started.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">fireTestStarted</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fireTestStarted</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">description</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/** 
+         * Instructs the notifier that the test method has been ignored.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">fireTestIgnored</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">notifier</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fireTestIgnored</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">description</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

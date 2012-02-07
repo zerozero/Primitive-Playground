@@ -1,0 +1,106 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>IRunnerBuilder.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">model</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IRunner</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * An &lt;code&gt;IRunnerBuilder&lt;/code&gt; is a strategy for constructing &lt;code&gt;IRunner&lt;/code&gt;s for classes.&lt;br/&gt;
+     * 
+     * Only writers of custom runners should use &lt;code&gt;IRunnerBuilder&lt;/code&gt;s.  A custom runner class with a constructor 
+     * taking an &lt;code&gt;IRunnerBuilder&lt;/code&gt; parameter will be passed the instance of &lt;code&gt;IRunnerBuilder&lt;/code&gt; used 
+     * to build that runner itself.&lt;br/&gt;
+     *  
+     * For example, imagine a custom &lt;code&gt;IRunner&lt;/code&gt; that builds suites based on a list of classes in a text file:
+     * 
+     * &lt;pre&gt;
+     * RunWith(TextFileSuite.as)
+     * SuiteSpecFile("mysuite.txt")
+     * class MySuite {}
+     * &lt;/pre&gt;
+     * 
+     * The implementation of TextFileSuite might include:
+     * 
+     * &lt;pre&gt;
+     * public function TextFileSuite(testClass:Class, builder:IRunnerBuilder) {
+     *   // ...
+     *     var runner:IRunner = builder.runnerForClass( testClass );
+     *   // ...
+     * }
+     * &lt;/pre&gt;
+     * 
+     * @see org.flexunit.runners.Suite
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptinterface">interface</span> <span class="ActionScriptDefault_Text">IRunnerBuilder</span> <span class="ActionScriptBracket/Brace">{</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns a boolean value indicating if this builder will be able to handle the testClass or not
+         * 
+         * @param testClass The class to test to determine an &lt;code&gt;IRunner&lt;/code&gt;.
+        */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">canHandleClass</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns an &lt;code&gt;IRunner&lt;/code&gt; that can safely run the provided &lt;code&gt;testClass&lt;/code&gt;.
+         * 
+         * @param testClass The class to for which to determine an &lt;code&gt;IRunner&lt;/code&gt;.
+         * 
+         * @return an &lt;code&gt;IRunner&lt;/code&gt; that can run the &lt;code&gt;testClass&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">safeRunnerForClass</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">Class</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IRunner</span>;
+        <span class="ActionScriptASDoc">/**
+         * Constructs and returns a list of &lt;code&gt;IRunner&lt;/code&gt;s, one for each child class in
+         * &lt;code&gt;children&lt;/code&gt;.  Care is taken to avoid infinite recursion:
+         * this builder will throw an exception if it is requested for another
+         * runner for &lt;code&gt;parent&lt;/code&gt; before this call completes.
+         * 
+         * @param parent The parent class that contains the &lt;code&gt;children&lt;/code&gt;.
+         * @param children The child classes for which to find &lt;code&gt;IRunner&lt;/code&gt;.
+         * 
+         * @return a list of &lt;code&gt;IRunner&lt;/code&gt;s, one for each child class.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">parent</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">children</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Array</span>;
+        <span class="ActionScriptASDoc">/**
+         * Returns an &lt;code&gt;IRunner&lt;/code&gt; for a specific &lt;code&gt;testClass&lt;/code&gt;.
+         * 
+         * @param testClass The test class for which to determine an &lt;code&gt;IRunner&lt;/code&gt;.
+         * 
+         * @return an &lt;code&gt;IRunner&lt;/code&gt; that will run the &lt;code&gt;testClass&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">runnerForClass</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">Class</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IRunner</span>;
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

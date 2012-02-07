@@ -1,0 +1,207 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>AssignmentSequencer.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">experimental</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">statements</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">experimental</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">theories</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IPotentialAssignment</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">experimental</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">theories</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Assignments</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AssumptionViolatedException</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">model</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">MultipleFailureException</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">statements</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AsyncStatementBase</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">statements</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IAsyncStatement</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">model</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">FrameworkMethod</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">token</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AsyncTestToken</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">token</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ChildResult</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">utils</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ClassNameUtil</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * The &lt;code&gt;AssignmentSequencer&lt;/code&gt; is responsible for the sequencing of parameters to be provided 
+     * to a particular theory method test.  It determines what potential parameters need to be provided to the 
+     * parameters in the theory test method.&lt;br/&gt;
+     * 
+     * Based on the number of parameters in the theory method test, additional &lt;code&gt;AssignmentSequencer&lt;/code&gt;s will 
+     * be created.  If there are still parameters that need to be assigned a value and there are still potential values 
+     * to assign to those parameters, assign an unused value to the next parameter and create a new 
+     * &lt;code&gt;AssignmentSequencer&lt;/code&gt;, determining if all parameters have then been assigned a value.  Once all of the 
+     * parameters in the theory method test have been assigned, that theory method will be run with that configuration.
+     * All permutations of potential parameters will be provided to the theory method.
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">AssignmentSequencer</span> <span class="ActionScriptReserved">extends</span> <span class="ActionScriptDefault_Text">AsyncStatementBase</span> <span class="ActionScriptReserved">implements</span> <span class="ActionScriptDefault_Text">IAsyncStatement</span> <span class="ActionScriptBracket/Brace">{</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">potential</span>:<span class="ActionScriptDefault_Text">Array</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">parameterAssignment</span>:<span class="ActionScriptDefault_Text">Assignments</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">counter</span>:<span class="ActionScriptDefault_Text">int</span> <span class="ActionScriptOperator">=</span> 0;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">errors</span>:<span class="ActionScriptDefault_Text">Array</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">Class</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">anchor</span>:<span class="ActionScriptDefault_Text">TheoryAnchor</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">frameworkMethod</span>:<span class="ActionScriptDefault_Text">FrameworkMethod</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Constructor.
+         * 
+         * @param parameterAssignment The current parameter assignments for a theory method test.
+         * @param frameworkMethod The theory method that is being tested.
+         * @param testClass The test class that contains the theory method.
+         * @param anchor The anchor for the theory method.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">AssignmentSequencer</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">parameterAssignment</span>:<span class="ActionScriptDefault_Text">Assignments</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">frameworkMethod</span>:<span class="ActionScriptDefault_Text">FrameworkMethod</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">anchor</span>:<span class="ActionScriptDefault_Text">TheoryAnchor</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">super</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">parameterAssignment</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">parameterAssignment</span>;
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">testClass</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">testClass</span>;
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">anchor</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">anchor</span>;
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">frameworkMethod</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">frameworkMethod</span>;
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">errors</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Array</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptComment">//Create a new token that will alert this class when the provided statement has completed
+</span>            <span class="ActionScriptDefault_Text">myToken</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">AsyncTestToken</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">ClassNameUtil</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getLoggerFriendlyClassName</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">this</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">myToken</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addNotificationMethod</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">handleChildExecuteComplete</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Determines if all parameters have been assigned for a particular configuration of a theory method.  If they have 
+         * all been assigned, run the theory with the particular parameter configuration.  If all parameter values have not 
+         * been assinged, determine what parameters can be provided to the next unassigned parameter.
+         * 
+         * @param parentToken The token to be notified when the theory method has finished running for a particluar permutation
+         * of parameters.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">evaluate</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">parentToken</span>:<span class="ActionScriptDefault_Text">AsyncTestToken</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">parentToken</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">parentToken</span>;
+            
+            <span class="ActionScriptComment">//Determine if all parameters for a theory have been assigned a value
+</span>            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptOperator">!</span><span class="ActionScriptDefault_Text">parameterAssignment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">complete</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptComment">//incomplete, determine what parameters can be supplied to the next unassigned parameter
+</span>                <span class="ActionScriptDefault_Text">potential</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">parameterAssignment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">potentialsForNextUnassigned</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">handleChildExecuteComplete</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptComment">//complete, run the theory with the provided parameter configuration
+</span>                <span class="ActionScriptDefault_Text">runWithCompleteAssignment</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">parameterAssignment</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Determine if any errors were encountered if the theory method test executed.  If the error was not an
+         * &lt;code&gt;AssumptionViolatedException&lt;/code&gt;, add it to the array of encountered errors and stop running the theory test.
+         * 
+         * If there are still parameters that need to be assigned a value and there are still potential values to assign to 
+         * those parameters, assign an unused value to the next parameter and create a new &lt;code&gt;AssignmentSequencer&lt;/code&gt;, 
+         * determining if all parameters have then been assigned a value.
+         * 
+         * If there are no furuther potential values to assign a parameter or all values have already been assigned to a parameter,
+         * this &lt;code&gt;AssignmentSequencer&lt;/code&gt; has finished its duty to sequence parameters.
+         * 
+         * @param result A &lt;code&gt;ChildResult&lt;/code&gt; that contains potential errors encountered during the theory's execution.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">handleChildExecuteComplete</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">result</span>:<span class="ActionScriptDefault_Text">ChildResult</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">source</span>:<span class="ActionScriptDefault_Text">IPotentialAssignment</span>;
+
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">result</span> <span class="ActionScriptOperator">&amp;&amp;</span> <span class="ActionScriptDefault_Text">result</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">error</span> <span class="ActionScriptOperator">&amp;&amp;</span> <span class="ActionScriptOperator">!</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">result</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">error</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">AssumptionViolatedException</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptDefault_Text">errors</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">push</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">result</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">error</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">errors</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptComment">//we received an error that was not an AssumptionViolation, we need to bail out of this case
+</span>                <span class="ActionScriptDefault_Text">sendComplete</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">return</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptComment">//i think we need to stop here on this error
+</span>            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">potential</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptOperator">&amp;&amp;</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">counter</span> <span class="ActionScriptOperator">&lt;</span> <span class="ActionScriptDefault_Text">potential</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptComment">//Obtain a value that has yet to be assigned to a parameter
+</span>                <span class="ActionScriptDefault_Text">source</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">potential</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">counter</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">IPotentialAssignment</span>;
+                <span class="ActionScriptDefault_Text">counter</span><span class="ActionScriptOperator">++</span>;
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">statement</span>:<span class="ActionScriptDefault_Text">AssignmentSequencer</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">AssignmentSequencer</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">parameterAssignment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">assignNext</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">source</span> <span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">frameworkMethod</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">testClass</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">anchor</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">statement</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">evaluate</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">myToken</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptDefault_Text">sendComplete</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Reports to the parentToken that the current configuration of parameter assignments have finished running in the theory
+         * method test and determines if any error were encountered during execution of that test.
+         * 
+         * @param error A potential error that was encountered during a configuration of the theory meethod.
+         */</span>
+        <span class="ActionScriptReserved">override</span> <span class="ActionScriptReserved">protected</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">sendComplete</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">error</span>:<span class="ActionScriptDefault_Text">Error</span><span class="ActionScriptOperator">=</span><span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">sendError</span>:<span class="ActionScriptDefault_Text">Error</span>;
+
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">error</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptDefault_Text">errors</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">push</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">error</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">errors</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptOperator">==</span> 1<span class="ActionScriptBracket/Brace">)</span>
+                <span class="ActionScriptDefault_Text">sendError</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">errors</span><span class="ActionScriptBracket/Brace">[</span> 0 <span class="ActionScriptBracket/Brace">]</span>;
+            <span class="ActionScriptReserved">else</span> <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">errors</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptOperator">&gt;</span> 1 <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptDefault_Text">sendError</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">MultipleFailureException</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">errors</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+
+            <span class="ActionScriptReserved">super</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">sendComplete</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">sendError</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Runs the theory for the &lt;code&gt;complete&lt;/code&gt; set of assigned parameters.
+         * 
+         * @param complete Contains a permutation of current assigned parameter / value pairs to be supplied to the 
+         * theory method test for this particular configuration.
+         */</span>
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">runWithCompleteAssignment</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">complete</span>:<span class="ActionScriptDefault_Text">Assignments</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptComment">//trace( "Complete" );
+</span>             <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">runner</span>:<span class="ActionScriptDefault_Text">TheoryBlockRunner</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">TheoryBlockRunner</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testClass</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">anchor</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">complete</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getMethodBlock</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">frameworkMethod</span> <span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">evaluate</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">myToken</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

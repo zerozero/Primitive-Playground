@@ -2,6 +2,6 @@
 <testrun name="" >
 <testsuite  name="Default Test Suite" project="Primitives_AS">
 <testsuite name="testSuite:AutoCreatedSuite" type="testsuiteclass"/>
-<testsuite name="testSuite.tests:PrimitiveModelTest" type="testcaseclass"/>
+<testsuite name="testSuite.tests:FileServiceTests" type="testcaseclass"/>
 </testsuite>
 </testrun>

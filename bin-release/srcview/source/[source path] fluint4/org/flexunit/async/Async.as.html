@@ -1,0 +1,226 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Async.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">async</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">events</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IEventDispatcher</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">net</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Responder</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">mx</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">rpc</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IResponder</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">statements</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * The &lt;code&gt;Async&lt;/code&gt; class contains static methods used in the handling of events in asynchronous
+     * methods in a particular test case.  These methods may be called in an asynchronous test method in
+     * order to exhibit specific behavior once the proper conditions are met.&lt;br/&gt;
+     * 
+     * The asynchronous test methods must be labeled as asynchronous in order
+     * to successfully use &lt;code&gt;Async&lt;/code&gt;'s static methods; otherwise, the test will not be registered as
+     * asynchronous and an &lt;code&gt;AssertionError&lt;/code&gt; will be thrown.&lt;br/&gt;
+     * 
+     * &lt;pre&gt;&lt;code&gt;
+     * [Test(async)]
+     * public function asyncTest():void {
+     *     Async.proceedOnEvent(...);
+     * }
+     * &lt;/code&gt;&lt;/pre&gt;
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">Async</span>
+    <span class="ActionScriptBracket/Brace">{</span>    
+        <span class="ActionScriptASDoc">/**
+         * This method is used when you want to ensure that a specific event fires during an asynchronous test. When the event fires, the flex unit
+         * framework simply acknowledges it internally. If there are additional outstanding asynchronous events, those will be processed individually.
+         *  
+         * This method is generally used when the existance of the event, and not the even't data is sufficient to indicate success. If you need to inspect
+         * the event's data before making a decision, then use &lt;code&gt;handleEvent&lt;/code&gt; instead. 
+         * 
+         * @param testCase The current asynchronous test case.
+         * @param target The target that will listen for the dispatched &lt;code&gt;eventName&lt;/code&gt;.
+         * @param eventName The name of the event being listend for by the &lt;code&gt;target&lt;/code&gt;.
+         * @param timeout The length of time, in milliseconds, before the calling the &lt;code&gt;timeoutHandler&lt;/code&gt;
+         * if the &lt;code&gt;eventName&lt;/code&gt; event is not dispatched.
+         * @param timeoutHandler The function that will be executed if the &lt;code&gt;target&lt;/code&gt; does not 
+         * receive expected &lt;code&gt;eventName&lt;/code&gt; before the &lt;code&gt;timeout&lt;/code&gt; time is reached.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">proceedOnEvent</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">target</span>:<span class="ActionScriptDefault_Text">IEventDispatcher</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">eventName</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">=</span>500<span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span>:<span class="ActionScriptDefault_Text">Function</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span>:<span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">AsyncLocator</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getCallableForTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">handler</span>:<span class="ActionScriptDefault_Text">Function</span>;
+
+            <span class="ActionScriptDefault_Text">handler</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">asyncHandler</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">pendUntilComplete</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">target</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addEventListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">eventName</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">handler</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">false</span><span class="ActionScriptOperator">,</span> 0<span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">true</span> <span class="ActionScriptBracket/Brace">)</span>;  
+        <span class="ActionScriptBracket/Brace">}</span> 
+        
+        <span class="ActionScriptASDoc">/**
+         * This method is used when you want to fail if a given event occurs, within a given amount of time, during an asynchronous test. When the event fires, 
+         * the flex unit framework causes the test to fail. If the timout is reached before the failure occurs, then the framework will no longer watch for 
+         * this event. So, for example, if you want to verify that you do not receive a failure within 300ms, this would be a good method to use.
+         *  
+         * This method is generally used when the existance of the event, and not the even't data is sufficient to indicate failure. If you need to inspect
+         * the event's data before making a decision, then use &lt;code&gt;handleEvent&lt;/code&gt; instead. 
+         * 
+         * @param testCase The current asynchronous test case.
+         * @param target The target that will listen for the dispatched &lt;code&gt;eventName&lt;/code&gt;.
+         * @param eventName The name of the event being listend for by the &lt;code&gt;target&lt;/code&gt;.
+         * @param timeout The length of time, in milliseconds, before the calling the &lt;code&gt;timeoutHandler&lt;/code&gt;
+         * if the &lt;code&gt;eventName&lt;/code&gt; event is not dispatched.
+         * @param timeoutHandler The function that will be executed if the &lt;code&gt;target&lt;/code&gt; does not 
+         * receive expected &lt;code&gt;eventName&lt;/code&gt; before the &lt;code&gt;timeout&lt;/code&gt; time is reached.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">failOnEvent</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">target</span>:<span class="ActionScriptDefault_Text">IEventDispatcher</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">eventName</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">=</span>500<span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span>:<span class="ActionScriptDefault_Text">Function</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span>:<span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">AsyncLocator</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getCallableForTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">handler</span>:<span class="ActionScriptDefault_Text">Function</span>;
+            
+            <span class="ActionScriptDefault_Text">handler</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">asyncHandler</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">failOnComplete</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">pendUntilComplete</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">target</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addEventListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">eventName</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">handler</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">false</span><span class="ActionScriptOperator">,</span> 0<span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">true</span> <span class="ActionScriptBracket/Brace">)</span>;  
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Causes the failure of the existing block (Before, After or the Test itself dependent upon where this statement is located) when an event occurs. In
+         * practice, this method is used to handle an event dispatched from an object under test that, while not necessarily part of the test itself, would indicate
+         * a failure if dispatched. A valid example might be an service call. You may want to test that the data is correct and returns within a given period of time,
+         * however, if at any time during that test a Failure event is dispatched, you likely wish to end the test. 
+         * 
+         * @param testCase The current asynchronous test case.
+         * @param target The target that will listen for the dispatched &lt;code&gt;eventName&lt;/code&gt;.
+         * @param eventName The name of the event being listend for by the &lt;code&gt;target&lt;/code&gt;.
+         * 
+         * Example:
+         *         [Test(async)]
+         *      public function doTest():void {
+         *          Async.registerFailureEvent( this, httpService, FaultEvent.FAULT );
+         *          Async.handleEvent( this, httpService, ResultEvent.RESULT, handleResult, 2000 );
+         *        httpService.send();            
+         *      }
+         * 
+         * Without the registerFailureEvent, you would need to wait 2 full seconds for the timeout to occur before declaring this test a failure when a fault
+         * event occurs.
+         * 
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">registerFailureEvent</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">target</span>:<span class="ActionScriptDefault_Text">IEventDispatcher</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">eventName</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span>:<span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">AsyncLocator</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getCallableForTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">handler</span>:<span class="ActionScriptDefault_Text">Function</span>;
+            
+            <span class="ActionScriptDefault_Text">handler</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">asyncErrorConditionHandler</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">failOnComplete</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">target</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addEventListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">eventName</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">handler</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptComment">//Do not use a weak reference here or there is nothing to keep it in memory
+</span>        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptASDoc">/**
+         * Allow you to continue a test while waiting for a given asynchronous event to occur. Normally a test ends when you reach the method closure at the end
+         * of your test method. This event tells the FlexUnit framework to continue that test pending the dispatch of an event by the &lt;code&gt;target&lt;/code&gt; of an
+         * event named &lt;code&gt;eventName&lt;/code&gt;. If that event does not occur within the &lt;code&gt;timeOut&lt;/code&gt; then the timeout handler (if specified) will be called, 
+         * else the test will be declared a failure. 
+         * 
+         * @param testCase The current asynchronous test case.
+         * @param target The target that will listen for the dispatched &lt;code&gt;eventName&lt;/code&gt;.
+         * @param eventName The name of the event being listend for by the &lt;code&gt;target&lt;/code&gt;.
+         * @param eventHandler The function that will be executed if the the &lt;code&gt;target&lt;/code&gt; dispatches an event with 
+         * a name of &lt;code&gt;eventName&lt;/code&gt; within the provided &lt;code&gt;timemout&lt;/code&gt; period.
+         * @param timeout The length of time, in milliseconds, before the calling the &lt;code&gt;timeoutHandler&lt;/code&gt;
+         * if the &lt;code&gt;eventName&lt;/code&gt; event is not dispatched.
+         * @param passThroughData An Object that can be given information about the current test, this information will be 
+         * available to both the &lt;code&gt;eventHandler&lt;/code&gt; and &lt;code&gt;timeoutHandler&lt;/code&gt;.
+         * @param timeoutHandler The function that will be executed if the &lt;code&gt;target&lt;/code&gt; does not 
+         * receive expected &lt;code&gt;eventName&lt;/code&gt; before the &lt;code&gt;timeout&lt;/code&gt; time is reached.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">handleEvent</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">target</span>:<span class="ActionScriptDefault_Text">IEventDispatcher</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">eventName</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">eventHandler</span>:<span class="ActionScriptDefault_Text">Function</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">=</span>500<span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span>:<span class="ActionScriptDefault_Text">Function</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span>:<span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">AsyncLocator</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getCallableForTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">handler</span>:<span class="ActionScriptDefault_Text">Function</span>;
+                   
+            <span class="ActionScriptDefault_Text">handler</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">asyncHandler</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">eventHandler</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">target</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addEventListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">eventName</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">handler</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">false</span><span class="ActionScriptOperator">,</span> 0<span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">true</span> <span class="ActionScriptBracket/Brace">)</span>;  
+        <span class="ActionScriptBracket/Brace">}</span> 
+        
+        <span class="ActionScriptASDoc">/**
+         * This method works similarly to the handleEvent, however, whereas the handleEvent does all of the work to handle a specific event,
+         * this method simply returns an eventHandler (function) which you use within your own addEventListener() methods. 
+         * 
+         * @param testCase The current asynchronous test case.
+         * @param eventHandler The function that will be executed if the &lt;code&gt;timemout&lt;/code&gt; period has not been reached.
+         * @param timeout The length of time, in milliseconds, before the calling the &lt;code&gt;timeoutHandler&lt;/code&gt;
+         * if the &lt;code&gt;eventName&lt;/code&gt; event is not dispatched.
+         * @param passThroughData An Object that can be given information about the current test, this information will be 
+         * available to both the &lt;code&gt;eventHandler&lt;/code&gt; and &lt;code&gt;timeoutHandler&lt;/code&gt;.
+         * @param timeoutHandler The function that will be executed if the &lt;code&gt;timeout&lt;/code&gt; period is reached.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">asyncHandler</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">eventHandler</span>:<span class="ActionScriptDefault_Text">Function</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span>:<span class="ActionScriptDefault_Text">Function</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Function</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span>:<span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">AsyncLocator</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getCallableForTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span> <span class="ActionScriptBracket/Brace">)</span>;
+                        
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">asyncHandler</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">eventHandler</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptComment">// We have a toggle in the compiler arguments so that we can choose whether or not the flex classes should
+</span>        <span class="ActionScriptComment">// be compiled into the FlexUnit swc.  For actionscript only projects we do not want to compile the
+</span>        <span class="ActionScriptComment">// flex classes since it will cause errors.
+</span>        <span class="ActionScriptASDoc">/**
+         * This method works in a similar fashion to handleEvent, however, it is intended to work with AsyncTokens and Responders as opposed to events. 
+         * 
+         * @param testCase The current asynchronous test case.
+         * @param responder The responder that will be executed if the &lt;code&gt;timemout&lt;/code&gt; period has not been reached.
+         * @param timeout The length of time, in milliseconds, before the calling the &lt;code&gt;timeoutHandler&lt;/code&gt;
+         * if the &lt;code&gt;eventName&lt;/code&gt; event is not dispatched.
+         * @param passThroughData An Object that can be given information about the current test, this information will be 
+         * available to both the &lt;code&gt;eventHandler&lt;/code&gt; and &lt;code&gt;timeoutHandler&lt;/code&gt;.
+         * @param timeoutHandler The function that will be executed if the &lt;code&gt;timeout&lt;/code&gt; period is reached.
+         */</span>
+        <span class="ActionScriptDefault_Text">CONFIG</span><span class="ActionScriptOperator">::</span><span class="ActionScriptDefault_Text">useFlexClasses</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">asyncResponder</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">responder</span>:<span class="ActionScriptOperator">*</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span>:<span class="ActionScriptDefault_Text">Function</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IResponder</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span>:<span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">AsyncLocator</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getCallableForTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span> <span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">asyncResponder</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">responder</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * This method works in a similar fashion to handleEvent, however, it is intended to work with AsyncTokens and Responders as opposed to events. 
+         * 
+         * @param testCase The current asynchronous test case.
+         * @param resultHandler The function that will be executed if the &lt;code&gt;timeout&lt;/code&gt; period has not been reached and we have a success.
+         * @param faultHandler The function that will be executed if the &lt;code&gt;timeout&lt;/code&gt; period has not been reached and we have an error.
+         * @param timeout The length of time, in milliseconds, before the calling the &lt;code&gt;timeoutHandler&lt;/code&gt;
+         * if the &lt;code&gt;eventName&lt;/code&gt; event is not dispatched.
+         * @param passThroughData An Object that can be given information about the current test, this information will be 
+         * available to both the &lt;code&gt;eventHandler&lt;/code&gt; and &lt;code&gt;timeoutHandler&lt;/code&gt;.
+         * @param timeoutHandler The function that will be executed if the &lt;code&gt;timeout&lt;/code&gt; period is reached.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">asyncNativeResponder</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">resultHandler</span> : <span class="ActionScriptDefault_Text">Function</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">faultHandler</span> : <span class="ActionScriptDefault_Text">Function</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span>:<span class="ActionScriptDefault_Text">Function</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptDefault_Text">Responder</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span>:<span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">AsyncLocator</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getCallableForTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span> <span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">asyncHandlingStatement</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">asyncNativeResponder</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">resultHandler</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">faultHandler</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

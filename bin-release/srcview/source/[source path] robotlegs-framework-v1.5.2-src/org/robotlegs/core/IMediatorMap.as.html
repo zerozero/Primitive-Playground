@@ -1,0 +1,146 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>IMediatorMap.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptComment">/*
+ * Copyright (c) 2009 the original author or authors
+ * 
+ * Permission is hereby granted to use, modify, and distribute this file 
+ * in accordance with the terms of the license agreement accompanying it.
+ */</span>
+
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">robotlegs</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">core</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">display</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">DisplayObjectContainer</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * The Robotlegs MediatorMap contract
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptinterface">interface</span> <span class="ActionScriptDefault_Text">IMediatorMap</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Map an &lt;code&gt;IMediator&lt;/code&gt; to a view Class
+         *
+         * @param viewClassOrName The concrete view Class or Fully Qualified Class Name
+         * @param mediatorClass The &lt;code&gt;IMediator&lt;/code&gt; Class
+         * @param injectViewAs The explicit view Interface or Class that the mediator depends on OR an Array of such Interfaces/Classes.
+         * @param autoCreate Automatically construct and register an instance of Class &lt;code&gt;mediatorClass&lt;/code&gt; when an instance of Class &lt;code&gt;viewClass&lt;/code&gt; is detected
+         * @param autoRemove Automatically remove an instance of Class &lt;code&gt;mediatorClass&lt;/code&gt; when its &lt;code&gt;viewClass&lt;/code&gt; leaves the ancestory of the context view
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">mapView</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">viewClassOrName</span>:<span class="ActionScriptOperator">*</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">mediatorClass</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">injectViewAs</span>:<span class="ActionScriptOperator">*</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">autoCreate</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">true</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">autoRemove</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">true</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Unmap a view Class
+         *  
+         * @param viewClassOrName The concrete view Class or Fully Qualified Class Name
+         */</span>        
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">unmapView</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">viewClassOrName</span>:<span class="ActionScriptOperator">*</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Create an instance of a mapped &lt;code&gt;IMediator&lt;/code&gt;
+         *
+         * &lt;p&gt;This will instantiate and register a Mediator for a given View Component.
+         * Mediator dependencies will be automatically resolved.&lt;/p&gt;
+         *
+         * @param viewComponent An instance of the view Class previously mapped to an &lt;code&gt;IMediator&lt;/code&gt; Class
+         * @return The &lt;code&gt;IMediator&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">createMediator</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">viewComponent</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IMediator</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Manually register an &lt;code&gt;IMediator&lt;/code&gt; instance
+         *
+         * &lt;p&gt;NOTE: Registering a Mediator will NOT inject its dependencies.
+         * It is assumed that dependencies are already satisfied.&lt;/p&gt;
+         *
+         * @param viewComponent The view component for the &lt;code&gt;IMediator&lt;/code&gt;
+         * @param mediator The &lt;code&gt;IMediator&lt;/code&gt; to register
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">registerMediator</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">viewComponent</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">mediator</span>:<span class="ActionScriptDefault_Text">IMediator</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Remove a registered &lt;code&gt;IMediator&lt;/code&gt; instance
+         *
+         * @param mediator The &lt;code&gt;IMediator&lt;/code&gt; to remove
+         * @return The &lt;code&gt;IMediator&lt;/code&gt; that was removed
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">removeMediator</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">mediator</span>:<span class="ActionScriptDefault_Text">IMediator</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IMediator</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Remove a registered &lt;code&gt;IMediator&lt;/code&gt; instance
+         *
+         * @param viewComponent The view that the &lt;code&gt;IMediator&lt;/code&gt; was registered with
+         * @return The &lt;code&gt;IMediator&lt;/code&gt; that was removed
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">removeMediatorByView</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">viewComponent</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IMediator</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Retrieve a registered &lt;code&gt;IMediator&lt;/code&gt; instance
+         *
+         * @param viewComponent The view that the &lt;code&gt;IMediator&lt;/code&gt; was registered with
+         * @return The &lt;code&gt;IMediator&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">retrieveMediator</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">viewComponent</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IMediator</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Check if the view Class has been mapped or not
+         * 
+         * @param viewClassOrName The concrete view Class or Fully Qualified Class Name
+         * 
+         * @return Whether this view class has been mapped
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">hasMapping</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">viewClassOrName</span>:<span class="ActionScriptOperator">*</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Check if the &lt;code&gt;IMediator&lt;/code&gt; has been registered
+         *
+         * @param mediator The &lt;code&gt;IMediator&lt;/code&gt; instance
+         * @return Whether this &lt;code&gt;IMediator&lt;/code&gt; has been registered
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">hasMediator</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">mediator</span>:<span class="ActionScriptDefault_Text">IMediator</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Check if an &lt;code&gt;IMediator&lt;/code&gt; has been registered for a view instance
+         *
+         * @param viewComponent The view that the &lt;code&gt;IMediator&lt;/code&gt; was registered with
+         * @return Whether an &lt;code&gt;IMediator&lt;/code&gt; has been registered for this view instance
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">hasMediatorForView</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">viewComponent</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * The &lt;code&gt;IMediatorMap&lt;/code&gt;'s &lt;code&gt;DisplayObjectContainer&lt;/code&gt;
+         *
+         * @return view The &lt;code&gt;DisplayObjectContainer&lt;/code&gt; to use as scope for this &lt;code&gt;IMediatorMap&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">contextView</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">DisplayObjectContainer</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * The &lt;code&gt;IMediatorMap&lt;/code&gt;'s &lt;code&gt;DisplayObjectContainer&lt;/code&gt;
+         *
+         * @param value The &lt;code&gt;DisplayObjectContainer&lt;/code&gt; to use as scope for this &lt;code&gt;IMediatorMap&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">set</span> <span class="ActionScriptDefault_Text">contextView</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">value</span>:<span class="ActionScriptDefault_Text">DisplayObjectContainer</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * The &lt;code&gt;IMediatorMap&lt;/code&gt;'s enabled status
+         * 
+         * @return Whether the &lt;code&gt;IMediatorMap&lt;/code&gt; is enabled
+         */</span>        
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">enabled</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * The &lt;code&gt;IMediatorMap&lt;/code&gt;'s enabled status
+         * 
+         * @param value Whether the &lt;code&gt;IMediatorMap&lt;/code&gt; should be enabled
+         */</span>        
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">set</span> <span class="ActionScriptDefault_Text">enabled</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">value</span>:<span class="ActionScriptDefault_Text">Boolean</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+    
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

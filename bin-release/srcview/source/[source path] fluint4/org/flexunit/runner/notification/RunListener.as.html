@@ -1,0 +1,132 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>RunListener.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notification</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Description</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IDescription</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Result</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * If you need to respond to the events during a test run, extend &lt;code&gt;RunListener&lt;/code&gt;
+     * and override the appropriate methods. If a listener throws an exception while processing a 
+     * test event, it will be removed for the remainder of the test run.
+     * 
+     * &lt;p&gt;
+     * For example, suppose you have a &lt;code&gt;Cowbell&lt;/code&gt;
+     * class that you want to make a noise whenever a test fails. You could write:
+     * &lt;pre&gt;
+     * public class RingingListener extends RunListener {
+     *     public function testFailure(failure:Failure):void {
+     *         Cowbell.ring();
+     *     }
+     * }
+     * &lt;/pre&gt;
+     * &lt;/p&gt;
+     * 
+     * &lt;p&gt;To invoke your listener, you need to run your tests through &lt;code&gt;FlexUnitCore&lt;/code&gt;.
+     * &lt;pre&gt;
+     * core:FlexUnitCore = new FlexUnitCore();
+     * core.addListener(new RingingListener());
+     * core.run(MyTestClass);
+     * &lt;/pre&gt;&lt;/p&gt;
+     * 
+     * @see org.flexunit.runner.FlexUnitCore
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">RunListener</span> <span class="ActionScriptReserved">implements</span> <span class="ActionScriptDefault_Text">IRunListener</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         * The &lt;code&gt;Result&lt;/code&gt; recieved for a finished test run.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">result</span>:<span class="ActionScriptDefault_Text">Result</span>;
+
+        <span class="ActionScriptASDoc">/**
+         * Called before any tests have been run.
+         * @param description describes the tests to be run
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">testRunStarted</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Called when all tests have finished
+         * @param result the summary of the test run, including all the tests that failed
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">testRunFinished</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">result</span>:<span class="ActionScriptDefault_Text">Result</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">result</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">result</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Called when an atomic test is about to be started.
+         * @param description the description of the test that is about to be run 
+         * (generally a class and method name)
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">testStarted</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * Called when an atomic test has finished, whether the test succeeds or fails.
+         * @param description the description of the test that just ran
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">testFinished</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/** 
+         * Called when an atomic test fails.
+         * @param failure describes the test that failed and the exception that was thrown
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">testFailure</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">failure</span>:<span class="ActionScriptDefault_Text">Failure</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * Called when an atomic test flags that it assumes a condition that is
+         * false
+         * 
+         * @param failure
+         *            describes the test that failed and the
+         *            &lt;code&gt; AssumptionViolatedException&lt;/code&gt; that was thrown
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">testAssumptionFailure</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">failure</span>:<span class="ActionScriptDefault_Text">Failure</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * Called when a test will not be run, generally because a test method is annotated 
+         * with &lt;code&gt; org.junit.Ignore&lt;/code&gt;.
+         * 
+         * @param description describes the test that will not be run
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">testIgnored</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

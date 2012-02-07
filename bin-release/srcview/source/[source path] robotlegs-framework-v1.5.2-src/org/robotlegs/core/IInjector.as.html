@@ -1,0 +1,173 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>IInjector.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptComment">/*
+ * Copyright (c) 2009 the original author or authors
+ * 
+ * Permission is hereby granted to use, modify, and distribute this file 
+ * in accordance with the terms of the license agreement accompanying it.
+ */</span>
+
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">robotlegs</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">core</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">system</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ApplicationDomain</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * The Robotlegs Injector contract
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptinterface">interface</span> <span class="ActionScriptDefault_Text">IInjector</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         * When asked for an instance of the class &lt;code&gt;whenAskedFor&lt;/code&gt;
+         * inject the instance &lt;code&gt;useValue&lt;/code&gt;.
+         *
+         * &lt;p&gt;This is used to register an existing instance with the injector
+         * and treat it like a Singleton.&lt;/p&gt;
+         *
+         * @param whenAskedFor A class or interface
+         * @param useValue An instance
+         * @param named An optional name (id)
+         * 
+         * @return * A reference to the rule for this injection. To be used with &lt;code&gt;mapRule&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">mapValue</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">whenAskedFor</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">useValue</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">named</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">""</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptOperator">*</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * When asked for an instance of the class &lt;code&gt;whenAskedFor&lt;/code&gt;
+         * inject a new instance of &lt;code&gt;instantiateClass&lt;/code&gt;.
+         *
+         * &lt;p&gt;This will create a new instance for each injection.&lt;/p&gt;
+         *
+         * @param whenAskedFor A class or interface
+         * @param instantiateClass A class to instantiate
+         * @param named An optional name (id)
+         * 
+         * @return * A reference to the rule for this injection. To be used with &lt;code&gt;mapRule&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">mapClass</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">whenAskedFor</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">instantiateClass</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">named</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">""</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptOperator">*</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * When asked for an instance of the class &lt;code&gt;whenAskedFor&lt;/code&gt;
+         * inject an instance of &lt;code&gt;whenAskedFor&lt;/code&gt;.
+         *
+         * &lt;p&gt;This will create an instance on the first injection, but
+         * will re-use that instance for subsequent injections.&lt;/p&gt;
+         *
+         * @param whenAskedFor A class or interface
+         * @param named An optional name (id)
+         * 
+         * @return * A reference to the rule for this injection. To be used with &lt;code&gt;mapRule&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">mapSingleton</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">whenAskedFor</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">named</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">""</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptOperator">*</span>;
+        
+        
+        <span class="ActionScriptASDoc">/**
+         * When asked for an instance of the class &lt;code&gt;whenAskedFor&lt;/code&gt;
+         * inject an instance of &lt;code&gt;useSingletonOf&lt;/code&gt;.
+         *
+         * &lt;p&gt;This will create an instance on the first injection, but
+         * will re-use that instance for subsequent injections.&lt;/p&gt;
+         *
+         * @param whenAskedFor A class or interface
+         * @param useSingletonOf A class to instantiate
+         * @param named An optional name (id)
+         * 
+         * @return * A reference to the rule for this injection. To be used with &lt;code&gt;mapRule&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">mapSingletonOf</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">whenAskedFor</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">useSingletonOf</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">named</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">""</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptOperator">*</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * When asked for an instance of the class &lt;code&gt;whenAskedFor&lt;/code&gt;
+         * use rule &lt;code&gt;useRule&lt;/code&gt; to determine the correct injection.
+         *
+         * &lt;p&gt;This will use whatever injection is set by the given injection rule as created using 
+         * one of the other mapping methods.&lt;/p&gt;
+         *
+         * @param whenAskedFor A class or interface
+         * @param useRule The rule to use for the injection
+         * @param named An optional name (id)
+         * 
+         * @return * A reference to the rule for this injection. To be used with &lt;code&gt;mapRule&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">mapRule</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">whenAskedFor</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">useRule</span>:<span class="ActionScriptOperator">*</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">named</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">""</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptOperator">*</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Perform an injection into an object, satisfying all it's dependencies
+         *
+         * &lt;p&gt;The &lt;code&gt;IInjector&lt;/code&gt; should throw an &lt;code&gt;Error&lt;/code&gt;
+         * if it can't satisfy all dependencies of the injectee.&lt;/p&gt;
+         *
+         * @param target The object to inject into - the Injectee
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">injectInto</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">target</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Create an object of the given class, supplying its dependencies as constructor parameters
+         * if the used DI solution has support for constructor injection
+         *
+         * &lt;p&gt;Adapters for DI solutions that don't support constructor injection should just create a new
+         * instance and perform setter and/ or method injection on that.&lt;/p&gt;
+         * 
+         * &lt;p&gt;NOTE: This method will always create a new instance. If you need to retrieve an instance
+         * consider using &lt;code&gt;getInstance&lt;/code&gt;&lt;/p&gt;
+         *
+         * &lt;p&gt;The &lt;code&gt;IInjector&lt;/code&gt; should throw an &lt;code&gt;Error&lt;/code&gt;
+         * if it can't satisfy all dependencies of the injectee.&lt;/p&gt;
+         *
+         * @param clazz The class to instantiate
+         * @return * The created instance
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">instantiate</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">clazz</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptOperator">*</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Create or retrieve an instance of the given class
+         * 
+         * @param clazz
+         * @param named An optional name (id)
+         * @return * An instance
+         */</span>        
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getInstance</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">clazz</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">named</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">""</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptOperator">*</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Create an injector that inherits rules from its parent
+         * 
+         * @return The injector 
+         */</span>        
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">createChild</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">applicationDomain</span>:<span class="ActionScriptDefault_Text">ApplicationDomain</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IInjector</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Remove a rule from the injector
+         *
+         * @param clazz A class or interface
+         * @param named An optional name (id)
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">unmap</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">clazz</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">named</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">""</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Does a rule exist to satsify such a request?
+         * 
+         * @param clazz A class or interface
+         * @param named An optional name (id)
+         * @return Whether such a mapping exists
+         */</span>        
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">hasMapping</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">clazz</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">named</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">""</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * @return The Application Domain
+         */</span>        
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">applicationDomain</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">ApplicationDomain</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * @param value The Application Domain
+         */</span>        
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">set</span> <span class="ActionScriptDefault_Text">applicationDomain</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">value</span>:<span class="ActionScriptDefault_Text">ApplicationDomain</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

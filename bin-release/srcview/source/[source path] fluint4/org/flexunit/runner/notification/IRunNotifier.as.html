@@ -1,0 +1,150 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>IRunNotifier.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version       0    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notification</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IDescription</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Result</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * &lt;code&gt;IRunNotifier&lt;/code&gt;s are a type of class that FlexUnit4 uses to notify others of an 
+     * event that occurred during testing.  There is generally only one &lt;code&gt;IRunNotifier&lt;/code&gt;
+     * used in a test run at a time.  &lt;code&gt;IRunNotifier&lt;/code&gt;s are used by the &lt;code&gt;IRunner&lt;/code&gt; 
+     * classes to notify others of the following conditions:
+     * 
+     * &lt;ul&gt;
+     * &lt;li&gt;For the Test Run: Started/Finished&lt;/li&gt;
+     * &lt;li&gt;For an Individual Test: Started/Failed/Ignored/Finished/AssumptionFailures&lt;/li&gt;
+     * &lt;/ul&gt;&lt;br/&gt;
+     * 
+     * A parallel can be drawn with &lt;code&gt;IEventDispatcher&lt;/code&gt;; however, unlike an event dispatcher, 
+     * &lt;code&gt;IRunNotifier&lt;/code&gt;s have limitations on what types of objects can listen to their events.
+     * An &lt;code&gt;IRunListeners&lt;/code&gt;s are used to listen to events that are broadcast by 
+     * &lt;code&gt;IRunNotifier&lt;/code&gt;s.  Each &lt;code&gt;IRunNotifier&lt;/code&gt; contain an &lt;code&gt;#addListener()&lt;/code&gt;
+     * and &lt;code&gt;#removeListener&lt;/code&gt; method that accetps an &lt;code&gt;IRunListener&lt;/code&gt; as an argument.&lt;br/&gt;
+     * 
+     * If one writes an &lt;code&gt;IRunner&lt;/code&gt;, they may need to notify FlexUnit4 of their progress while 
+     * running tests.  This is accomplished by invoking the &lt;code&gt;IRunNotifier&lt;/code&gt; passed to the
+     * implementation of &lt;code&gt;org.flexunit.runner.IRunner#run(RunNotifier)&lt;/code&gt;.
+     * 
+     * @see org.flexunit.runner.notification.IRunListener
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptinterface">interface</span> <span class="ActionScriptDefault_Text">IRunNotifier</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         * Invoke to tell all registered &lt;code&gt;IRunListener&lt;/code&gt;s that the test run has started.
+         * 
+         * @param description An &lt;code&gt;IDescription&lt;/code&gt; of the top most &lt;code&gt;IRunner&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">fireTestRunStarted</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Invoke to tell all registered &lt;code&gt;IRunListener&lt;/code&gt;s that the test run has finished.
+         * 
+         * @param result The &lt;code&gt;Result&lt;/code&gt; of the test run.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">fireTestRunFinished</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">result</span>:<span class="ActionScriptDefault_Text">Result</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Invoke to tell all registered &lt;code&gt;IRunListener&lt;/code&gt;s that an atomic test has started.
+         * 
+         * @param description An &lt;code&gt;IDescription&lt;/code&gt; of the atomic test (generally a class 
+         * and method name).
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">fireTestStarted</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Invoke to tell all registered &lt;code&gt;IRunListener&lt;/code&gt;s that an atomic test failed.
+         * 
+         * @param failure The &lt;code&gt;Failure&lt;/code&gt; indicating why the test ended up failing.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">fireTestFailure</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">failure</span>:<span class="ActionScriptDefault_Text">Failure</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Invoke to tell all registered &lt;code&gt;IRunListener&lt;/code&gt;s that an atomic test flagged 
+         * that it assumed something false.
+         * 
+         * @param failure The &lt;code&gt;Failure&lt;/code&gt; indicating what 
+         * &lt;code&gt;AssumptionViolatedException&lt;/code&gt; was thrown.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">fireTestAssumptionFailed</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">failure</span>:<span class="ActionScriptDefault_Text">Failure</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Invoke to tell all registered &lt;code&gt;IRunListener&lt;/code&gt;s that an atomic test was ignored.
+         * 
+         * @param description The &lt;code&gt;IDescription&lt;/code&gt; of the ignored test.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">fireTestIgnored</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Invoke to tell all registered &lt;code&gt;IRunListener&lt;/code&gt;s that an atomic test finished. Always invoke 
+         * &lt;code&gt;#fireTestFinished(IDescription)&lt;/code&gt; if you invoke &lt;code&gt;#fireTestStarted(IDescription)&lt;/code&gt; 
+         * as listeners are likely to expect them to come in pairs.
+         * 
+         * @param description The &lt;code&gt;IDescription&lt;/code&gt; of the test that finished.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">fireTestFinished</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Adds an &lt;code&gt;IRunListener&lt;/code&gt; to the list of registered listeners in the 
+         * &lt;code&gt;IRunNotifier&lt;/code&gt;.
+         * 
+         * @param listener The &lt;code&gt;IRunListener&lt;/code&gt; to add.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">addListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">listener</span>:<span class="ActionScriptDefault_Text">IRunListener</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Adds &lt;code&gt;IRunListener&lt;/code&gt; to the beginning of the list of registered listeners in the 
+         * &lt;code&gt;IRunNotifier&lt;/code&gt;.
+         * 
+         * @param listener The &lt;code&gt;IRunListener&lt;/code&gt; to add to the beginning.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">addFirstListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">listener</span>:<span class="ActionScriptDefault_Text">IRunListener</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Removes an &lt;code&gt;IRunListener&lt;/code&gt; from the list of registered listeners in the 
+         * &lt;code&gt;IRunNotifier&lt;/code&gt;.
+         * 
+         * @param listener The &lt;code&gt;IRunListener&lt;/code&gt; to remove.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">removeListener</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">listener</span>:<span class="ActionScriptDefault_Text">IRunListener</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Ask that the tests run stop before starting the next test. Phrased politely because
+         * the test currently running will not be interrupted. 
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">pleaseStop</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

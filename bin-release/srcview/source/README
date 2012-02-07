@@ -1,0 +1,1 @@
+This is an experiment to create an app using the RobotLegs mvcs framework with Away3D. The intention is to have any 3D object automatically assigned a mediator at creation time so that all 3D objects can participate as views in the mvcs paradigm.

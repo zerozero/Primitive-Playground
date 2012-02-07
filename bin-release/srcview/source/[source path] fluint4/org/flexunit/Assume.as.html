@@ -1,0 +1,129 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Assume.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AssumptionViolatedException</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">matchers</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Each</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hamcrest</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Matcher</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hamcrest</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">object</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">equalTo</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hamcrest</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">object</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">notNullValue</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">hamcrest</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">object</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">nullValue</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * A set of methods useful for stating assumptions about the conditions in which a test is meaningful.
+     * A failed assumption does not mean the code is broken, but that the test provides no useful information.
+     * The default FlexUnit runner treats tests with failing assumptions as ignored.  Custom runners may behave differently.
+     * 
+     * For example:
+     * &lt;pre&gt;
+     * [Test]
+     * public function checkBasedOnValue():void {
+     *     var testValue:String = getValue();
+     *     Assume.assumeNotNull(testValue);
+     *     // ...
+     * }
+     * &lt;/pre&gt;
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">Assume</span> <span class="ActionScriptBracket/Brace">{</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * If called with an expression evaluating to &lt;code&gt;false&lt;/code&gt;, the test will halt and be ignored.
+         * 
+         * @param b The evaluated Boolean value to check.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assumeTrue</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">b</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">assumeThat</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">b</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">equalTo</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptReserved">true</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * If called with one or more null elements in &lt;code&gt;objects&lt;/code&gt;, the test will halt and be ignored.
+         * 
+         * @param objects One or more objects to check.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assumeNotNull</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptOperator">...</span><span class="ActionScriptDefault_Text">objects</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">assumeThat</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">objects</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">Array</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">Each</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">eachOne</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">notNullValue</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * Call to assume that &lt;code&gt;actual&lt;/code&gt; satisfies the condition specified by &lt;code&gt;matcher&lt;/code&gt;.
+         * If not, the test halts and is ignored.
+         * 
+         * Example:
+         * &lt;pre&gt;
+         * Assume.assumeThat(1, is(1)); // passes
+         * foo(); // will execute
+         * Assume.assumeThat(0, is(1)); // assumption failure! test halts
+         * int x = 1 / 0; // will never execute
+         * &lt;/pre&gt;
+         *   
+         * @param actual The computed value being compared.
+         * @param matcher An expression, built of &lt;code&gt;Matcher&lt;/code&gt;s, specifying allowed values.
+         * 
+         * @see org.hamcrest.CoreMatchers
+         * @see org.flexunit.matchers.FlexUnitMatchers
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assumeThat</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">actual</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">matcher</span>:<span class="ActionScriptDefault_Text">Matcher</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptOperator">!</span><span class="ActionScriptDefault_Text">matcher</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">matches</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">actual</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">)</span>
+                <span class="ActionScriptReserved">throw</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">AssumptionViolatedException</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">actual</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">matcher</span><span class="ActionScriptBracket/Brace">)</span>; 
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * Use to assume that an operation completes normally.  If &lt;code&gt;e&lt;/code&gt; is non-null, the test will halt and be ignored.
+         * 
+         * For example:
+         * &lt;pre&gt;
+         * [Test]
+         * public function createFileDirectory():void {
+         *     var myFileDirectory:File = File.userDirectory.resolvePath("information");
+         *     try {
+         *         myFileDirectory.createDirectory();
+         *     } catch (e:Error) {
+         *         // stop test and ignore if data can't be opened
+         *         Assume.assumeNoException(e);
+         *     }
+         *     // ...
+         * }
+         * &lt;/pre&gt;
+         * 
+         * @param e If non-null, the offending exception.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assumeNoException</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">e</span>:<span class="ActionScriptDefault_Text">Error</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">assumeThat</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">e</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">nullValue</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

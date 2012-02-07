@@ -1,0 +1,148 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>ISimpleCursor.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">manipulation</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptinterface">interface</span> <span class="ActionScriptDefault_Text">ISimpleCursor</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         *  If the cursor is located after the last item in the view, 
+         *  this property is &lt;code&gt;true&lt;/code&gt; .
+         *  If the ICollectionView is empty (length == 0),
+         *  this property is &lt;code&gt;true&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">afterLast</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span>;
+    
+        <span class="ActionScriptComment">//----------------------------------
+</span>        <span class="ActionScriptComment">//  beforeFirst
+</span>        <span class="ActionScriptComment">//----------------------------------
+</span>    
+        <span class="ActionScriptASDoc">/**
+         *  If the cursor is located before the first item in the view,
+         *  this property is &lt;code&gt;true&lt;/code&gt;.
+         *  If the ICollectionView is empty (length == 0),
+         *  this property is &lt;code&gt;true&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">beforeFirst</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span>;
+    
+        <span class="ActionScriptComment">//----------------------------------
+</span>        <span class="ActionScriptComment">//  current
+</span>        <span class="ActionScriptComment">//----------------------------------        
+</span>        <span class="ActionScriptASDoc">/**
+         *  Provides access the object at the location
+         *  in the source collection referenced by this cursor.
+         *  If the cursor is beyond the ends of the collection
+         *  (&lt;code&gt;beforeFirst&lt;/code&gt;, &lt;code&gt;afterLast&lt;/code&gt;)
+         *  this will return &lt;code&gt;null&lt;/code&gt;.
+         *
+         *  @see #moveNext()
+         *  @see #movePrevious()
+         *  @see #seek()
+         *  @see #beforeFirst
+         *  @see #afterLast
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">current</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Object</span>;
+    
+        <span class="ActionScriptASDoc">/**
+         *  Moves the cursor to the next item within the collection.
+         *  On success the &lt;code&gt;current&lt;/code&gt; property is updated
+         *  to reference the object at this new location.
+         *  Returns &lt;code&gt;true&lt;/code&gt; if the resulting &lt;code&gt;current&lt;/code&gt; 
+         *  property is valid, or &lt;code&gt;false&lt;/code&gt; if not 
+         *  (the property value is &lt;code&gt;afterLast&lt;/code&gt;).
+         *
+         *  &lt;p&gt;If the data is not local and an asynchronous operation must be performed,
+         *  an ItemPendingError is thrown.
+         *  See the ItemPendingError documentation and  the collections
+         *  documentation for more information on using the ItemPendingError.&lt;/p&gt;
+         *
+         *  @return &lt;code&gt;true&lt;/code&gt; if still in the list,
+         *  &lt;code&gt;false&lt;/code&gt; if the &lt;code&gt;current&lt;/code&gt; value initially was
+         *  or now is &lt;code&gt;afterLast&lt;/code&gt;.
+         *
+         *  @see #current
+         *  @see #movePrevious()
+         *
+         *  @example
+         *  &lt;pre&gt;
+         *  var myArrayCollection:ICollectionView = new ArrayCollection([ "Bobby", "Mark", "Trevor", "Jacey", "Tyler" ]);
+         *  var cursor:IViewCursor = myArrayCollection.createCursor();
+         *  while (!cursor.afterLast)
+         *  {
+         *      trace(cursor.current);
+         *      cursor.moveNext();
+         *  }
+         *  &lt;/pre&gt;
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">moveNext</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span>;
+    
+        <span class="ActionScriptASDoc">/**
+         *  Moves the cursor to the previous item within the collection.
+         *  On success the &lt;code&gt;current&lt;/code&gt; property is updated
+         *  to reference the object at this new location.
+         *  Returns &lt;code&gt;true&lt;/code&gt; if the resulting &lt;code&gt;current&lt;/code&gt; 
+         *  property is valid, or &lt;code&gt;false&lt;/code&gt; if not 
+         *  (the property value is &lt;code&gt;beforeFirst&lt;/code&gt;).
+         *
+         *  &lt;p&gt;If the data is not local and an asynchronous operation must be performed,
+         *  an ItemPendingError is thrown.
+         *  See the ItemPendingError documentation and the collections
+         *  documentation for more information on using the ItemPendingError.&lt;/p&gt;
+         *
+         *  @return &lt;code&gt;true&lt;/code&gt; if still in the list,
+         *  &lt;code&gt;false&lt;/code&gt; if the &lt;code&gt;current&lt;/code&gt; value initially was or
+         *  now is &lt;code&gt;beforeFirst&lt;/code&gt;.
+         *
+         *  For example:
+         *  &lt;pre&gt;
+         *  var myArrayCollection:ICollectionView = new ArrayCollection([ "Bobby", "Mark", "Trevor", "Jacey", "Tyler" ]);
+         *  var cursor:IViewCursor = myArrayCollection.createCursor();
+         *  cursor.seek(CursorBookmark.last);
+         *  while (!cursor.beforeFirst)
+         *  {
+         *      trace(current);
+         *      cursor.movePrevious();
+         *  }
+         *  &lt;/pre&gt;
+         *
+         *  @see #current
+         *  @see #moveNext()
+         *  @see mx.collections.errors.ItemPendingError
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">movePrevious</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span>;
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

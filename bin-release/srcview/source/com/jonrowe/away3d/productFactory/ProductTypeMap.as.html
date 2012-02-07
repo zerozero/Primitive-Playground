@@ -9,7 +9,7 @@
 
 <body><pre><span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">jonrowe</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">productFactory</span>
 <span class="ActionScriptBracket/Brace">{</span>
-    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">jonrowe</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">productFactory</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">onjects</span><span class="ActionScriptOperator">.</span><span class="ActionScriptOperator">*</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">jonrowe</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">productFactory</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">primitives</span><span class="ActionScriptOperator">.</span><span class="ActionScriptOperator">*</span>;
     <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">com</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">jonrowe</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">productFactory</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">interfaces</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IProductTypeMap</span>;
 
     <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">ProductTypeMap</span> <span class="ActionScriptReserved">implements</span> <span class="ActionScriptDefault_Text">IProductTypeMap</span>
@@ -30,17 +30,24 @@
             <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">obj</span> : <span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
             
             <span class="ActionScriptComment">//scene
-</span>            <span class="ActionScriptDefault_Text">obj</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">ProductType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AXES</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">OnAxes</span>;
-            <span class="ActionScriptDefault_Text">obj</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">ProductType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TRIDENT</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">OnTrident</span>;
+</span>            <span class="ActionScriptComment">/*obj[ ProductType.AXES ] = PrimitiveAxes;
+            obj[ ProductType.TRIDENT ] = PrimitiveTrident;
+            obj[ ProductType.TRANSFORM_WIDGET ] = PrimitiveTransformWidget;
             
-            <span class="ActionScriptComment">//wire
-</span>            <span class="ActionScriptDefault_Text">obj</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">ProductType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">WIRE_SPHERE</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">WireSphere</span>;
-            <span class="ActionScriptDefault_Text">obj</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">ProductType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">WIRE_CUBE</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">OnWireCube</span>;
-            <span class="ActionScriptDefault_Text">obj</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">ProductType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">WIRE_PLANE</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">OnWirePlane</span>;
+            //wire
+            obj[ ProductType.WIRE_SPHERE ] = PrimitiveWireSphere;
+            obj[ ProductType.WIRE_CUBE ] = PrimitiveWireCube;
+            obj[ ProductType.WIRE_PLANE ] = PrimitiveWirePlane;
             
-            <span class="ActionScriptComment">//solid
-</span>            <span class="ActionScriptDefault_Text">obj</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">ProductType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">CAPSULE</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">OnCapsule</span>;
-            <span class="ActionScriptDefault_Text">obj</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">ProductType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">CONE</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">OnCone</span>;
+            //solid
+            obj[ ProductType.CAPSULE ] = PrimitiveCapsule;
+            obj[ ProductType.CONE ] = PrimitiveCone;
+            obj[ ProductType.CUBE ] = PrimitiveCube;
+            obj[ ProductType.CYLINDER ] = PrimitiveCylinder;
+            obj[ ProductType.SPHERE ] = PrimitiveSphere;
+            obj[ ProductType.PLANE ] = PrimitivePlane;*/</span>
+
+            <span class="ActionScriptDefault_Text">obj</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">ProductType</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">PRIMITIVE</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Primitive</span>;
             
             
             <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">obj</span>;

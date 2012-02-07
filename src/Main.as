@@ -34,7 +34,7 @@ package
 	
 	import uk.co.soulwire.gui.SimpleGUI;
 	
-	[SWF(width="800", height="600", frameRate="60", backgroundColor="0x727272")]
+	
 	public class Main extends Sprite
 	{
 		public static const RESIZE :String = "stage_resize"; 
@@ -48,13 +48,8 @@ package
 		
 		public function Main()
 		{
-			visible = false;
-			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.addEventListener( Event.RESIZE, onStageResize );
-			
-			createContext();
-			createChildren();
+			//visible = false;
+			//createContext();
 		}
 		
 		
@@ -68,29 +63,14 @@ package
 			createGUI();
 			create3DView();
 			ViewSource.addMenuItem(this, "srcview/index.html"); 
-			onStageResize();
 			visible = true;
+			onStageResize();
 		}
 		
-		/*
-		public function duplicate( primitive :IPrimitive ):void{
-			
-			var dupe :IPrimitive = asView3D.duplicateObject( primitive );
-			context.createMediator(Primitive(dupe));
-		}*/
-		
-		/**
-		 * we call asView3D to create the object here so we can get a refernce for it to pass to the context 
-		 * @param init
-		 * 
-		 */		
-		public function create( init:PrimitiveInit ):void{
-			
-		}
 		
 		/*			PRIVATE			*/
 		
-		private function onStageResize(e:Event = null):void{
+		public function onStageResize(e:Event = null):void{
 			asView3D.setSize( stage.stageWidth - 160, stage.stageHeight );
 			dispatchEvent( new Event( RESIZE ));
 		}
@@ -98,15 +78,6 @@ package
 		private function createContext():void{
 			context = new PrimitivesContext( this );
 		}
-		
-		
-		/*private function createDefaultObject():void{
-			
-			var primitiveInit :PrimitiveInit = new PrimitiveInit("Cube","Default Cube",Cube,PrimitiveObjectBase.DEFAULT_MATERIAL ,{});
-			var cube :IPrimitive = asView3D.createObject( ProductType.PRIMITIVE, primitiveInit );
-			context.createMediator(Primitive(cube));
-		}*/
-		
 		
 		private function create3DView():void{
 			

@@ -15,6 +15,7 @@ package com.jonrowe.away3d.productFactory.interfaces
 		function movePivot( x:Number, y:Number, z:Number ):void;
 		
 		function get object3D( ):ObjectContainer3D;
+		function set object3D( obj:ObjectContainer3D ):void;
 		function set primitiveName( name :String ):void;
 		function get primitiveName( ):String;
 		function set type( name :String ):void;

@@ -1,0 +1,247 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>UIImpersonator.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+ 
+ <span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fluint</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">uiImpersonation</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">display</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">DisplayObject</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Assert</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fluint</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">uiImpersonation</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">VisualTestEnvironmentBuilder</span>;
+
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">UIImpersonator</span> <span class="ActionScriptReserved">extends</span> <span class="ActionScriptDefault_Text">Assert</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/** Returns a test environment of either a Flex Container or a Sprite if in AS Only mode **/</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">testEnvironment</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IVisualTestEnvironment</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">testEnvironment</span>:<span class="ActionScriptDefault_Text">IVisualEnvironmentBuilder</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">VisualTestEnvironmentBuilder</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getInstance</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">environment</span>:<span class="ActionScriptDefault_Text">IVisualTestEnvironment</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">testEnvironment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">buildVisualTestEnvironment</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">environment</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptASDoc">/**
+         *  Adds a child DisplayObject to the TestEnvironment.
+         *  The child is added after other existing children,
+         *  so that the first child added has index 0,
+         *  the next has index 1, an so on.
+         *
+         *  &lt;p&gt;&lt;b&gt;Note: &lt;/b&gt;While the &lt;code&gt;child&lt;/code&gt; argument to the method
+         *  is specified as of type DisplayObject, the argument must implement
+         *  the IUIComponent interface to be added as a child of a container.
+         *  All Flex components implement this interface.&lt;/p&gt;
+         *
+         *  @param child The DisplayObject to add as a child of the TestEnvironment.
+         *  It must implement the IUIComponent interface.
+         *
+         *  @return The added child as an object of type DisplayObject. 
+         *  You typically cast the return value to UIComponent, 
+         *  or to the type of the added component.
+         *
+         *  @see mx.core.Container
+         *
+         *  @tiptext Adds a child object to this container.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">addChild</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">child</span>:<span class="ActionScriptDefault_Text">DisplayObject</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">DisplayObject</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">testEnvironment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addChild</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">child</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptASDoc">/**
+         *  Adds a child DisplayObject to the TestEnvironment.
+         *  The child is added at the index specified.
+         *
+         *  &lt;p&gt;&lt;b&gt;Note: &lt;/b&gt;While the &lt;code&gt;child&lt;/code&gt; argument to the method
+         *  is specified as of type DisplayObject, the argument must implement
+         *  the IUIComponent interface to be added as a child of TestEnvironment.
+         *  All Flex components implement this interface.&lt;/p&gt;
+         *
+         *  @param child The DisplayObject to add as a child of the TestEnvironment.
+         *  It must implement the IUIComponent interface.
+         *
+         *  @param index The index to add the child at.
+         *
+         *  @return The added child as an object of type DisplayObject. 
+         *  You typically cast the return value to UIComponent, 
+         *  or to the type of the added component.
+         *
+         *  @see mx.core.Container
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">addChildAt</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">child</span>:<span class="ActionScriptDefault_Text">DisplayObject</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">index</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">DisplayObject</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">testEnvironment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">addChildAt</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">child</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">index</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>  
+
+        <span class="ActionScriptASDoc">/**
+         *  Removes a child DisplayObject from the child list of the TestEnviroment.
+         *  The removed child will have its &lt;code&gt;parent&lt;/code&gt;
+         *  property set to null. 
+         *  The child will still exist unless explicitly destroyed.
+         *  If you add it to another container,
+         *  it will retain its last known state.
+         *
+         *  @param child The DisplayObject to remove.
+         *
+         *  @return The removed child as an object of type DisplayObject. 
+         *  You typically cast the return value to UIComponent, 
+         *  or to the type of the removed component.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">removeChild</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">child</span>:<span class="ActionScriptDefault_Text">DisplayObject</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">DisplayObject</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">testEnvironment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">removeChild</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">child</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span> 
+
+        <span class="ActionScriptASDoc">/**
+         *  Removes a child DisplayObject from the child list of the TestEnvironment
+         *  at the specified index.
+         *  The removed child will have its &lt;code&gt;parent&lt;/code&gt;
+         *  property set to null. 
+         *  The child will still exist unless explicitly destroyed.
+         *  If you add it to another container,
+         *  it will retain its last known state.
+         *
+         *  @param index The child index of the DisplayObject to remove.
+         *
+         *  @return The removed child as an object of type DisplayObject. 
+         *  You typically cast the return value to UIComponent, 
+         *  or to the type of the removed component.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">removeChildAt</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">index</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">DisplayObject</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">testEnvironment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">removeChildAt</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">index</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span> 
+
+        <span class="ActionScriptASDoc">/**
+         *  Removes all children from the child list of this container.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">removeAllChildren</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">testEnvironment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">removeAllChildren</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span> 
+
+        <span class="ActionScriptASDoc">/**
+         *  Gets the &lt;i&gt;n&lt;/i&gt;th child component object.
+         *
+         *  &lt;p&gt;The children returned from this method include children that are
+         *  declared in MXML and children that are added using the
+         *  &lt;code&gt;addChild()&lt;/code&gt; or &lt;code&gt;addChildAt()&lt;/code&gt; method.&lt;/p&gt;
+         *
+         *  @param childIndex Number from 0 to (numChildren - 1).
+         *
+         *  @return Reference to the child as an object of type DisplayObject. 
+         *  You typically cast the return value to UIComponent, 
+         *  or to the type of a specific Flex control, such as ComboBox or TextArea.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getChildAt</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">index</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">DisplayObject</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">testEnvironment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getChildAt</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">index</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptASDoc">/**
+         *  Returns the child whose &lt;code&gt;name&lt;/code&gt; property is the specified String.
+         *
+         *  @param name The identifier of the child.
+         *
+         *  @return The DisplayObject representing the child as an object of type DisplayObject.
+         *  You typically cast the return value to UIComponent, 
+         *  or to the type of a specific Flex control, such as ComboBox or TextArea.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getChildByName</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">name</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">DisplayObject</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">testEnvironment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getChildByName</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">name</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptASDoc">/**
+         *  Gets the zero-based index of a specific child.
+         *
+         *  &lt;p&gt;The first child of the Test Environment (i.e.: the first child tag
+         *  that appears in the MXML declaration) has an index of 0,
+         *  the second child has an index of 1, and so on.
+         *  The indexes of the test environemnt children determine
+         *  the order in which they get laid out.
+         *  For example, in a VBox the child with index 0 is at the top,
+         *  the child with index 1 is below it, etc.&lt;/p&gt;
+         *
+         *  &lt;p&gt;If you add a child by calling the &lt;code&gt;addChild()&lt;/code&gt; method,
+         *  the new child's index is equal to the largest index among existing
+         *  children plus one.
+         *  You can insert a child at a specified index by using the
+         *  &lt;code&gt;addChildAt()&lt;/code&gt; method; in that case the indices of the
+         *  child previously at that index, and the children at higher indices,
+         *  all have their index increased by 1 so that all indices fall in the
+         *  range from 0 to &lt;code&gt;(numChildren - 1)&lt;/code&gt;.&lt;/p&gt;
+         *
+         *  &lt;p&gt;If you remove a child by calling &lt;code&gt;removeChild()&lt;/code&gt;
+         *  or &lt;code&gt;removeChildAt()&lt;/code&gt; method, then the indices of the
+         *  remaining children are adjusted so that all indices fall in the
+         *  range from 0 to &lt;code&gt;(numChildren - 1)&lt;/code&gt;.&lt;/p&gt;
+         *
+         *  &lt;p&gt;If &lt;code&gt;myView.getChildIndex(myChild)&lt;/code&gt; returns 5,
+         *  then &lt;code&gt;myView.getChildAt(5)&lt;/code&gt; returns myChild.&lt;/p&gt;
+         *
+         *  &lt;p&gt;The index of a child may be changed by calling the
+         *  &lt;code&gt;setChildIndex()&lt;/code&gt; method.&lt;/p&gt;
+         *
+         *  @param child Reference to child whose index to get.
+         *
+         *  @return Number between 0 and (numChildren - 1).
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getChildIndex</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">child</span>:<span class="ActionScriptDefault_Text">DisplayObject</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">int</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">testEnvironment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getChildIndex</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">child</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptASDoc">/**
+         *  Sets the index of a particular child.
+         *  See the &lt;code&gt;getChildIndex()&lt;/code&gt; method for a
+         *  description of the child's index.
+         *
+         *  @param child Reference to child whose index to set.
+         *
+         *  @param newIndex Number that indicates the new index.
+         *  Must be an integer between 0 and (numChildren - 1).
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">setChildIndex</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">child</span>:<span class="ActionScriptDefault_Text">DisplayObject</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">newIndex</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">testEnvironment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">setChildIndex</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">child</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">newIndex</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span> 
+
+        <span class="ActionScriptASDoc">/**
+         *  Number of child components in the TestEnvironment.
+         *
+         *  &lt;p&gt;The number of children is initially equal
+         *  to the number of children declared in MXML.
+         *  At runtime, new children may be added by calling
+         *  &lt;code&gt;addChild()&lt;/code&gt; or &lt;code&gt;addChildAt()&lt;/code&gt;,
+         *  and existing children may be removed by calling
+         *  &lt;code&gt;removeChild()&lt;/code&gt;, &lt;code&gt;removeChildAt()&lt;/code&gt;,
+         *  or &lt;code&gt;removeAllChildren()&lt;/code&gt;.&lt;/p&gt;
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">numChildren</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">int</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">testEnvironment</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">numChildren</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

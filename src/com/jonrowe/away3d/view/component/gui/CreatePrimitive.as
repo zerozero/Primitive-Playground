@@ -18,6 +18,7 @@ package com.jonrowe.away3d.view.component.gui
 		public static const MAKE :String = "makePrimitive";
 		public static const DUPLICATE :String = "duplicatePrimitive";
 		public static const DELETE :String = "deletePrimitive";
+		public static const IMPORT :String = "importPrimitive";
 		
 		private static const NAME :String = "CreatePrimitive";
 		
@@ -61,6 +62,7 @@ package com.jonrowe.away3d.view.component.gui
 			gui.addButton("Make", {callback:onMake});
 			gui.addButton("Duplicate", {callback:onDuplicate});
 			gui.addButton("Delete", {callback:onDelete});
+			gui.addButton("Import", {callback:onImport});
 			gui.show();
 			
 		}
@@ -73,10 +75,12 @@ package com.jonrowe.away3d.view.component.gui
 			dispatchEvent( new Event( DELETE ));
 		}
 		
-		
 		private function onMake():void{
 			dispatchEvent(new Event(MAKE));
-			
+		}
+		
+		private function onImport():void{
+			dispatchEvent(new Event(IMPORT));
 		}
 		
 	}

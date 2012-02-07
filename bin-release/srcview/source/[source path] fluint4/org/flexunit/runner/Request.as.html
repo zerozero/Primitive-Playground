@@ -1,0 +1,256 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Request.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">builders</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AllDefaultPossibilitiesBuilder</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">namespaces</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">classInternal</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">requests</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ClassRequest</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">requests</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">FilterRequest</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">requests</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">SortingRequest</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">manipulation</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IFilter</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">manipulation</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ISort</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">manipulation</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">filters</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">DynamicFilter</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">manipulation</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">filters</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">MethodNameFilter</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Suite</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">requests</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">QualifyingRequest</span>;
+    
+    <span class="ActionScriptReserved">use</span> <span class="ActionScriptReserved">namespace</span> <span class="ActionScriptDefault_Text">classInternal</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * A &lt;code&gt;Request&lt;/code&gt; is an abstract description of tests to be run.  It represents an object that 
+     * wraps tests when they are presented to the &lt;code&gt;FlexUnitCore&lt;/code&gt;.  &lt;code&gt;Request&lt;/code&gt;s can be 
+     * filtered and sorted to control the subset and order of tests to be executed.
+     * 
+     * The following static methods can be used to create requests:
+     * &lt;ul&gt;
+     * &lt;li&gt;&lt;code&gt;#aClass()&lt;/code&gt;&lt;/li&gt;
+     * &lt;li&gt;&lt;code&gt;#classes()&lt;/code&gt;&lt;/li&gt;
+     * &lt;li&gt;&lt;code&gt;#runner()&lt;/code&gt;&lt;/li&gt;
+     * &lt;li&gt;&lt;code&gt;#method()&lt;/code&gt;&lt;/li&gt;
+     * &lt;/ul&gt;
+     * 
+     * &lt;p&gt;The key property of the &lt;code&gt;Request&lt;/code&gt; that the &lt;code&gt;FlexUnitCore&lt;/code&gt; needs is the 
+     * &lt;code&gt;IRunner&lt;/code&gt;.  The &lt;code&gt;IRunner&lt;/code&gt; is an interface implemented by any object 
+     * capable of executing a specific type of test.&lt;/p&gt;
+     * 
+     * &lt;p&gt;The flow when FlexUnit4 runs tests is that a &lt;code&gt;Request&lt;/code&gt; specifies some tests to be run.
+     * The &lt;code&gt;IRunner&lt;/code&gt; is created for each class implied by the &lt;code&gt;Request&lt;/code&gt;.  The
+     * &lt;code&gt;IRunner&lt;/code&gt; provides a detailed &lt;code&gt;IDescription&lt;/code&gt; of the class which is a tree 
+     * structure of the tests to be run.&lt;/p&gt;
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">Request</span> <span class="ActionScriptReserved">implements</span> <span class="ActionScriptDefault_Text">IRequest</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_filter</span>:<span class="ActionScriptDefault_Text">Function</span>;
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_sort</span>:<span class="ActionScriptDefault_Text">ISort</span>;
+        <span class="ActionScriptASDoc">/**
+         * The &lt;code&gt;IRunner&lt;/code&gt; for this Request.
+         */</span>
+        <span class="ActionScriptDefault_Text">classInternal</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_runner</span>:<span class="ActionScriptDefault_Text">IRunner</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns an &lt;code&gt;ISort&lt;/code&gt; for this Request.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">sort</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">ISort</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">_sort</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">set</span> <span class="ActionScriptDefault_Text">sort</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">value</span>:<span class="ActionScriptDefault_Text">ISort</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_sort</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">value</span>;
+            <span class="ActionScripttrace">trace</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"To be implemented"</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptASDoc">/**
+         * Returns an &lt;code&gt;IRunner&lt;/code&gt; for this Request.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">iRunner</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IRunner</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">_runner</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptMetadata">Deprecated</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"Use the iRunner property instead"</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">]</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getRunner</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IRunner</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">iRunner</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns a Request that only contains those tests that should run when
+         * a &lt;code&gt;filter&lt;/code&gt; is applied.
+         * 
+         * @param filter The &lt;code&gt;Filter&lt;/code&gt; to apply to this Request.
+         * 
+         * @return the filtered Request.
+         */</span>
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">filterWithFilter</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">filter</span>:<span class="ActionScriptDefault_Text">IFilter</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Request</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">FilterRequest</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">filter</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns a Request that only runs contains tests whose &lt;code&gt; Description&lt;/code&gt;
+         * equals &lt;code&gt;desiredDescription&lt;/code&gt;.
+         * 
+         * @param desiredDescription An &lt;code&gt;IDescription&lt;/code&gt; of those tests that should be run.
+         * 
+         * @return the filtered Request.
+         */</span>
+        <span class="ActionScriptReserved">protected</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">filterWithDescription</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">desiredDescription</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Request</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">filter</span>:<span class="ActionScriptDefault_Text">DynamicFilter</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">DynamicFilter</span><span class="ActionScriptBracket/Brace">(</span>
+                <span class="ActionScriptfunction">function</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptBracket/Brace">{</span>
+                    <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">isTest</span> <span class="ActionScriptBracket/Brace">)</span>
+                        <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">desiredDescription</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">equals</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">description</span><span class="ActionScriptBracket/Brace">)</span>;
+                    
+                    <span class="ActionScriptComment">// explicitly check if any children want to run
+</span>                    <span class="ActionScriptReserved">for</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">i</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">=</span>0; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">&lt;</span><span class="ActionScriptDefault_Text">description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">children</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span>; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">++</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                        <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">item</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">children</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">IDescription</span>;
+                        
+                        <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">shouldRun</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">item</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">true</span>;
+                        <span class="ActionScriptBracket/Brace">}</span>
+                    <span class="ActionScriptBracket/Brace">}</span> 
+                    
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">false</span>;
+                <span class="ActionScriptBracket/Brace">}</span><span class="ActionScriptOperator">,</span>    
+                <span class="ActionScriptfunction">function</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptBracket/Brace">{</span>
+                    <span class="ActionScriptReserved">return</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptString">"Method "</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">desiredDescription</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">displayName</span> <span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptBracket/Brace">}</span> 
+            <span class="ActionScriptBracket/Brace">)</span>;
+            
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">filterWithFilter</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">filter</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns a Request that either filters based on a &lt;code&gt; Description&lt;/code&gt; or a &lt;code&gt;Filter&lt;/code&gt;.
+         * 
+         * @param filterOrDescription The &lt;code&gt; Filter&lt;/code&gt; or &lt;code&gt; Description&lt;/code&gt; to apply to this Request.
+         * 
+         * @return the filtered Request.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">filterWith</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">filterOrDescription</span>:<span class="ActionScriptOperator">*</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Request</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">filterOrDescription</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">filterWithDescription</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">filterOrDescription</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span> <span class="ActionScriptReserved">else</span> <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">filterOrDescription</span> <span class="ActionScriptReserved">is</span> <span class="ActionScriptDefault_Text">IFilter</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">filterWithFilter</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">filterOrDescription</span> <span class="ActionScriptReserved">as</span> <span class="ActionScriptDefault_Text">IFilter</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            
+            <span class="ActionScriptComment">//If neither an IDescription or Filter is provided, return the current request
+</span>            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">this</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * @param sorterOrComparatorFunction is either an ISorted implementation or a comparator function to be used
+         * to define the sort order of the tests in this Request.
+         * 
+         * @return a Request with ordered Tests.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">sortWith</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">sorterOrComparatorFunction</span>:<span class="ActionScriptOperator">*</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Request</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">SortingRequest</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">sorterOrComparatorFunction</span><span class="ActionScriptBracket/Brace">)</span>;    
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Create a &lt;code&gt;Request&lt;/code&gt; that, when processed, will run all the tests
+         * in a class. The odd name is necessary because &lt;code&gt;class&lt;/code&gt; is a reserved word.
+         * 
+         * @param clazz the class containing the tests.
+         * 
+         * @return a &lt;code&gt;Request&lt;/code&gt; that will cause all tests in the class to be run.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">aClass</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">clazz</span>:<span class="ActionScriptDefault_Text">Class</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Request</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">ClassRequest</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">clazz</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+<span class="ActionScriptComment">/*         public static function aInstance( instance:Object ):Request {
+            return new InstanceRequest( instance );
+        }
+ */</span>        
+ 
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">qualifyClasses</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptOperator">...</span><span class="ActionScriptDefault_Text">argumentsArray</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Request</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">QualifyingRequest</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">classes</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">apply</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">argumentsArray</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+ 
+         <span class="ActionScriptASDoc">/**
+         * Create a &lt;code&gt;Request&lt;/code&gt; that, when processed, will run all the tests
+         * in a set of classes.
+         * 
+         * @param argumentsArray the classes containing the tests.
+         * 
+         * @return a &lt;code&gt;Request&lt;/code&gt; that will cause all tests in the classes to be run.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">classes</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptOperator">...</span><span class="ActionScriptDefault_Text">argumentsArray</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Request</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Suite</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">AllDefaultPossibilitiesBuilder</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">true</span> <span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">argumentsArray</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptASDoc">/**
+         * @param runner the IRunner to return.
+         * 
+         * @return a &lt;code&gt;Request&lt;/code&gt; that will run the given runner when invoked.
+         */</span>
+         <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">runner</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">runner</span>:<span class="ActionScriptDefault_Text">IRunner</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Request</span> <span class="ActionScriptBracket/Brace">{</span>
+             <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">request</span>:<span class="ActionScriptDefault_Text">Request</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Request</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+             <span class="ActionScriptDefault_Text">request</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">_runner</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">runner</span>;
+             
+             <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">request</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Create a &lt;code&gt;Request&lt;/code&gt; that, when processed, will run a single test.
+         * This is done by filtering out all other tests. This method is used to support rerunning
+         * single tests.
+         * 
+         * @param clazz the class of the test.
+         * @param methodName the name of the test.
+         * 
+         * @return a &lt;code&gt;Request&lt;/code&gt; that will cause a single test be run.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">method</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">clazz</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">methodName</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Request</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">method</span>:<span class="ActionScriptDefault_Text">IDescription</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">Description</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">createTestDescription</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">clazz</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">methodName</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">Request</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">aClass</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">clazz</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">filterWith</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">method</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">methods</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">clazz</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">methodNames</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Request</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">Request</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">aClass</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">clazz</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">filterWith</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">MethodNameFilter</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">methodNames</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Constructor.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">Request</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

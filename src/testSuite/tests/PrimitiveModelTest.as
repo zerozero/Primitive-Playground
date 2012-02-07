@@ -52,6 +52,12 @@ package testSuite.tests
 		}
 		
 		[Test]
+		public function testChangeDragPlane():void{
+			sceneProxy.dragPlane = "XY";
+			Assert.assertTrue("Should be XY", sceneProxy.dragPlane == "XY");
+		}
+		
+		[Test]
 		public function testSelectedPrimitiveToCreate():void{
 			var primitives :Object = sceneProxy.primitives;
 			sceneProxy.primitiveListSelection = "Cube";

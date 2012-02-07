@@ -79,7 +79,9 @@ package com.jonrowe.away3d.productFactory.primitives
 		
 		public function set selected( trueOrFalse :Boolean):void{
 			_selected = trueOrFalse;
-			Entity(object3D).showBounds = selected;
+			if (object3D is Entity)
+				Entity(object3D).showBounds = selected;
+			
 			if (selected){
 				addChild(trident);
 				dispatchEvent( new Event(ENTITY_SELECT));
@@ -107,17 +109,29 @@ package com.jonrowe.away3d.productFactory.primitives
 				for ( prop in initObjOrPrimitive.options ){
 					object3D[prop] = initObjOrPrimitive.options[prop]; 
 				}
+				Entity(object3D).mouseEnabled = true;
+				Entity(object3D).addEventListener(MouseEvent3D.CLICK, onClickEntity);
+				Entity(object3D).addEventListener(MouseEvent3D.MOUSE_DOWN, onMouseDownEntity);
+				Entity(object3D).addEventListener(MouseEvent3D.MOUSE_UP, onMouseUpEntity);
 			}else if (initObjOrPrimitive is ObjectContainer3D){
 				object3D = initObjOrPrimitive;
+				var mesh :Mesh;
+				for (var i:int = 0; i < ObjectContainer3D(initObjOrPrimitive).numChildren; i++)
+				{
+					mesh = Mesh(ObjectContainer3D(initObjOrPrimitive).getChildAt(i));
+					
+					mesh.mouseEnabled = true;
+					mesh.addEventListener(MouseEvent3D.CLICK, onClickEntity);
+					mesh.addEventListener(MouseEvent3D.MOUSE_DOWN, onMouseDownEntity);
+					mesh.addEventListener(MouseEvent3D.MOUSE_UP, onMouseUpEntity);
+				}
+				
 			}else{
 				throw new Error("Wrong type of object passed to Primitive init");
 			}
 			
 			addChild( object3D );
-			Entity(object3D).mouseEnabled = true;
-			Entity(object3D).addEventListener(MouseEvent3D.CLICK, onClickEntity);
-			Entity(object3D).addEventListener(MouseEvent3D.MOUSE_DOWN, onMouseDownEntity);
-			Entity(object3D).addEventListener(MouseEvent3D.MOUSE_UP, onMouseUpEntity);
+			
 		}
 		
 		
@@ -156,12 +170,11 @@ package com.jonrowe.away3d.productFactory.primitives
 		}
 		
 		private function onMouseDownEntity( e:MouseEvent3D ):void{
-			trace('down');
 			dispatchEvent( new Event( START_DRAG ));
+			this._scene.addEventListener(MouseEvent3D.MOUSE_UP, onMouseUpEntity);
 		}
 		
 		private function onMouseUpEntity( e:MouseEvent3D ):void{
-			trace('up');
 			dispatchEvent( new Event( END_DRAG ));			
 		}
 		

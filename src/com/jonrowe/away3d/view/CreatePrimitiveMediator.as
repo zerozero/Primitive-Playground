@@ -1,6 +1,8 @@
 package com.jonrowe.away3d.view
 {
 	import com.jonrowe.away3d.model.SceneProxy;
+	import com.jonrowe.away3d.services.FileService;
+	import com.jonrowe.away3d.services.IFileService;
 	import com.jonrowe.away3d.view.component.gui.CreatePrimitive;
 	import com.jonrowe.away3d.view.component.gui.ICreatePrimitveComponent;
 	
@@ -17,6 +19,9 @@ package com.jonrowe.away3d.view
 		
 		[Inject]
 		public var sceneProxy :SceneProxy;
+		
+		[Inject]
+		public var fileService :IFileService;
 		
 		public function CreatePrimitiveMediator()
 		{
@@ -38,6 +43,7 @@ package com.jonrowe.away3d.view
 				Sprite(view).addEventListener( CreatePrimitive.MAKE, onMake );
 				Sprite(view).addEventListener(CreatePrimitive.DUPLICATE, onDuplicate);
 				Sprite(view).addEventListener(CreatePrimitive.DELETE, onDelete);
+				Sprite(view).addEventListener(CreatePrimitive.IMPORT, onImport);
 			}
 		}
 		
@@ -55,6 +61,10 @@ package com.jonrowe.away3d.view
 				sceneProxy.primitiveListSelection = view.selected as String;
 				sceneProxy.createPrimitveType( sceneProxy.primitiveListSelection );
 			}
+		}
+		
+		private function onImport( e:Event ):void{
+			fileService.loadMesh();
 		}
 		
 		public function get view():ICreatePrimitveComponent{

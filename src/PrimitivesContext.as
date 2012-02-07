@@ -26,9 +26,9 @@ package
 			//primitives
 			
 			commandMap.mapEvent(SocketServiceEvent.NEW_MEMBER, NewMemberCommand, SocketServiceEvent, true);
-			//commandMap.mapEvent(CreatePrimitiveEvent.CREATE, CreateObjectCommand, CreatePrimitiveEvent, true);
-				
+			
 			injector.mapSingletonOf(ISocketService,SocketService);
+			injector.mapSingletonOf(IFileService,FileService);
 			
 			mediatorMap.mapView(EditView, EditViewMediator);
 			mediatorMap.mapView(Primitive,PrimitiveMediator);
@@ -39,7 +39,7 @@ package
 			
 			injector.mapSingleton(SceneProxy);
 			super.startup();
-			//gui
+			
 		}
 		
 		//manually map mediators to primitives since primitives are not display objects and do not emit ADDED_TO_STAGE events

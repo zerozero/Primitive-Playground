@@ -1,0 +1,319 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Assert.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">framework</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AssertionFailedError</span>;
+     
+    <span class="ActionScriptASDoc">/**
+     * A set of assert methods.  Messages are only displayed when an assert fails.
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">Assert</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_assertCount</span>:<span class="ActionScriptDefault_Text">int</span> <span class="ActionScriptOperator">=</span> 0;
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns the number of assertions that have been made
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">assertionsMade</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptDefault_Text">Number</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">_assertCount</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        
+        <span class="ActionScriptASDoc">/**
+         * Resets the count for the number of assertions that have been made back to zero
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">resetAssertionsFields</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_assertCount</span> <span class="ActionScriptOperator">=</span> 0;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assertWithApply</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">asserter</span>:<span class="ActionScriptDefault_Text">Function</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">args</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_assertCount</span><span class="ActionScriptOperator">++</span>;
+            <span class="ActionScriptDefault_Text">asserter</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">apply</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">args</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assertWith</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">asserter</span>:<span class="ActionScriptDefault_Text">Function</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptOperator">...</span><span class="ActionScriptDefault_Text">rest</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_assertCount</span><span class="ActionScriptOperator">++</span>;
+            <span class="ActionScriptDefault_Text">asserter</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">apply</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptASDoc">/**
+         * Asserts that two provided values are equal.
+         * 
+         * @param asserter The function to use for assertion. 
+         * @param rest
+         *             Must be passed at least 2 arguments of type Object to compare for equality.
+         *             If three arguments are passed, the first argument must be a String
+         *             and will be used as the error message.
+         * 
+         *             &lt;code&gt;assertEquals( String, Object, Object );&lt;/code&gt;
+         *             &lt;code&gt;assertEquals( Object, Object );&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assertEquals</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptOperator">...</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_assertCount</span><span class="ActionScriptOperator">++</span>;
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptOperator">==</span> 3 <span class="ActionScriptBracket/Brace">)</span>
+                <span class="ActionScriptDefault_Text">failNotEquals</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>1<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>2<span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">else</span>
+                <span class="ActionScriptDefault_Text">failNotEquals</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptString">""</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>1<span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">failNotEquals</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">message</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">expected</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">actual</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">expected</span> <span class="ActionScriptOperator">!=</span> <span class="ActionScriptDefault_Text">actual</span> <span class="ActionScriptBracket/Brace">)</span>
+               <span class="ActionScriptDefault_Text">failWithUserMessage</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">message</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptString">"expected:&lt;"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">expected</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">"&gt; but was:&lt;"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">actual</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">"&gt;"</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * /**
+         * Asserts that the provided values are strictly equal.
+         * 
+         * @param rest
+         *             Must be passed at least 2 arguments of type Object to compare for strict equality.
+         *             If three arguments are passed, the first argument must be a String
+         *             and will be used as the error message.
+         * 
+         *             &lt;code&gt;assertStrictlyEquals( String, Object, Object );&lt;/code&gt;
+         *             &lt;code&gt;assertStrictlyEquals( Object, Object );&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assertStrictlyEquals</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptOperator">...</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_assertCount</span><span class="ActionScriptOperator">++</span>;
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptOperator">==</span> 3 <span class="ActionScriptBracket/Brace">)</span>
+                <span class="ActionScriptDefault_Text">failNotStrictlyEquals</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>1<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>2<span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">else</span>
+                <span class="ActionScriptDefault_Text">failNotStrictlyEquals</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptString">""</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>1<span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">failNotStrictlyEquals</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">message</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">expected</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">actual</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">expected</span> <span class="ActionScriptOperator">!==</span> <span class="ActionScriptDefault_Text">actual</span> <span class="ActionScriptBracket/Brace">)</span>
+               <span class="ActionScriptDefault_Text">failWithUserMessage</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">message</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptString">"expected:&lt;"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">expected</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">"&gt; but was:&lt;"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">actual</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">"&gt;"</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * Asserts that a condition is true.
+         * 
+         * @param rest
+         *             Accepts an argument of type Boolean.
+         *             If two arguments are passed the first argument must be a String 
+         *             and will be used as the error message.
+         *             
+         *             &lt;code&gt;assertTrue( String, Boolean );&lt;/code&gt;
+         *             &lt;code&gt;assertTrue( Boolean );&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assertTrue</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptOperator">...</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_assertCount</span><span class="ActionScriptOperator">++</span>;
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptOperator">==</span> 2 <span class="ActionScriptBracket/Brace">)</span>
+                <span class="ActionScriptDefault_Text">failNotTrue</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>1<span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">else</span>
+                <span class="ActionScriptDefault_Text">failNotTrue</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptString">""</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * Asserts that a condition is not true.
+         * 
+         * @param rest
+         *             Accepts an argument of type Boolean.
+         *             If two arguments are passed the first argument must be a String 
+         *             and will be used as the error message.
+         *             
+         *             &lt;code&gt;assertTrue( String, Boolean );&lt;/code&gt;
+         *             &lt;code&gt;assertTrue( Boolean );&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">failNotTrue</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">message</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">condition</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptOperator">!</span><span class="ActionScriptDefault_Text">condition</span> <span class="ActionScriptBracket/Brace">)</span>
+               <span class="ActionScriptDefault_Text">failWithUserMessage</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">message</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptString">"expected true but was false"</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * Asserts that a condition is false.
+         * 
+         * @param rest
+         *             Accepts an argument of type Boolean.
+         *             If two arguments are passed the first argument must be a String
+         *             and will be used as the error message.
+         *             
+         *             &lt;code&gt;assertFalse( String, Boolean );&lt;/code&gt;
+         *             &lt;code&gt;assertFalse( Boolean );&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assertFalse</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptOperator">...</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_assertCount</span><span class="ActionScriptOperator">++</span>;
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptOperator">==</span> 2 <span class="ActionScriptBracket/Brace">)</span>
+                <span class="ActionScriptDefault_Text">failTrue</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>1<span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">else</span>
+                <span class="ActionScriptDefault_Text">failTrue</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptString">""</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * Asserts that a condition is false. 
+         * 
+         * @param rest
+         *             Accepts an argument of type Boolean.
+         *             If two arguments are passed the first argument must be a String 
+         *             and will be used as the error message.
+         *             
+         *             &lt;code&gt;assertTrue( String, Boolean );&lt;/code&gt;
+         *             &lt;code&gt;assertTrue( Boolean );&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">failTrue</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">message</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">condition</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">condition</span> <span class="ActionScriptBracket/Brace">)</span>
+               <span class="ActionScriptDefault_Text">failWithUserMessage</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">message</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptString">"expected false but was true"</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptComment">//TODO:  (&lt;code&gt;null&lt;/code&gt; okay) needs removal?
+</span>        <span class="ActionScriptASDoc">/**
+         * Asserts that an object is null.
+         * 
+         * @param rest
+         *             Accepts an argument of type Object.
+         *             If two arguments are passed the first argument must be a String
+         *             and will be used as the error message.
+         *             
+         *             &lt;code&gt;assertNull( String, Object );&lt;/code&gt;
+         *             &lt;code&gt;assertNull( Object );&lt;/code&gt;
+         * 
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assertNull</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptOperator">...</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_assertCount</span><span class="ActionScriptOperator">++</span>;
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptOperator">==</span> 2 <span class="ActionScriptBracket/Brace">)</span>
+                <span class="ActionScriptDefault_Text">failNotNull</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>1<span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">else</span>
+                <span class="ActionScriptDefault_Text">failNotNull</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptString">""</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * Asserts that an object is not null. 
+         * 
+         * @param rest
+         *             Accepts an argument of type Boolean.
+         *             If two arguments are passed the first argument must be a String 
+         *             and will be used as the error message.
+         *             
+         *             &lt;code&gt;assertTrue( String, Boolean );&lt;/code&gt;
+         *             &lt;code&gt;assertTrue( Boolean );&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">failNull</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">message</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">object</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">object</span> <span class="ActionScriptOperator">==</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>
+               <span class="ActionScriptDefault_Text">failWithUserMessage</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">message</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptString">"object was null: "</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">object</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptComment">//TODO:  (&lt;code&gt;null&lt;/code&gt; okay) needs removal?
+</span>        <span class="ActionScriptASDoc">/**
+         * Asserts that an object is not null.
+         * 
+         * @param rest
+         *             Accepts an argument of type Object.
+         *             If two arguments are passed the first argument must be a String
+         *             and will be used as the error message.
+         *             
+         *             &lt;code&gt;assertNotNull( String, Object );&lt;/code&gt;
+         *             &lt;code&gt;assertNotNull( Object );&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assertNotNull</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptOperator">...</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_assertCount</span><span class="ActionScriptOperator">++</span>;
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptOperator">==</span> 2 <span class="ActionScriptBracket/Brace">)</span>
+                <span class="ActionScriptDefault_Text">failNull</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>1<span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">else</span>
+                <span class="ActionScriptDefault_Text">failNull</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptString">""</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">rest</span><span class="ActionScriptBracket/Brace">[</span>0<span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+        <span class="ActionScriptASDoc">/**
+         * Asserts that an object is not null.
+         * 
+         * @param rest
+         *             Accepts an argument of type Boolean.
+         *             If two arguments are passed the first argument must be a String 
+         *             and will be used as the error message.
+         *             
+         *             &lt;code&gt;assertTrue( String, Boolean );&lt;/code&gt;
+         *             &lt;code&gt;assertTrue( Boolean );&lt;/code&gt;
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">failNotNull</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">message</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">object</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">object</span> <span class="ActionScriptOperator">!=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>
+               <span class="ActionScriptDefault_Text">failWithUserMessage</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">message</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptString">"object was not null: "</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">object</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        <span class="ActionScriptComment">//TODO:  (&lt;code&gt;null&lt;/code&gt; okay) needs removal?
+</span>        <span class="ActionScriptASDoc">/**
+         * Fails a test with the argument message.
+         * 
+         * @param failMessage
+         *            the identifying message for the &lt;code&gt; AssertionFailedError&lt;/code&gt; (&lt;code&gt;null&lt;/code&gt;
+         *            okay)
+         * @see AssertionFailedError
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">fail</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">failMessage</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">""</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">throw</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">AssertionFailedError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">failMessage</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    
+
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">failWithUserMessage</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">userMessage</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">failMessage</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">userMessage</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptOperator">&gt;</span> 0 <span class="ActionScriptBracket/Brace">)</span>
+                <span class="ActionScriptDefault_Text">userMessage</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">userMessage</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">" - "</span>;
+    
+            <span class="ActionScriptReserved">throw</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">AssertionFailedError</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">userMessage</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">failMessage</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

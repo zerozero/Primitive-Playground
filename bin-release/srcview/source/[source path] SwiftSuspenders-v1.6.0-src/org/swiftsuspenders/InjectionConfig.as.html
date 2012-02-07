@@ -1,0 +1,98 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>InjectionConfig.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptComment">/*
+* Copyright (c) 2009 the original author or authors
+*
+* Permission is hereby granted to use, modify, and distribute this file
+* in accordance with the terms of the license agreement accompanying it.
+*/</span>
+
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">swiftsuspenders</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">utils</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getQualifiedClassName</span>;
+
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">swiftsuspenders</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">injectionresults</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">InjectionResult</span>;
+
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">InjectionConfig</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/*******************************************************************************************
+         *                                public properties                                           *
+         *******************************************************************************************/</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">request</span> : <span class="ActionScriptDefault_Text">Class</span>;
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">injectionName</span> : <span class="ActionScriptDefault_Text">String</span>;
+
+
+        <span class="ActionScriptASDoc">/*******************************************************************************************
+         *                                private properties                                           *
+         *******************************************************************************************/</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">m_injector</span> : <span class="ActionScriptDefault_Text">Injector</span>;
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">m_result</span> : <span class="ActionScriptDefault_Text">InjectionResult</span>;
+
+
+        <span class="ActionScriptASDoc">/*******************************************************************************************
+         *                                public methods                                               *
+         *******************************************************************************************/</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">InjectionConfig</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">request</span> : <span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">injectionName</span> : <span class="ActionScriptDefault_Text">String</span><span class="ActionScriptBracket/Brace">)</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">request</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">request</span>;
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">injectionName</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">injectionName</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getResponse</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">injector</span> : <span class="ActionScriptDefault_Text">Injector</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptDefault_Text">Object</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">m_result</span><span class="ActionScriptBracket/Brace">)</span>
+            <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">m_result</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getResponse</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">m_injector</span> <span class="ActionScriptOperator">||</span> <span class="ActionScriptDefault_Text">injector</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">parentConfig</span> : <span class="ActionScriptDefault_Text">InjectionConfig</span> <span class="ActionScriptOperator">=</span>
+                <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">m_injector</span> <span class="ActionScriptOperator">||</span> <span class="ActionScriptDefault_Text">injector</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getAncestorMapping</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">request</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">injectionName</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">parentConfig</span><span class="ActionScriptBracket/Brace">)</span>
+            <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">parentConfig</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getResponse</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">injector</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">null</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">hasResponse</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">injector</span> : <span class="ActionScriptDefault_Text">Injector</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptDefault_Text">Boolean</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">m_result</span><span class="ActionScriptBracket/Brace">)</span>
+            <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">true</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">parentConfig</span> : <span class="ActionScriptDefault_Text">InjectionConfig</span> <span class="ActionScriptOperator">=</span>
+                <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">m_injector</span> <span class="ActionScriptOperator">||</span> <span class="ActionScriptDefault_Text">injector</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getAncestorMapping</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">request</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">injectionName</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">parentConfig</span> <span class="ActionScriptOperator">!=</span> <span class="ActionScriptReserved">null</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">hasOwnResponse</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptDefault_Text">Boolean</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">m_result</span> <span class="ActionScriptOperator">!=</span> <span class="ActionScriptReserved">null</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">setResult</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">result</span> : <span class="ActionScriptDefault_Text">InjectionResult</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">m_result</span> <span class="ActionScriptOperator">!=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptOperator">&amp;&amp;</span> <span class="ActionScriptDefault_Text">result</span> <span class="ActionScriptOperator">!=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptBracket/Brace">)</span>
+            <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScripttrace">trace</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">'Warning: Injector already has a rule for type "'</span> <span class="ActionScriptOperator">+</span>
+                        <span class="ActionScriptDefault_Text">getQualifiedClassName</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">request</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">'", named "'</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">injectionName</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">'".\n '</span> <span class="ActionScriptOperator">+</span>
+                        <span class="ActionScriptString">'If you have overwritten this mapping intentionally you can use '</span> <span class="ActionScriptOperator">+</span>
+                        <span class="ActionScriptString">'"injector.unmap()" prior to your replacement mapping in order to '</span> <span class="ActionScriptOperator">+</span>
+                        <span class="ActionScriptString">'avoid seeing this message.'</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptDefault_Text">m_result</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">result</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">setInjector</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">injector</span> : <span class="ActionScriptDefault_Text">Injector</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">m_injector</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">injector</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

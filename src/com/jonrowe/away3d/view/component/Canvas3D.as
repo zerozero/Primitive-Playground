@@ -6,12 +6,14 @@ package com.jonrowe.away3d.view.component
 	import away3d.events.MouseEvent3D;
 	import away3d.lights.DirectionalLight;
 	import away3d.lights.PointLight;
+	import away3d.loaders.Loader3D;
 	import away3d.tools.utils.Drag3D;
 	
 	import com.jonrowe.away3d.productFactory.PrimitiveInit;
 	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
 	import com.jonrowe.away3d.productFactory.primitives.PrimitiveObjectBase;
 	import com.jonrowe.away3d.productFactory.primitives.component.WireframeSingleAxisGrid;
+	import com.jonrowe.away3d.utils.Drag2D;
 	import com.jonrowe.away3d.utils.HoverDragController;
 	
 	import flash.display.Sprite;
@@ -35,7 +37,7 @@ package com.jonrowe.away3d.view.component
 		private var camController:HoverDragController;   
 		private var directionalLight :DirectionalLight;
 		private var pointLight :PointLight;
-		private var drag :Drag3D;
+		private var drag :Drag2D;
 		
 		/*		CONSTRUCT		*/
 		
@@ -43,7 +45,6 @@ package com.jonrowe.away3d.view.component
 		{
 			super();
 			this.addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-			createChildren();
 		}
 		
 		
@@ -86,6 +87,11 @@ package com.jonrowe.away3d.view.component
 			
 		}
 		
+		public function displayLoadedMesh( mesh : IPrimitive ):void{
+			_view.scene.addChild( mesh as ObjectContainer3D );
+			//mesh.light([pointLight]);
+		}
+		
 		public function removePrimitive( primitive :IPrimitive ):void{
 			_view.scene.removeChild( primitive as ObjectContainer3D );
 		}
@@ -97,14 +103,32 @@ package com.jonrowe.away3d.view.component
 			
 		}
 		
+		public function startDragging( primitive :IPrimitive, plane :String, useGlobalPlane :Boolean ):void{
+			drag = new Drag2D(_view,ObjectContainer3D(primitive));
+			if (plane) drag.plane = plane;
+			
+			//drag.offsetCenter = true;
+			drag.useRotations = true;
+			
+			drag.debug = true;
+			if ( !useGlobalPlane ){
+				drag.planeObject3d = ObjectContainer3D(primitive);
+			}else{
+				drag.planeObject3d  = null;
+			}
+			camController.active = false;
+		}
+		
+		public function endDragging( primitive :IPrimitive ):void{
+			camController.active = true;
+			if (!drag) return;
+			drag.debug = false;
+			drag = null;
+		}
+		
 		
 		/*		PRIVATE		*/
 		
-		
-		private function initView():void{
-			_view.width = 600;
-			_view.height = 600;
-		}
 		
 		private function initScene():void{
 			
@@ -138,23 +162,14 @@ package com.jonrowe.away3d.view.component
 		
 		/*		EVENT		*/
 		
-		private function onMouseDownEntity( e:MouseEvent3D ):void{
-			
-			drag = new Drag3D(_view,ObjectContainer3D(e.target));
-			drag.useRotations = true;
-			camController.active = false;
-		}
 		
-		private function onMouseUpEntity( e:MouseEvent3D ):void{
-			drag = null;
-			camController.active = true;
-		}
 		private function onAddedToStage( e:Event ):void{
-			initView();
+			createChildren();
 			initLights();
 			initScene();
 			initCamController();
 			dispatchEvent( new Event(SCENE_READY));
+			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 		
 		private function onEnterFrame(ev : Event) : void {

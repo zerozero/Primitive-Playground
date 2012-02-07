@@ -86,6 +86,34 @@ package com.jonrowe.away3d.model
 			return _primitiveObjects;
 		}
 		
+		/**
+		 * accessor for the _primitiveListSelection property 
+		 * @return a <code>PrimitiveInit</code> object
+		 * 
+		 */	
+		private var _dragPlane :String;
+		public function get dragPlane():String{
+			return _dragPlane;
+		}
+		
+		public function set dragPlane(plane:String):void{
+			_dragPlane = plane;
+		}
+		
+		/**
+		 * accessor for the _primitiveListSelection property 
+		 * @return a <code>PrimitiveInit</code> object
+		 * 
+		 */	
+		private var _useGlobalPlane :Boolean;
+		public function get useGlobalPlane():Boolean{
+			return _useGlobalPlane;
+		}
+		
+		public function set useGlobalPlane(trueOrFalse:Boolean):void{
+			_useGlobalPlane = trueOrFalse;
+		}
+		
 		
 		public function createDefaultObject():void{
 			createPrimitveType("Cube");

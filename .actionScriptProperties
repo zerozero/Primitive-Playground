@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties analytics="false" mainApplicationPath="Main.as" projectUUID="0b16fd48-ccea-438c-af2b-9177df288bd1" version="10">
-  <compiler additionalCompilerArguments="-locale en_US -swf-version=13 -define+=CONFIG::useFlexClasses,false" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderLocation="/Applications/MAMP/htdocs/labs/primitiveplayground" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="11.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+<actionScriptProperties analytics="false" mainApplicationPath="Primitives.as" projectUUID="0b16fd48-ccea-438c-af2b-9177df288bd1" version="10">
+  <compiler additionalCompilerArguments="-locale en_US -swf-version=13 -define+=CONFIG::useFlexClasses,false -keep-as3-metadata+=Inject -keep-as3-metadata+=PostConstruct" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="false" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderLocation="/Applications/MAMP/htdocs/labs/primitiveplayground" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="11.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath>
       <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/libs/away3d-away3d-core-fp11-f71921f/src"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/libs/minimalcomps/src"/>
@@ -48,21 +48,16 @@
   </compiler>
   <applications>
     <application path="FlexUnitCompilerApplication.as"/>
-    <application path="Main.as"/>
     <application path="FlexUnitApplication.as"/>
+    <application path="Primitives.as"/>
   </applications>
   <modules/>
   <buildCSSFiles/>
   <publishSource>
-    <sourcePathIncludes>
-      <include path="[source path] away3d-away3d-core-fp11-f71921f-src"/>
-      <include path="[source path] fluint4"/>
-      <include path="[source path] minimalcomps-src"/>
-      <include path="[source path] robotlegs-framework-v1.5.2-src"/>
-      <include path="[source path] simpleGUI-src"/>
-      <include path="[source path] SwiftSuspenders-v1.6.0-src"/>
-    </sourcePathIncludes>
-    <sourceExcludes/>
+    <sourcePathIncludes/>
+    <sourceExcludes>
+      <exclude path="html-template"/>
+    </sourceExcludes>
   </publishSource>
   <flashCatalyst validateFlashCatalystCompatibility="false"/>
 </actionScriptProperties>

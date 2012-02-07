@@ -1,0 +1,70 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>PropertyInjectionPoint.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptComment">/*
+ * Copyright (c) 2009 the original author or authors
+ * 
+ * Permission is hereby granted to use, modify, and distribute this file 
+ * in accordance with the terms of the license agreement accompanying it.
+ */</span>
+
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">swiftsuspenders</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">injectionpoints</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">swiftsuspenders</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">InjectionConfig</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">swiftsuspenders</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Injector</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">swiftsuspenders</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">InjectorError</span>;
+
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">PropertyInjectionPoint</span> <span class="ActionScriptReserved">extends</span> <span class="ActionScriptDefault_Text">InjectionPoint</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/*******************************************************************************************
+        *                                private properties                                           *
+        *******************************************************************************************/</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_propertyName</span> : <span class="ActionScriptDefault_Text">String</span>;
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_propertyType</span> : <span class="ActionScriptDefault_Text">String</span>;
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_injectionName</span> : <span class="ActionScriptDefault_Text">String</span>;
+
+        
+        <span class="ActionScriptASDoc">/*******************************************************************************************
+        *                                public methods                                               *
+        *******************************************************************************************/</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">PropertyInjectionPoint</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">node</span> : <span class="ActionScriptDefault_Text">XML</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">injector</span> : <span class="ActionScriptDefault_Text">Injector</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptBracket/Brace">)</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">super</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">node</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptReserved">override</span> <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">applyInjection</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">target</span> : <span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">injector</span> : <span class="ActionScriptDefault_Text">Injector</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptDefault_Text">Object</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">injectionConfig</span> : <span class="ActionScriptDefault_Text">InjectionConfig</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">injector</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getMapping</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptBracket/Brace">(</span>
+                    <span class="ActionScriptDefault_Text">injector</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getApplicationDomain</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getDefinition</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">_propertyType</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">_injectionName</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">injection</span> : <span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">injectionConfig</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getResponse</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">injector</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">injection</span> <span class="ActionScriptOperator">==</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptBracket/Brace">)</span>
+            <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">throw</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">InjectorError</span><span class="ActionScriptBracket/Brace">(</span>
+                        <span class="ActionScriptString">'Injector is missing a rule to handle injection into property "'</span> <span class="ActionScriptOperator">+</span>
+                        <span class="ActionScriptDefault_Text">_propertyName</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">'" of object "'</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">target</span> <span class="ActionScriptOperator">+</span>
+                        <span class="ActionScriptString">'". Target dependency: "'</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">_propertyType</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">'", named "'</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">_injectionName</span> <span class="ActionScriptOperator">+</span>
+                        <span class="ActionScriptString">'"'</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptDefault_Text">target</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">_propertyName</span><span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">injection</span>;
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">target</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+
+        <span class="ActionScriptASDoc">/*******************************************************************************************
+        *                                protected methods                                           *
+        *******************************************************************************************/</span>
+        <span class="ActionScriptReserved">override</span> <span class="ActionScriptReserved">protected</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">initializeInjection</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">node</span> : <span class="ActionScriptDefault_Text">XML</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_propertyType</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">node</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">parent</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptOperator">@</span><span class="ActionScriptDefault_Text">type</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">toString</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">_propertyName</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">node</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">parent</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptOperator">@</span><span class="ActionScriptDefault_Text">name</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">toString</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">_injectionName</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">node</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">arg</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">attribute</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">'value'</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">toString</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

@@ -1,0 +1,147 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>IAsyncHandlingStatement.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">statements</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">events</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Event</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">events</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">FullScreenEvent</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">net</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Responder</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">mx</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">rpc</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IResponder</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">fluint</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">sequence</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">SequenceRunner</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * An &lt;code&gt;IAsyncHandlingStatement&lt;/code&gt; is an interface for statements that handle asynchronous functionality
+     * for tests.  If a statement is going to be handlining asynchronous tests, it needs to implement this interface.
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptinterface">interface</span> <span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         * Returns a Boolean value indicating whether the test method is current executing.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">bodyExecuting</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Creates an &lt;code&gt;AsyncHandler&lt;/code&gt; that pend and either call the &lt;code&gt;eventHandler&lt;/code&gt; or the
+         * &lt;code&gt;timeoutHandler&lt;/code&gt;, passing the &lt;code&gt;passThroughData&lt;/code&gt;, depending on whether the
+         * &lt;code&gt;timeout&lt;/code&gt; period has been reached.
+         * 
+         * @param eventHandler The Function that will be executed if the handler is called before 
+         * the &lt;code&gt;timeout&lt;/code&gt; has expired.
+         * @param timeout The length of time, in milliseconds, before the &lt;code&gt;timeoutHandler&lt;/code&gt; will be executed.
+         * @param passThroughData An Object that can be given information about the current test; this information will 
+         * be available for both the &lt;code&gt;eventHandler&lt;/code&gt; and the &lt;code&gt;timeoutHandler&lt;/code&gt;.
+         * @param timeoutHandler The Function that will be executed if the &lt;code&gt;timeout&lt;/code&gt; time is reached prior to
+         * the expected event being dispatched.
+         * 
+         * @return an event handler Function that will determine whether the &lt;code&gt;timeout&lt;/code&gt; has been reached.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">asyncHandler</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">eventHandler</span>:<span class="ActionScriptDefault_Text">Function</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span>:<span class="ActionScriptDefault_Text">Function</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Function</span>; 
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">asyncErrorConditionHandler</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">eventHandler</span>:<span class="ActionScriptDefault_Text">Function</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Function</span>;
+        
+        <span class="ActionScriptComment">// We have a toggle in the compiler arguments so that we can choose whether or not the flex classes should
+</span>        <span class="ActionScriptComment">// be compiled into the FlexUnit swc.  For actionscript only projects we do not want to compile the
+</span>        <span class="ActionScriptComment">// flex classes since it will cause errors.
+</span>        <span class="ActionScriptASDoc">/**
+         * Creates an &lt;code&gt;IAsyncTestResponder&lt;/code&gt; that pend and either call the &lt;code&gt;eventHandler&lt;/code&gt; or the
+         * &lt;code&gt;timeoutHandler&lt;/code&gt;, passing the &lt;code&gt;passThroughData&lt;/code&gt;, depending on whether the
+         * &lt;code&gt;timeout&lt;/code&gt; period has been reached.
+         * 
+         * @param responder The responder that will be executed if the &lt;code&gt;IResponder&lt;/code&gt; is called before 
+         * the &lt;code&gt;timeout&lt;/code&gt; has expired.
+         * @param timeout The length of time, in milliseconds, before the &lt;code&gt;timeoutHandler&lt;/code&gt; will be executed.
+         * @param passThroughData An Object that can be given information about the current test; this information will 
+         * be available for both the &lt;code&gt;eventHandler&lt;/code&gt; and the &lt;code&gt;timeoutHandler&lt;/code&gt;.
+         * @param timeoutHandler The Function that will be executed if the &lt;code&gt;timeout&lt;/code&gt; time is reached prior to
+         * the expected event being dispatched.
+         * 
+         * @return an &lt;code&gt;IResponder&lt;/code&gt; that will determine whether the &lt;code&gt;timeout&lt;/code&gt; has been reached.
+         */</span>
+        <span class="ActionScriptDefault_Text">CONFIG</span><span class="ActionScriptOperator">::</span><span class="ActionScriptDefault_Text">useFlexClasses</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">asyncResponder</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">responder</span>:<span class="ActionScriptOperator">*</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span>:<span class="ActionScriptDefault_Text">Function</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IResponder</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Creates an &lt;code&gt;IAsyncNativeTestResponder&lt;/code&gt; that pend and either call the &lt;code&gt;eventHandler&lt;/code&gt; or the
+         * &lt;code&gt;timeoutHandler&lt;/code&gt;, passing the &lt;code&gt;passThroughData&lt;/code&gt;, depending on whether the
+         * &lt;code&gt;timeout&lt;/code&gt; period has been reached.
+         * 
+         * @param resultHandler The result function that will be executed if the &lt;code&gt;Responder&lt;/code&gt; is called before 
+         * the &lt;code&gt;timeout&lt;/code&gt; has expired.
+         * @param faultHandler The fault function that will be executed if the &lt;code&gt;Responder&lt;/code&gt; is called before 
+         * the &lt;code&gt;timeout&lt;/code&gt; has expired.
+         * @param timeout The length of time, in milliseconds, before the &lt;code&gt;timeoutHandler&lt;/code&gt; will be executed.
+         * @param passThroughData An Object that can be given information about the current test; this information will 
+         * be available for both the &lt;code&gt;eventHandler&lt;/code&gt; and the &lt;code&gt;timeoutHandler&lt;/code&gt;.
+         * @param timeoutHandler The Function that will be executed if the &lt;code&gt;timeout&lt;/code&gt; time is reached prior to
+         * the expected event being dispatched.
+         * 
+         * @return a &lt;code&gt;Responder&lt;/code&gt; that will determine whether the &lt;code&gt;timeout&lt;/code&gt; has been reached.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">asyncNativeResponder</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">resultHandler</span> : <span class="ActionScriptDefault_Text">Function</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">faultHandler</span> : <span class="ActionScriptDefault_Text">Function</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeout</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">timeoutHandler</span>:<span class="ActionScriptDefault_Text">Function</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Responder</span>;
+        
+        <span class="ActionScriptComment">// We have a toggle in the compiler arguments so that we can choose whether or not the flex classes should
+</span>        <span class="ActionScriptComment">// be compiled into the FlexUnit swc.  For actionscript only projects we do not want to compile the
+</span>        <span class="ActionScriptComment">// flex classes since it will cause errors.
+</span>        <span class="ActionScriptDefault_Text">CONFIG</span><span class="ActionScriptOperator">::</span><span class="ActionScriptDefault_Text">useFlexClasses</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">handleBindableNextSequence</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">event</span>:<span class="ActionScriptDefault_Text">Event</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">sequenceRunner</span>:<span class="ActionScriptDefault_Text">SequenceRunner</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * A handler method that is called in order to fail for a given asynchronous event once an it
+         * has been dispatched.
+         * 
+         * @param event The event that was received.
+         * @param passThroughData An Object that contains information to pass to the handler.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">failOnComplete</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">event</span>:<span class="ActionScriptDefault_Text">Event</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        <span class="ActionScriptASDoc">/**
+         * A handler method that is called in order to wait once an asynchronous event has been dispatched.
+         * 
+         * @param event The event that was received.
+         * @param passThroughData An Object that contains information to pass to the handler.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">pendUntilComplete</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">event</span>:<span class="ActionScriptDefault_Text">Event</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">passThroughData</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">=</span><span class="ActionScriptReserved">null</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Handles the next steps in a &lt;code&gt;SequenceRunner&lt;/code&gt;.
+         * 
+         * @param event The event boradcast by the last step in the sequence.
+         * @param sequenceRunner The runner responsible for running the steps in the sequence.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">handleNextSequence</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">event</span>:<span class="ActionScriptDefault_Text">Event</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">sequenceRunner</span>:<span class="ActionScriptDefault_Text">SequenceRunner</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

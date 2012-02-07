@@ -1,0 +1,276 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Assignments.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">experimental</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">theories</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">lang</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">reflect</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Constructor</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flex</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">lang</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">reflect</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Method</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">experimental</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">theories</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IParameterSupplier</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">experimental</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">theories</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IPotentialAssignment</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">experimental</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">theories</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">ParameterSignature</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">experimental</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">theories</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">error</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">CouldNotGenerateValueException</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">model</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">TestClass</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * The &lt;code&gt;Assignments&lt;/code&gt; is responsible for keeping track of assigned and unassigned parameters for a given
+     * configuration of a theory method.
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">Assignments</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         * An array of &lt;code&gt;IPotentialAssignment&lt;/code&gt;s that have been assigned values.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">assigned</span>:<span class="ActionScriptDefault_Text">Array</span>;
+        <span class="ActionScriptASDoc">/**
+         * An array of &lt;code&gt;ParameterSignature&lt;/code&gt;s that not been assigned values.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">unassigned</span>:<span class="ActionScriptDefault_Text">Array</span>;
+        <span class="ActionScriptASDoc">/**
+         * The test class that contains the theory.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">TestClass</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Constructor.
+         * 
+         * @param assigned An array of &lt;code&gt;IPotentialAssignment&lt;/code&gt;s that have been assigned values.
+         * @param unassigned An array of &lt;code&gt;ParameterSignature&lt;/code&gt;s that not been assigned values.
+         * @param testClass The test class that contains the theory.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">Assignments</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">assigned</span>:<span class="ActionScriptDefault_Text">Array</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">unassigned</span>:<span class="ActionScriptDefault_Text">Array</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">TestClass</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">assigned</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">assigned</span>;
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">unassigned</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">unassigned</span>;
+            <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">testClass</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">testClass</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/** This is perhaps a tad bit more complicated than really needed for AS. The java version really
+         *  needs to worry about multiple method signatures including multiple constructor signatures.
+         *  No such worries here, but the basic flow was kept the same to be relatable and cause...
+         *  who knows what the future could bring.
+         * 
+         * @param method The current theory method.
+         * @param testClass The test class that contains the method.
+         * 
+         * @return an &lt;code&gt;Assignments&lt;/code&gt; that contains all unassigned &lt;code&gt;ParameterSignature&lt;/code&gt; that need to be assigned
+         * before a theory method test can be run.
+         **/</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">allUnassigned</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">method</span>:<span class="ActionScriptDefault_Text">Method</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">testClass</span>:<span class="ActionScriptDefault_Text">TestClass</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Assignments</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">signatures</span>:<span class="ActionScriptDefault_Text">Array</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">constructor</span>:<span class="ActionScriptDefault_Text">Constructor</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">testClass</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">klassInfo</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">constructor</span>;
+
+            <span class="ActionScriptDefault_Text">signatures</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">ParameterSignature</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">signaturesByContructor</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">constructor</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">signatures</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">signatures</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">concat</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">ParameterSignature</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">signaturesByMethod</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">method</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptComment">//trace( signatures.toString() );
+</span>            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Assignments</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Array</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">signatures</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">testClass</span> <span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns a Boolean value indicating whether all unassigned values have been assigned.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">complete</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">unassigned</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptOperator">==</span> 0;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns the next unassigned &lt;code&gt;ParameterSignature&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">nextUnassigned</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">ParameterSignature</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">unassigned</span><span class="ActionScriptBracket/Brace">[</span> 0 <span class="ActionScriptBracket/Brace">]</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Creates a new &lt;code&gt;Assignments&lt;/code&gt; consiting of the assigned array containing the new source and
+         * the the array of still unassigned &lt;code&gt;ParameterSignature&lt;/code&gt;s minus the first element which was
+         * just assigned.
+         * 
+         * @param source The new &lt;code&gt;IPotentialAssignment&lt;/code&gt; to add.
+         * 
+         * @return an new &lt;code&gt;Assignments&lt;/code&gt; with one more assigned parameter and one fewer unassigned parameters.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">assignNext</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">source</span>:<span class="ActionScriptDefault_Text">IPotentialAssignment</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Assignments</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">assigned</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">assigned</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">slice</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">assigned</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">push</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">source</span><span class="ActionScriptBracket/Brace">)</span>;
+    
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Assignments</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">assigned</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">unassigned</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">slice</span><span class="ActionScriptBracket/Brace">(</span>1<span class="ActionScriptOperator">,</span><span class="ActionScriptDefault_Text">unassigned</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">testClass</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns an array of values from &lt;code&gt;IPotentialAssignment&lt;/code&gt;s ranging from the start poisition to the stop position
+         * in the assigned array.
+         * 
+         * @param start The starting position in the assigned array.
+         * @param stop The ending position in the assigned array.
+         * @param nullsOk A Boolean value indicating whether a null value is acceptable.  If a null values are not ok,
+         * a &lt;code&gt;CouldNotGenerateValueException&lt;/code&gt; will be thrown.
+         * 
+         * @return An array of values from &lt;code&gt;IPotentialAssignment&lt;/code&gt;s ranging from the start poisition to the stop position
+         * in the assigned array.
+         * 
+         * @throws CouldNotGenerateValueException if a value of null is encountered a nulls are not allowed.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getActualValues</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">start</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">stop</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">nullsOk</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Array</span><span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">values</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Array</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">stop</span> <span class="ActionScriptOperator">-</span> <span class="ActionScriptDefault_Text">start</span><span class="ActionScriptBracket/Brace">)</span>; <span class="ActionScriptComment">//Object[stop - start];
+</span>            <span class="ActionScriptReserved">for</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">i</span>:<span class="ActionScriptDefault_Text">int</span><span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">start</span>; <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptOperator">&lt;</span> <span class="ActionScriptDefault_Text">stop</span>; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">++</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">value</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">assigned</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getValue</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">value</span> <span class="ActionScriptOperator">==</span> <span class="ActionScriptReserved">null</span> <span class="ActionScriptOperator">&amp;&amp;</span> <span class="ActionScriptOperator">!</span><span class="ActionScriptDefault_Text">nullsOk</span><span class="ActionScriptBracket/Brace">)</span>
+                    <span class="ActionScriptReserved">throw</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">CouldNotGenerateValueException</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+                <span class="ActionScriptDefault_Text">values</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptOperator">-</span> <span class="ActionScriptDefault_Text">start</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">value</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">values</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Retrieves the potential values that the next unassigned &lt;code&gt;ParameterSignature&lt;/code&gt; can use.
+         * 
+         * @return an Array consisting of values that can be potentially used by the next 
+         * unassigned &lt;code&gt;ParameterSignature&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">potentialsForNextUnassigned</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Array</span>  <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">unassigned</span>:<span class="ActionScriptDefault_Text">ParameterSignature</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">nextUnassigned</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">getSupplier</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">unassigned</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getValueSources</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">unassigned</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Retrieves an object that implements &lt;code&gt;IParameterSupplier&lt;/code&gt; that can be used to obtain potential values
+         * for the provided &lt;code&gt;ParameterSignature&lt;/code&gt;.
+         * 
+         * @param unassigned The parameter signature used to determine the &lt;code&gt;IParameterSupplier&lt;/code&gt;.
+         * 
+         * @return an object that implements &lt;code&gt;IParameterSupplier&lt;/code&gt; that can be used to get potential values 
+         * for the &lt;code&gt;ParameterSignature&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getSupplier</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">unassigned</span>:<span class="ActionScriptDefault_Text">ParameterSignature</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IParameterSupplier</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">supplier</span>:<span class="ActionScriptDefault_Text">IParameterSupplier</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">getAnnotatedSupplier</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">unassigned</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">supplier</span> <span class="ActionScriptOperator">!=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptBracket/Brace">)</span>
+                <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">supplier</span>;
+    
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">AllMembersSupplier</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">testClass</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Retrieves an object that implements &lt;code&gt;IParameterSupplier&lt;/code&gt; that can be used to obtain potential values
+         * for the provided &lt;code&gt;ParameterSignature&lt;/code&gt;.
+         * 
+         * @param unassigned The parameter signature used to determine the &lt;code&gt;IParameterSupplier&lt;/code&gt;.
+         * 
+         * @return an object that implements &lt;code&gt;IParameterSupplier&lt;/code&gt; that can be used to get potential values 
+         * for the &lt;code&gt;ParameterSignature&lt;/code&gt;.  If no annotated suppliet can be found for the &lt;code&gt;ParameterSignature&lt;/code&gt;,
+         * a value of null is returned.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getAnnotatedSupplier</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">unassigned</span>:<span class="ActionScriptDefault_Text">ParameterSignature</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IParameterSupplier</span> <span class="ActionScriptBracket/Brace">{</span>
+<span class="ActionScriptComment">/*             var supplier:Boolean = unassigned.findDeepAnnotation( "ParametersSuppliedBy" );
+            if ( supplier == null)
+                 return null;
+ */</span>
+            <span class="ActionScriptComment">//fix me     return annotation.value().newInstance();
+</span>            <span class="ActionScriptReserved">return</span> <span class="ActionScriptReserved">null</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Retrieves an array of constructor arguments from the assigned array.
+         * 
+         * @param nullsOk A Boolean value indicating whether null values are acceptable as an argument.
+         * 
+         * @return an array of constructor arguments from the assigned array.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getConstructorArguments</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">nullsOk</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">getActualValues</span><span class="ActionScriptBracket/Brace">(</span>0<span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">getConstructorParameterCount</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">nullsOk</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Retrieves an array of method arguments from the assigned array.
+         * 
+         * @param nullsOk A Boolean value indicating whether null values are acceptable as an argument.
+         * 
+         * @return an array of method arguments from the assigned array.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getMethodArguments</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">nullsOk</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">getActualValues</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">getConstructorParameterCount</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptOperator">,</span><span class="ActionScriptDefault_Text">assigned</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">nullsOk</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Retrieves an array of all arguments from the assigned array.
+         * 
+         * @param nullsOk A Boolean value indicating whether null values are acceptable as an argument.
+         * 
+         * @return an array of all arguments from the assigned array.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getAllArguments</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">nullsOk</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">getActualValues</span><span class="ActionScriptBracket/Brace">(</span>0<span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">assigned</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">nullsOk</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Determines the number of parameters in the constructor of the test class.
+         * 
+         * @return the number of parameters in the constructor of the test class.
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getConstructorParameterCount</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">int</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">constructor</span>:<span class="ActionScriptDefault_Text">Constructor</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">testClass</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">klassInfo</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">constructor</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">signatures</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">ParameterSignature</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">signaturesByContructor</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">constructor</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">constructorParameterCount</span>:<span class="ActionScriptDefault_Text">int</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">signatures</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span>;
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">constructorParameterCount</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns an array of descriptions for all currently assigned &lt;code&gt;IPotentialAssignment&lt;/code&gt;s.
+         * 
+         * @param nullsOk A Boolean that indicates whether null values will be accepted.
+         * 
+         * @return an array of descriptions for all currently assigned &lt;code&gt;IPotentialAssignment&lt;/code&gt;s.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getArgumentStrings</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">nullsOk</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">values</span>:<span class="ActionScriptDefault_Text">Array</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Array</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">assigned</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span> <span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptReserved">for</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">i</span>:<span class="ActionScriptDefault_Text">int</span> <span class="ActionScriptOperator">=</span> 0; <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptOperator">&lt;</span> <span class="ActionScriptDefault_Text">values</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">length</span>; <span class="ActionScriptDefault_Text">i</span><span class="ActionScriptOperator">++</span><span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptDefault_Text">values</span><span class="ActionScriptBracket/Brace">[</span><span class="ActionScriptDefault_Text">i</span><span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">assigned</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">i</span> <span class="ActionScriptBracket/Brace">]</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getDescription</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptBracket/Brace">}</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">values</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+        
+        <span class="ActionScriptASDoc">/**
+         * Returns a string containing the name of the test class, the assigned parameters, and the 
+         * unassigned parameters.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">toString</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">str</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">"              Assignments :\n"</span>;
+            
+            <span class="ActionScriptDefault_Text">str</span> <span class="ActionScriptOperator">+=</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"                  testClass:"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">testClass</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">"\n"</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">str</span> <span class="ActionScriptOperator">+=</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"                  assigned:"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">assigned</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptString">"\n"</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">str</span> <span class="ActionScriptOperator">+=</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"                  unassigned:"</span> <span class="ActionScriptOperator">+</span> <span class="ActionScriptDefault_Text">unassigned</span><span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">str</span>;         
+        <span class="ActionScriptBracket/Brace">}</span>
+     <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

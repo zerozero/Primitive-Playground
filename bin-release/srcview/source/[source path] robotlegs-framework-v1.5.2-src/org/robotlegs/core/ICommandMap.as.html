@@ -1,0 +1,93 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>ICommandMap.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptComment">/*
+ * Copyright (c) 2009 the original author or authors
+ * 
+ * Permission is hereby granted to use, modify, and distribute this file 
+ * in accordance with the terms of the license agreement accompanying it.
+ */</span>
+
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">robotlegs</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">core</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    
+    <span class="ActionScriptASDoc">/**
+     * The Robotlegs CommandMap contract
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptinterface">interface</span> <span class="ActionScriptDefault_Text">ICommandMap</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         * Detain a Command instance
+         * 
+         * @param command The Command instance to detain
+         */</span>        
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">detain</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">command</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Release a Command instance
+         * 
+         * @param command The Command instance to release for garbage collection
+         */</span>        
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">release</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">command</span>:<span class="ActionScriptDefault_Text">Object</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Execute a Command with an optional payload
+         * 
+         * &lt;p&gt;The &lt;code&gt;commandClass&lt;/code&gt; must implement an execute() method&lt;/p&gt;
+         * 
+         * @param commandClass The Class to instantiate - must have an execute() method
+         * @param payload An optional payload
+         * @param payloadClass  An optional class to inject the payload as
+         * @param named An optional name for the payload injection
+         * 
+         * @throws org.robotlegs.base::ContextError
+         */</span>        
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">execute</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">commandClass</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">payload</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">payloadClass</span>:<span class="ActionScriptDefault_Text">Class</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">named</span>:<span class="ActionScriptDefault_Text">String</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptString">''</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Map a Class to an Event type
+         * 
+         * &lt;p&gt;The &lt;code&gt;commandClass&lt;/code&gt; must implement an execute() method&lt;/p&gt;
+         * 
+         * @param eventType The Event type to listen for
+         * @param commandClass The Class to instantiate - must have an execute() method
+         * @param eventClass Optional Event class for a stronger mapping. Defaults to &lt;code&gt;flash.events.Event&lt;/code&gt;. Your commandClass can optionally [Inject] a variable of this type to access the event that triggered the command.
+         * @param oneshot Unmap the Class after execution?
+         * 
+         * @throws org.robotlegs.base::ContextError
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">mapEvent</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">eventType</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">commandClass</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">eventClass</span>:<span class="ActionScriptDefault_Text">Class</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">oneshot</span>:<span class="ActionScriptDefault_Text">Boolean</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">false</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Unmap a Class to Event type mapping
+         *
+         * @param eventType The Event type
+         * @param commandClass The Class to unmap
+         * @param eventClass Optional Event class for a stronger mapping. Defaults to &lt;code&gt;flash.events.Event&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">unmapEvent</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">eventType</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">commandClass</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">eventClass</span>:<span class="ActionScriptDefault_Text">Class</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Removes all mappings made through &lt;code&gt;mapEvent&lt;/code&gt;
+         */</span>        
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">unmapEvents</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Check if a Class has been mapped to an Event type
+         *
+         * @param eventType The Event type
+         * @param commandClass The Class
+         * @param eventClass Optional Event class for a stronger mapping. Defaults to &lt;code&gt;flash.events.Event&lt;/code&gt;.
+         * @return Whether the Class is mapped to this Event type
+         */</span>
+        <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">hasEventCommand</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">eventType</span>:<span class="ActionScriptDefault_Text">String</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">commandClass</span>:<span class="ActionScriptDefault_Text">Class</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">eventClass</span>:<span class="ActionScriptDefault_Text">Class</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">null</span><span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">Boolean</span>;
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span>
+</pre></body>
+</html>

@@ -7,7 +7,7 @@ package com.jonrowe.away3d.view
 	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
 	import com.jonrowe.away3d.productFactory.primitives.Primitive;
 	import com.jonrowe.away3d.productFactory.primitives.PrimitiveObjectBase;
-	import com.jonrowe.away3d.view.event.EntitySelectEvent;
+	import com.jonrowe.away3d.view.event.EntityEvent;
 	
 	import flash.events.Event;
 	
@@ -31,20 +31,38 @@ package com.jonrowe.away3d.view
 		override public function onRegister():void{
 			
 			view.addEventListener(PrimitiveObjectBase.ENTITY_SELECT, onClickEntity);
+			view.addEventListener(PrimitiveObjectBase.START_DRAG, onStartDrag);
+			view.addEventListener(PrimitiveObjectBase.END_DRAG, onEndDrag);
 			view.selected = true;
 			//add a listener for other entities being selected - will need to move to proxy to manage selection rules when remote clients can select
-			addContextListener(EntitySelectEvent.ENTITY_SELECT, onEntitySelect);
-			dispatch(new EntitySelectEvent(EntitySelectEvent.ENTITY_SELECT, view as IPrimitive ));
+			addContextListener(EntityEvent.ENTITY_SELECT, onEntitySelect);
+			dispatch(new EntityEvent(EntityEvent.ENTITY_SELECT, view as IPrimitive ));
 		}
 		
+		protected function onStartDrag( e:Event ):void{
+			dispatch(new EntityEvent(EntityEvent.START_DRAG, e.currentTarget as IPrimitive ));						
+		}
 		
+		protected function onEndDrag( e:Event ):void{
+			dispatch(new EntityEvent(EntityEvent.END_DRAG, e.currentTarget as IPrimitive ));			
+		}
 		
+		/**
+		 * this entity was clicked 
+		 * @param e
+		 * 
+		 */		
 		protected function onClickEntity( e:Event ):void{
 			sceneProxy.selectedPrimitive = e.currentTarget as IPrimitive;
-			dispatch(new EntitySelectEvent(EntitySelectEvent.ENTITY_SELECT, e.currentTarget as IPrimitive ));
+			dispatch(new EntityEvent(EntityEvent.ENTITY_SELECT, e.currentTarget as IPrimitive ));
 		}
 		
-		protected function onEntitySelect( e:EntitySelectEvent ):void{
+		/**
+		 * respond to other entities being selected 
+		 * @param e
+		 * 
+		 */		
+		protected function onEntitySelect( e:EntityEvent ):void{
 			if (e.primitive != getViewComponent() as IPrimitive)
 				PrimitiveObjectBase(getViewComponent()).selected = false;
 		}

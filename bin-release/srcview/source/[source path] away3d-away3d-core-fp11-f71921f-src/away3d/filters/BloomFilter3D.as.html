@@ -1,0 +1,94 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>BloomFilter3D.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">filters</span>
+<span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">core</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">managers</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Stage3DProxy</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">filters</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">tasks</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Filter3DBloomCompositeTask</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">filters</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">tasks</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Filter3DBlurTask</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">away3d</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">filters</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">tasks</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Filter3DBrightPassTask</span>;
+
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">display3D</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">textures</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Texture</span>;
+
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">BloomFilter3D</span> <span class="ActionScriptReserved">extends</span> <span class="ActionScriptDefault_Text">Filter3DBase</span>
+    <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_blurTask</span> : <span class="ActionScriptDefault_Text">Filter3DBlurTask</span>;
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_brightPassTask</span> : <span class="ActionScriptDefault_Text">Filter3DBrightPassTask</span>;
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">_compositeTask</span> : <span class="ActionScriptDefault_Text">Filter3DBloomCompositeTask</span>;
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">BloomFilter3D</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">blurX</span> : <span class="ActionScriptDefault_Text">uint</span> <span class="ActionScriptOperator">=</span> 15<span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">blurY</span> : <span class="ActionScriptDefault_Text">uint</span> <span class="ActionScriptOperator">=</span> 15<span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">threshold</span> : <span class="ActionScriptDefault_Text">Number</span> <span class="ActionScriptOperator">=</span> .75<span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">exposure</span> : <span class="ActionScriptDefault_Text">Number</span> <span class="ActionScriptOperator">=</span> 3<span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">quality</span> : <span class="ActionScriptDefault_Text">int</span> <span class="ActionScriptOperator">=</span> 3<span class="ActionScriptBracket/Brace">)</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">super</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">_brightPassTask</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Filter3DBrightPassTask</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">threshold</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">_blurTask</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Filter3DBlurTask</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">blurX</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">blurY</span><span class="ActionScriptBracket/Brace">)</span>;
+               <span class="ActionScriptDefault_Text">_compositeTask</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Filter3DBloomCompositeTask</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">exposure</span><span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">quality</span> <span class="ActionScriptOperator">&gt;</span> 4<span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptDefault_Text">quality</span> <span class="ActionScriptOperator">=</span> 4;
+            <span class="ActionScriptReserved">else</span> <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">quality</span> <span class="ActionScriptOperator">&lt;</span> 0<span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptDefault_Text">quality</span> <span class="ActionScriptOperator">=</span> 0;
+
+            <span class="ActionScriptDefault_Text">_blurTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">textureScale</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptBracket/Brace">(</span>4 <span class="ActionScriptOperator">-</span> <span class="ActionScriptDefault_Text">quality</span><span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptDefault_Text">addTask</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">_brightPassTask</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">addTask</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">_blurTask</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">addTask</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">_compositeTask</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">override</span> <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">setRenderTargets</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">mainTarget</span> : <span class="ActionScriptDefault_Text">Texture</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">stage3DProxy</span> : <span class="ActionScriptDefault_Text">Stage3DProxy</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_brightPassTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">target</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">_blurTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getMainInputTexture</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">stage3DProxy</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptDefault_Text">_blurTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">target</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">_compositeTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getMainInputTexture</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">stage3DProxy</span><span class="ActionScriptBracket/Brace">)</span>;
+            <span class="ActionScriptComment">// use bright pass's input as composite's input
+</span>            <span class="ActionScriptDefault_Text">_compositeTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">overlayTexture</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">_brightPassTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">getMainInputTexture</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">stage3DProxy</span><span class="ActionScriptBracket/Brace">)</span>;
+
+            <span class="ActionScriptReserved">super</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">setRenderTargets</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">mainTarget</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">stage3DProxy</span><span class="ActionScriptBracket/Brace">)</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">exposure</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptDefault_Text">Number</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">_compositeTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">exposure</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">set</span> <span class="ActionScriptDefault_Text">exposure</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">value</span> : <span class="ActionScriptDefault_Text">Number</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_compositeTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">exposure</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">value</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">blurX</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptDefault_Text">uint</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">_blurTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">blurX</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">set</span> <span class="ActionScriptDefault_Text">blurX</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">value</span> : <span class="ActionScriptDefault_Text">uint</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_blurTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">blurX</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">value</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">blurY</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptDefault_Text">uint</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">_blurTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">blurY</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">set</span> <span class="ActionScriptDefault_Text">blurY</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">value</span> : <span class="ActionScriptDefault_Text">uint</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_blurTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">blurY</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">value</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">get</span> <span class="ActionScriptDefault_Text">threshold</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptDefault_Text">Number</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">_brightPassTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">threshold</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptReserved">set</span> <span class="ActionScriptDefault_Text">threshold</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptDefault_Text">value</span> : <span class="ActionScriptDefault_Text">Number</span><span class="ActionScriptBracket/Brace">)</span> : <span class="ActionScriptReserved">void</span>
+        <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">_brightPassTask</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">threshold</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">value</span>;
+        <span class="ActionScriptBracket/Brace">}</span>
+    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span>
+</pre></body>
+</html>

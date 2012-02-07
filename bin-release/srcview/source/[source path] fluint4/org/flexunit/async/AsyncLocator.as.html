@@ -1,0 +1,121 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>AsyncLocator.as</title>
+<link rel="stylesheet" type="text/css" href="../../../../../SourceStyles.css"/>
+</head>
+
+<body><pre><span class="ActionScriptASDoc">/**
+ * Copyright (c) 2009 Digital Primates IT Consulting Group
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * @author     Michael Labriola 
+ * @version    
+ **/</span> 
+<span class="ActionScriptpackage">package</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">async</span> <span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">flash</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">utils</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">Dictionary</span>;
+    
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">AssertionError</span>;
+    <span class="ActionScriptReserved">import</span> <span class="ActionScriptDefault_Text">org</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">flexunit</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">internals</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">runners</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">statements</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span>;
+    
+    <span class="ActionScriptASDoc">/**
+     * The &lt;code&gt;AsyncLocator&lt;/code&gt; is used to keep track of test cases that have implemented asynchronous 
+     * functionality.  The test cases are registered with the &lt;code&gt;AsyncLocator&lt;/code&gt; and reference an
+     * object that implements &lt;code&gt;IAsyncHandlingStatement&lt;/code&gt;.  Test cases are registered using the
+     * method &lt;code&gt;#registerStatementForTest()&lt;/code&gt;.&lt;br/&gt;
+     * 
+     * The &lt;code&gt;IAsyncHandlingStatement&lt;/code&gt; is then retrieved using the method &lt;code&gt;#getCallableForTest()&lt;/code&gt;
+     * and providing the test case.  If a test case has not been registered, an &lt;code&gt;AssertionError&lt;/code&gt; will be
+     * thrown.&lt;br/&gt;
+     * 
+     * Once an asynchronous test has completed, the method &lt;code&gt;#cleanUpCallableForTest&lt;/code&gt; should be called in 
+     * order to disassociate the test case and the &lt;code&gt;IAsyncHandlingStatement&lt;/code&gt;.
+     * 
+     * @see org.flexunit.async.Async
+     */</span>
+    <span class="ActionScriptReserved">public</span> <span class="ActionScriptclass">class</span> <span class="ActionScriptDefault_Text">AsyncLocator</span> <span class="ActionScriptBracket/Brace">{</span>
+        <span class="ActionScriptASDoc">/**
+         * @private
+         */</span>
+        <span class="ActionScriptReserved">private</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">asyncHandlerMap</span>:<span class="ActionScriptDefault_Text">Dictionary</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">Dictionary</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span>;
+        
+        <span class="ActionScriptASDoc">/**
+         * Registers the &lt;code&gt;expectAsyncInstance&lt;/code&gt; with the provided &lt;code&gt;testCase&lt;/code&gt;.
+         * 
+         * @param expectAsyncInstance the &lt;code&gt;IAsyncHandlingStatement&lt;/code&gt; to be registered.
+         * @param testCase The test case to associate with the particular &lt;code&gt;expectAsyncInstance&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">registerStatementForTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">expectAsyncInstance</span>:<span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span><span class="ActionScriptOperator">,</span> <span class="ActionScriptDefault_Text">testCase</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptDefault_Text">asyncHandlerMap</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">testCase</span> <span class="ActionScriptBracket/Brace">]</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">expectAsyncInstance</span>;
+        <span class="ActionScriptBracket/Brace">}</span> 
+        
+        <span class="ActionScriptASDoc">/**
+         * Retrieves the &lt;code&gt;IAsyncHandlingStatement&lt;/code&gt; for the provided &lt;code&gt;testCase&lt;/code&gt;.  If no 
+         * &lt;code&gt;IAsyncHandlingStatement&lt;/code&gt; has been registered for the &lt;code&gt;testCase&lt;/code&gt;, an 
+         * &lt;code&gt;AssertionError&lt;/code&gt; will be thrown.
+         * 
+         * @param testCase The test case used to retrieve the &lt;code&gt;IAsyncHandlingStatement&lt;/code&gt;.
+         * 
+         * @return an &lt;code&gt;IAsyncHandlingStatement&lt;/code&gt; associated with the &lt;code&gt;testCase&lt;/code&gt;.
+         * 
+         * @throws org.flexunit.AssertionError Thrown if an &lt;code&gt;IAsyncHandlingStatement&lt;/code&gt; was not registered
+         * for the provided &lt;code&gt;testCase&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">getCallableForTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptvar">var</span> <span class="ActionScriptDefault_Text">handler</span>:<span class="ActionScriptDefault_Text">IAsyncHandlingStatement</span> <span class="ActionScriptOperator">=</span> <span class="ActionScriptDefault_Text">asyncHandlerMap</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">testCase</span> <span class="ActionScriptBracket/Brace">]</span>;
+            
+            <span class="ActionScriptComment">//If no handler was obtained from the dictionary, the test case was never marked as asynchronous, throw an AssertionError
+</span>            <span class="ActionScriptReserved">if</span> <span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptOperator">!</span><span class="ActionScriptDefault_Text">handler</span> <span class="ActionScriptBracket/Brace">)</span> <span class="ActionScriptBracket/Brace">{</span>
+                <span class="ActionScriptReserved">throw</span> <span class="ActionScriptReserved">new</span> <span class="ActionScriptDefault_Text">AssertionError</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">"Cannot add asynchronous functionality to methods defined by Test,Before or After that are not marked async"</span><span class="ActionScriptBracket/Brace">)</span>;    
+            <span class="ActionScriptBracket/Brace">}</span>
+
+            <span class="ActionScriptReserved">return</span> <span class="ActionScriptDefault_Text">handler</span>;
+        <span class="ActionScriptBracket/Brace">}</span> 
+        
+        <span class="ActionScriptASDoc">/**
+         * Removes the registration for the &lt;code&gt;IAsyncHandlingStatement&lt;/code&gt; that was associated with the
+         * provided &lt;code&gt;testCase&lt;/code&gt;.
+         * 
+         * @param testCase The test case to remove the association with the &lt;code&gt;IAsyncHandlingStatement&lt;/code&gt;.
+         */</span>
+        <span class="ActionScriptReserved">public</span> <span class="ActionScriptReserved">static</span> <span class="ActionScriptfunction">function</span> <span class="ActionScriptDefault_Text">cleanUpCallableForTest</span><span class="ActionScriptBracket/Brace">(</span> <span class="ActionScriptDefault_Text">testCase</span>:<span class="ActionScriptDefault_Text">Object</span> <span class="ActionScriptBracket/Brace">)</span>:<span class="ActionScriptReserved">void</span> <span class="ActionScriptBracket/Brace">{</span>
+            <span class="ActionScriptReserved">delete</span> <span class="ActionScriptDefault_Text">asyncHandlerMap</span><span class="ActionScriptBracket/Brace">[</span> <span class="ActionScriptDefault_Text">testCase</span> <span class="ActionScriptBracket/Brace">]</span>;
+        <span class="ActionScriptBracket/Brace">}</span> 
+        
+<span class="ActionScriptComment">/*        private static var instance:AsyncLocator;
+        public static function getInstance():AsyncLocator {
+            if ( !instance ) {
+                instance = new AsyncLocator();
+            }
+            
+            return instance;
+        }
+
+        public function AsyncLocator() {
+            callableMap = new Dictionary();
+        }
+*/</span>    <span class="ActionScriptBracket/Brace">}</span>
+<span class="ActionScriptBracket/Brace">}</span></pre></body>
+</html>

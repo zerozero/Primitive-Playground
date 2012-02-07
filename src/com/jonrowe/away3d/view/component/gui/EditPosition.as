@@ -2,11 +2,15 @@ package com.jonrowe.away3d.view.component.gui
 {
 	import away3d.containers.ObjectContainer3D;
 	
+	import com.bit101.components.Component;
 	import com.bit101.components.InputText;
+	import com.bit101.components.RadioButton;
 	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
 	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.Vector3D;
 	
 	import uk.co.soulwire.gui.SimpleGUI;
@@ -14,6 +18,7 @@ package com.jonrowe.away3d.view.component.gui
 	public class EditPosition extends Sprite
 	{
 		public var primitive :IPrimitive;
+		public var plane :String = "XZ";
 		
 		private var gui :SimpleGUI;
 		private var moveToParams :InputText;
@@ -21,6 +26,9 @@ package com.jonrowe.away3d.view.component.gui
 		private var translateDistance:InputText;
 		
 		private static const MAX_WIDTH : int = 126;
+		
+		public static const CHANGE_PLANE :String = "change_plane";
+		public static const CHANGE_GLOBAL_LOCAL :String = "change_global_local";
 		
 		public function EditPosition(primitive :IPrimitive)
 		{
@@ -48,8 +56,28 @@ package com.jonrowe.away3d.view.component.gui
 			translateParams = gui.addControl(InputText, {label:"trans axis x,y,z:", width:64}) as InputText;
 			translateDistance = gui.addControl(InputText, {label:"trans distance:", width:64}) as InputText;
 			gui.addButton("Translate", {callback:onTransform});
+			
+			gui.addLabel("Drag Plane:");
+			var rb :Component = gui.addControl( RadioButton, {label:"XY", width:64}) as RadioButton;
+			rb.addEventListener(MouseEvent.CLICK, onRBclick);
+			
+			rb = gui.addControl( RadioButton, {label:"XZ", width:64, selected:true }) as RadioButton;
+			rb.addEventListener(MouseEvent.CLICK, onRBclick);
+
+			rb = gui.addControl( RadioButton, {label:"ZY", width:64 }) as RadioButton;
+			rb.addEventListener(MouseEvent.CLICK, onRBclick);
+			
+			gui.addToggle("useGlobalPlane",{label:"global/local",selected:false});
+			
+			dispatchEvent( new Event( CHANGE_PLANE ));
 			gui.show();
 		}
+		
+		private function onRBclick( e:MouseEvent ):void{
+			plane = RadioButton(e.currentTarget).label;
+			dispatchEvent( new Event( CHANGE_PLANE ));
+		}
+		
 		
 		private function onMoveTo():void{
 			
@@ -69,6 +97,16 @@ package com.jonrowe.away3d.view.component.gui
 		}
 		
 		//FWD
+		private var _useGlobalPlane :Boolean;
+		public function set useGlobalPlane( trueOrFalse:Boolean ):void{
+			_useGlobalPlane = trueOrFalse;
+			dispatchEvent( new Event( CHANGE_GLOBAL_LOCAL ));
+		}
+		
+		public function get useGlobalPlane():Boolean{
+			return _useGlobalPlane;
+		}
+		
 		private var _moveForward :Number = 0;
 		public function set moveForward( amount :Number):void{
 			var increment :Number = amount - _moveForward;
