@@ -3,10 +3,8 @@ package com.jonrowe.away3d.view.component.gui
 	import away3d.containers.ObjectContainer3D;
 	
 	import com.bit101.components.InputText;
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
-	import com.jonrowe.away3d.productFactory.primitives.Primitive;
+	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
 	
-	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.geom.Vector3D;
 	
@@ -14,7 +12,7 @@ package com.jonrowe.away3d.view.component.gui
 	
 	public class EditRotation extends Sprite
 	{
-		public var primitive :IPrimitive;
+		public var primitive :IMeshGroupContainer3D;
 		
 		private var gui :SimpleGUI;
 		private var rotateToParams :InputText;
@@ -23,7 +21,7 @@ package com.jonrowe.away3d.view.component.gui
 		
 		private static const MAX_WIDTH : int = 126;
 		
-		public function EditRotation(primitive :IPrimitive)
+		public function EditRotation(primitive :IMeshGroupContainer3D)
 		{
 			super();
 			this.primitive = primitive;
@@ -74,7 +72,7 @@ package com.jonrowe.away3d.view.component.gui
 			
 			var componentValues :Array = movePivotParams.text.split(",");
 			if (componentValues.length == 3){
-				Primitive(primitive).pivotPoint = new Vector3D(componentValues[0],componentValues[1],componentValues[2]);
+				IMeshGroupContainer3D(primitive).pivotPoint = new Vector3D(componentValues[0],componentValues[1],componentValues[2]);
 			}
 		}
 		

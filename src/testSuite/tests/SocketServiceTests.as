@@ -4,8 +4,8 @@ package testSuite.tests
 	import away3d.primitives.PrimitiveBase;
 	
 	import com.jonrowe.away3d.model.SceneProxy;
-	import com.jonrowe.away3d.productFactory.PrimitiveInit;
-	import com.jonrowe.away3d.productFactory.primitives.PrimitiveObjectBase;
+	import com.jonrowe.away3d.meshGroupFactory.PrimitiveInit;
+	import com.jonrowe.away3d.meshGroupFactory.containers.MeshGroupContainer3D;
 	import com.jonrowe.away3d.services.ISocketService;
 	import com.jonrowe.away3d.services.SocketService;
 	import com.jonrowe.away3d.services.event.SocketServiceEvent;
@@ -84,7 +84,7 @@ package testSuite.tests
 		{
 			var asyncHandler:Function = Async.asyncHandler( this, handleSuccess, 500, null, handleTimeout );
 			serviceDispatcher.addEventListener(SocketServiceEvent.OBJECT_CREATED, asyncHandler, false, 0, true );
-			var init :PrimitiveInit = new PrimitiveInit("Cube", "Cube-1", Cube, PrimitiveObjectBase.DEFAULT_MATERIAL, {} );
+			var init :PrimitiveInit = new PrimitiveInit("Cube", "Cube-1", Cube, MeshGroupContainer3D.DEFAULT_MATERIAL, {} );
 			socket.createObject(init);
 			
 		}

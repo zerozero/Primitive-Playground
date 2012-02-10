@@ -5,7 +5,7 @@ package com.jonrowe.away3d.view.component.gui
 	import away3d.materials.MaterialBase;
 	import away3d.primitives.Plane;
 	
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
+	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
 	
 	import flash.display.Sprite;
 	
@@ -13,13 +13,13 @@ package com.jonrowe.away3d.view.component.gui
 	
 	public class EditMaterials extends Sprite
 	{
-		private var primitive :IPrimitive;
+		private var primitive :IMeshGroupContainer3D;
 		private var gui :SimpleGUI;
 		public var color :int = 0x6666cc;
 		public var colorAlpha :Number = 0.8;
 		public var bothsides :Boolean;
 		
-		public function EditMaterials(primitive :IPrimitive)
+		public function EditMaterials(primitive :IMeshGroupContainer3D)
 		{
 			super();
 			this.primitive = primitive;
@@ -32,21 +32,24 @@ package com.jonrowe.away3d.view.component.gui
 			gui.addGroup(primitive.primitiveName);
 			
 			gui.addColour("color");
-			gui.addToggle("bothsides",{label:"both sides",selected:(primitive.object3D is Plane)});
+			gui.addToggle("bothsides",{label:"both sides"});
 			gui.addSlider("colorAlpha",0.05,1,{label:"alpha", width:178});
 			gui.addButton("Apply", {callback:onApplyColor});
 			gui.show();
 		}
 		
 		private function onApplyColor():void{
-			var mesh :Mesh = Mesh(primitive.object3D) ;
+			
+			primitive.applyMaterial( new ColorMaterial(color,colorAlpha));
+			
+			/*var mesh :Mesh = Mesh(primitive.object3D) ;
 			if (!mesh)
 				return;
 			var mat :MaterialBase = mesh.material;
 			var lights :Array = mat.lights;
 			mesh.material = new ColorMaterial(color,colorAlpha);
 			mesh.material.bothSides = bothsides;
-			mesh.material.lights = lights;
+			mesh.material.lights = lights;*/
 		}
 	}
 }

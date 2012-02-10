@@ -3,36 +3,13 @@ package
 	
 	
 	
-	import away3d.primitives.Cube;
-	
 	import com.adobe.viewsource.ViewSource;
-	import com.bit101.components.Accordion;
-	import com.bit101.components.ComboBox;
-	import com.bit101.components.PushButton;
-	import com.bit101.components.VScrollBar;
-	import com.jonrowe.away3d.productFactory.PrimitiveInit;
-	import com.jonrowe.away3d.productFactory.ProductType;
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
-	import com.jonrowe.away3d.productFactory.primitives.Primitive;
-	import com.jonrowe.away3d.productFactory.primitives.PrimitiveObjectBase;
 	import com.jonrowe.away3d.view.component.Canvas3D;
 	import com.jonrowe.away3d.view.component.EditView;
 	
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import flash.geom.Rectangle;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
-	
-	import flashx.textLayout.formats.TextAlign;
-	
-	import org.robotlegs.base.ContextEvent;
-	import org.robotlegs.mvcs.Context;
-	
-	import uk.co.soulwire.gui.SimpleGUI;
 	
 	
 	public class Main extends Sprite
@@ -48,8 +25,7 @@ package
 		
 		public function Main()
 		{
-			//visible = false;
-			//createContext();
+			super();
 		}
 		
 		

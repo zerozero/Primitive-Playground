@@ -3,7 +3,7 @@ package testSuite.tests
 	import away3d.library.AssetLibrary;
 	import away3d.loaders.Loader3D;
 	
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
+	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
 	import com.jonrowe.away3d.services.FileService;
 	import com.jonrowe.away3d.services.event.Loader3DEvent;
 	
@@ -54,12 +54,12 @@ package testSuite.tests
 		[Test(async)]
 		public function loadEmbeddedMesh_Loader3DNotNull():void{
 			var asyncHandler:Function = Async.asyncHandler( this, loadEmbeddedMeshResult, 500, null, handleTimeout );
-			files.eventDispatcher.addEventListener( Loader3DEvent.DISPLAY, asyncHandler, false, 0, true );
+			files.eventDispatcher.addEventListener( Loader3DEvent.LOADED, asyncHandler, false, 0, true );
 			files.loadMesh();
 		}
 		
 		private function loadEmbeddedMeshResult( e:Loader3DEvent, passThroughData:Object ):void{
-			Assert.assertTrue("type should be Loader3D", e.data is IPrimitive);
+			Assert.assertNotNull("Character should exist", AssetLibrary.getAsset("Character"));
 		}
 		
 		[Test]

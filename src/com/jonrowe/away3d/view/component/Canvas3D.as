@@ -9,10 +9,10 @@ package com.jonrowe.away3d.view.component
 	import away3d.loaders.Loader3D;
 	import away3d.tools.utils.Drag3D;
 	
-	import com.jonrowe.away3d.productFactory.PrimitiveInit;
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
-	import com.jonrowe.away3d.productFactory.primitives.PrimitiveObjectBase;
-	import com.jonrowe.away3d.productFactory.primitives.component.WireframeSingleAxisGrid;
+	import com.jonrowe.away3d.meshGroupFactory.PrimitiveInit;
+	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
+	import com.jonrowe.away3d.meshGroupFactory.containers.MeshGroupContainer3D;
+	import com.jonrowe.away3d.meshGroupFactory.containers.component.WireframeSingleAxisGrid;
 	import com.jonrowe.away3d.utils.Drag2D;
 	import com.jonrowe.away3d.utils.HoverDragController;
 	
@@ -33,7 +33,7 @@ package com.jonrowe.away3d.view.component
 		/*		PRIVATE PROPERTIES		*/
 		
 		private var _view:View3D;
-		private var _selected :IPrimitive;
+		private var _selected :IMeshGroupContainer3D;
 		private var camController:HoverDragController;   
 		private var directionalLight :DirectionalLight;
 		private var pointLight :PointLight;
@@ -50,11 +50,11 @@ package com.jonrowe.away3d.view.component
 		
 		/*		GET/SET		*/
 		
-		public function get selected():IPrimitive{
+		public function get selected():IMeshGroupContainer3D{
 			return _selected;
 		}
 		
-		public function set selected(p:IPrimitive):void{
+		public function set selected(p:IMeshGroupContainer3D):void{
 			_selected = p;
 		}
 		
@@ -78,21 +78,18 @@ package com.jonrowe.away3d.view.component
 		
 		/*		PUBLIC		*/
 		
-		public function displayPrimitive( primitive :IPrimitive ):void{
+		public function displayPrimitive( primitive :IMeshGroupContainer3D ):void{
 			_view.scene.addChild(primitive as ObjectContainer3D);
-			
-			//tempoarily - light the primitive
-//			primitive.light([directionalLight]);
 			primitive.light([pointLight]);
 			
 		}
 		
-		public function displayLoadedMesh( mesh : IPrimitive ):void{
+		public function displayLoadedMesh( mesh : IMeshGroupContainer3D ):void{
 			_view.scene.addChild( mesh as ObjectContainer3D );
 			//mesh.light([pointLight]);
 		}
 		
-		public function removePrimitive( primitive :IPrimitive ):void{
+		public function removePrimitive( primitive :IMeshGroupContainer3D ):void{
 			_view.scene.removeChild( primitive as ObjectContainer3D );
 		}
 		
@@ -103,7 +100,7 @@ package com.jonrowe.away3d.view.component
 			
 		}
 		
-		public function startDragging( primitive :IPrimitive, plane :String, useGlobalPlane :Boolean ):void{
+		public function startDragging( primitive :IMeshGroupContainer3D, plane :String, useGlobalPlane :Boolean ):void{
 			drag = new Drag2D(_view,ObjectContainer3D(primitive));
 			if (plane) drag.plane = plane;
 			
@@ -119,7 +116,7 @@ package com.jonrowe.away3d.view.component
 			camController.active = false;
 		}
 		
-		public function endDragging( primitive :IPrimitive ):void{
+		public function endDragging( primitive :IMeshGroupContainer3D ):void{
 			camController.active = true;
 			if (!drag) return;
 			drag.debug = false;

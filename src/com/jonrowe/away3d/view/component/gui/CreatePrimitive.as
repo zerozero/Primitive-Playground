@@ -2,12 +2,6 @@ package com.jonrowe.away3d.view.component.gui
 {
 	import away3d.primitives.*;
 	
-	import com.jonrowe.away3d.productFactory.PrimitiveInit;
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
-	import com.jonrowe.away3d.productFactory.primitives.Primitive;
-	import com.jonrowe.away3d.productFactory.primitives.PrimitiveObjectBase;
-	
-	import flash.display.Sprite;
 	import flash.events.Event;
 	
 	import uk.co.soulwire.gui.SimpleGUI;
@@ -25,7 +19,7 @@ package com.jonrowe.away3d.view.component.gui
 		private var gui :SimpleGUI;
 		private var dataProvider :Array = [];
 		
-		private var _selectedPrimitiveToCreate :Object;
+		private var _selectedPrimitiveToCreate :String;
 		
 		
 		
@@ -34,11 +28,11 @@ package com.jonrowe.away3d.view.component.gui
 			super();
 		}
 		
-		public function set selected(obj:Object):void{
+		public function set selected(obj:String):void{
 			_selectedPrimitiveToCreate = obj;
 		}
 		
-		public function get selected():Object{
+		public function get selected():String{
 			return _selectedPrimitiveToCreate;
 		}
 		
@@ -62,7 +56,7 @@ package com.jonrowe.away3d.view.component.gui
 			gui.addButton("Make", {callback:onMake});
 			gui.addButton("Duplicate", {callback:onDuplicate});
 			gui.addButton("Delete", {callback:onDelete});
-			gui.addButton("Import", {callback:onImport});
+			/*gui.addButton("Socrates", {callback:onImport});*/
 			gui.show();
 			
 		}

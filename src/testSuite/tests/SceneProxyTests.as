@@ -1,12 +1,13 @@
 package testSuite.tests
 {
-	import away3d.primitives.Capsule;
+	import away3d.primitives.Cube;
+	import away3d.primitives.PrimitiveBase;
 	
+	import com.jonrowe.away3d.meshGroupFactory.MeshGroupType;
+	import com.jonrowe.away3d.meshGroupFactory.containers.MeshGroupContainer3D;
+	import com.jonrowe.away3d.meshGroupFactory.containers.Primitive;
+	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
 	import com.jonrowe.away3d.model.SceneProxy;
-	import com.jonrowe.away3d.productFactory.PrimitiveInit;
-	import com.jonrowe.away3d.productFactory.ProductType;
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
-	import com.jonrowe.away3d.productFactory.primitives.PrimitiveObjectBase;
 	import com.jonrowe.away3d.view.event.*;
 	
 	import flash.events.EventDispatcher;
@@ -14,7 +15,7 @@ package testSuite.tests
 	import org.flexunit.Assert;
 	import org.flexunit.async.Async;
 	
-	public class PrimitiveModelTest
+	public class SceneProxyTests
 	{		
 		private var sceneProxy :SceneProxy;
 		private var modelDispatcher :EventDispatcher;
@@ -45,47 +46,41 @@ package testSuite.tests
 		{
 		}
 		
-		[Test]
-		public function testListOfPrimitivesExists():void{
+		[Test (description="Primitives list is null by default, is conditionally created the first time it is accessed")]
+		public function GetPrimitivesList_PrimitivesListNull_PrimitivesListNotNull():void{
+			Assert.assertNull(primitives);
 			var primitives :Object = sceneProxy.primitives;
 			Assert.assertNotNull(primitives);
 		}
 		
-		[Test]
-		public function testChangeDragPlane():void{
-			sceneProxy.dragPlane = "XY";
-			Assert.assertTrue("Should be XY", sceneProxy.dragPlane == "XY");
-		}
 		
-		[Test]
-		public function testSelectedPrimitiveToCreate():void{
-			var primitives :Object = sceneProxy.primitives;
-			sceneProxy.primitiveListSelection = "Cube";
-			Assert.assertEquals("should both be Cube", primitives[sceneProxy.primitiveListSelection], primitives["Cube"]);
-		}
-		
-		[Test(async, description="Create Primitive")]
-		public function testCreatePrimitive():void{
-			var primitives :Object = sceneProxy.primitives;
-			sceneProxy.primitiveListSelection = "Cube";
-			var asyncHandler:Function = Async.asyncHandler( this, testCreatePrimitiveResult, 500, null, handleTimeout );
+		[Test(async, description="Create a primitive type Mesh Group init with string")]
+		public function CreateMeshGroup_InitWithString_PrimitiveNotNull():void{
+			
+			var asyncHandler:Function = Async.asyncHandler( this, CreatePrimitiveTypeMeshGroupResult, 500, null, handleTimeout );
 			sceneProxy.eventDispatcher.addEventListener( DisplayPrimitiveEvent.DISPLAY, asyncHandler, false, 0, true );
-			sceneProxy.createPrimitveType( sceneProxy.primitiveListSelection );
+			sceneProxy.createMeshGroup( "Cube" );
 		}
 		
-		private function testCreatePrimitiveResult( e:DisplayPrimitiveEvent, passThroughData:Object ):void{
+		
+		private function CreatePrimitiveTypeMeshGroupResult( e:DisplayPrimitiveEvent, passThroughData:Object ):void{
 			var primitives :Object = sceneProxy.primitives;
-			Assert.assertEquals("type should be Cube", e.primitive.type, "Cube");
+			Assert.assertTrue("type should be Primitive", e.primitive is Primitive);
+			Assert.assertTrue("mesh should be Cube", e.primitive.meshes[0] is Cube);
 			Assert.assertTrue("Should be one object in the primitivesCollection ", sceneProxy.primitiveObjects.length == 1);
 		}
 		
-		[Test(async, description="Duplicate Primitive")]
+		
+		
+		
+		/*[Test(async, description="Duplicate Primitive")]
 		public function testDuplicatePrimitive():void{
 			//inits list of primitives if not yet defined
 			var primitives :Object = sceneProxy.primitives;
 			//create a mock primitive
-			var primitive :IPrimitive = PrimitiveObjectBase.create( ProductType.PRIMITIVE );
-			primitive.init( "Cube", sceneProxy.createObjectInit( "Cube" ) );
+			var primitive :IMeshGroupContainer3D = MeshGroupContainer3D.create( MeshGroupType.PRIMITIVE );
+			primitive.appendMesh( new (primitives["Cube"].classname) );
+			sceneProxy.primitiveObjects.addItem(primitive);
 			//set it as the selected primitive
 			sceneProxy.selectedPrimitive = primitive;
 			//test duplication
@@ -95,9 +90,9 @@ package testSuite.tests
 		}
 		
 		private function testDuplicatePrimitiveResult( e:DisplayPrimitiveEvent, passThroughData:Object ):void{
-			var primitives :Object = sceneProxy.primitives;
-			Assert.assertEquals("type should be Cube", e.primitive.type, "Cube");
-		}
+			//Assert.assertNotNull("mesh should be Cube", Cube(e.primitive.meshes[0]));
+			Assert.assertTrue("Should be two objects in the primitivesCollection ", sceneProxy.primitiveObjects.length == 2);
+		}*/
 		
 		[Test(async, description="Delete Primitive")]
 		public function testDeletePrimitive():void{
@@ -105,9 +100,9 @@ package testSuite.tests
 			var primitives :Object = sceneProxy.primitives;
 			//create a mock primitive
 			
-			sceneProxy.createPrimitveType("Cube");
+			sceneProxy.createMeshGroup("Cube");
 			//set it as the selected primitive
-			sceneProxy.selectedPrimitive = sceneProxy.primitiveObjects.getItemAt(0) as IPrimitive;
+			sceneProxy.selectedPrimitive = sceneProxy.primitiveObjects.getItemAt(0) as IMeshGroupContainer3D;
 			
 			//test deletion
 			var asyncHandler:Function = Async.asyncHandler( this, testDeletePrimitiveResult, 500, null, handleTimeout );
@@ -117,18 +112,11 @@ package testSuite.tests
 		
 		private function testDeletePrimitiveResult( e:DisplayPrimitiveEvent, passThroughData:Object ):void{
 			var primitives :Object = sceneProxy.primitives;
-			Assert.assertEquals("type should be Cube", e.primitive.type, "Cube");
+			Assert.assertTrue("mesh should be Cube", e.primitive.meshes[0] is Cube);
 			Assert.assertTrue("Should be no objects in the primitivesCollection ", sceneProxy.primitiveObjects.length == 0);
 		}
 		
-		[Test]
-		public function createObjectInitializer_initWithName_validInitObject():void{
-			var primitives :Object = sceneProxy.primitives;
-			var init :PrimitiveInit = sceneProxy.createObjectInit("Capsule");
-			Assert.assertNotNull(init);
-			Assert.assertTrue( init.primitiveClass == Capsule );
-			Assert.assertTrue( init.name.indexOf("Capsule") > -1 );
-		}
+		
 		
 		protected function handleTimeout( passThroughData:Object ):void {
 			Assert.fail( "Timeout reached before event");	

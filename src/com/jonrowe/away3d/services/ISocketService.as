@@ -1,6 +1,6 @@
 package com.jonrowe.away3d.services
 {
-	import com.jonrowe.away3d.productFactory.PrimitiveInit;
+	import com.jonrowe.away3d.meshGroupFactory.PrimitiveInit;
 
 	public interface ISocketService
 	{

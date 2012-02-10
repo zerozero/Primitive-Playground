@@ -2,8 +2,8 @@ package com.jonrowe.away3d.view
 {
 	import com.jonrowe.away3d.model.SceneProxy;
 	import com.jonrowe.away3d.model.event.CreatePrimitiveEvent;
-	import com.jonrowe.away3d.productFactory.PrimitiveInit;
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
+	import com.jonrowe.away3d.meshGroupFactory.PrimitiveInit;
+	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
 	import com.jonrowe.away3d.view.component.EditGUI;
 	import com.jonrowe.away3d.view.component.EditView;
 	import com.jonrowe.away3d.view.component.gui.*;

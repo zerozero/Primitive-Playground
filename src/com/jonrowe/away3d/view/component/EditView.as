@@ -5,7 +5,7 @@ package com.jonrowe.away3d.view.component
 	import com.bit101.components.VScrollBar;
 	import com.bit101.components.Window;
 	import com.jonrowe.away3d.model.data.PropertyVO;
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
+	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -45,7 +45,7 @@ package com.jonrowe.away3d.view.component
 		
 		
 		
-		public function createGUI(primitive :IPrimitive ):void{
+		public function createGUI(primitive :IMeshGroupContainer3D ):void{
 			
 			hideGUIs();
 			

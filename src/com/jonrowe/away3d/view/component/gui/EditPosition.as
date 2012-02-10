@@ -5,7 +5,7 @@ package com.jonrowe.away3d.view.component.gui
 	import com.bit101.components.Component;
 	import com.bit101.components.InputText;
 	import com.bit101.components.RadioButton;
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
+	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
 	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -17,7 +17,7 @@ package com.jonrowe.away3d.view.component.gui
 	
 	public class EditPosition extends Sprite
 	{
-		public var primitive :IPrimitive;
+		public var primitive :IMeshGroupContainer3D;
 		public var plane :String = "XZ";
 		
 		private var gui :SimpleGUI;
@@ -30,7 +30,7 @@ package com.jonrowe.away3d.view.component.gui
 		public static const CHANGE_PLANE :String = "change_plane";
 		public static const CHANGE_GLOBAL_LOCAL :String = "change_global_local";
 		
-		public function EditPosition(primitive :IPrimitive)
+		public function EditPosition(primitive :IMeshGroupContainer3D)
 		{
 			super();
 			this.primitive = primitive;

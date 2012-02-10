@@ -2,7 +2,7 @@ package com.jonrowe.away3d.services
 {
 	//import JSON;
 	
-	import com.jonrowe.away3d.productFactory.PrimitiveInit;
+	import com.jonrowe.away3d.meshGroupFactory.PrimitiveInit;
 	import com.jonrowe.away3d.services.data.NewMemberVO;
 	import com.jonrowe.away3d.services.event.SocketServiceEvent;
 	import com.rational.serialization.json.JSON;

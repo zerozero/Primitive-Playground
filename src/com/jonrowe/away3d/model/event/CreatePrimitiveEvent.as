@@ -1,8 +1,8 @@
 package com.jonrowe.away3d.model.event
 {
-	import com.jonrowe.away3d.productFactory.PrimitiveInit;
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
-	import com.jonrowe.away3d.productFactory.primitives.PrimitiveObjectBase;
+	import com.jonrowe.away3d.meshGroupFactory.PrimitiveInit;
+	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
+	import com.jonrowe.away3d.meshGroupFactory.containers.MeshGroupContainer3D;
 	
 	import flash.events.Event;
 	

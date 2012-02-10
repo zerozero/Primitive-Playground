@@ -4,7 +4,7 @@ package
 	import com.jonrowe.away3d.controller.NewMemberCommand;
 	import com.jonrowe.away3d.model.SceneProxy;
 	import com.jonrowe.away3d.model.event.*;
-	import com.jonrowe.away3d.productFactory.primitives.*;
+	import com.jonrowe.away3d.meshGroupFactory.containers.*;
 	import com.jonrowe.away3d.services.*;
 	import com.jonrowe.away3d.services.event.*;
 	import com.jonrowe.away3d.view.*;
@@ -32,6 +32,7 @@ package
 			
 			mediatorMap.mapView(EditView, EditViewMediator);
 			mediatorMap.mapView(Primitive,PrimitiveMediator);
+			mediatorMap.mapView(Socrates,SocratesMediator);
 			mediatorMap.mapView(CreatePrimitive,CreatePrimitiveMediator,ICreatePrimitveComponent);
 			mediatorMap.mapView(Canvas3D,Canvas3DMediator);
 			

@@ -1,4 +1,4 @@
-package com.jonrowe.away3d.productFactory.primitives.component
+package com.jonrowe.away3d.meshGroupFactory.containers.component
 {
 	import away3d.core.base.Geometry;
 	import away3d.entities.Mesh;

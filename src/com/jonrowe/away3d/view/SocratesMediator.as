@@ -1,7 +1,7 @@
 package com.jonrowe.away3d.view
 {
 	import com.jonrowe.away3d.meshGroupFactory.containers.MeshGroupContainer3D;
-	import com.jonrowe.away3d.meshGroupFactory.containers.Primitive;
+	import com.jonrowe.away3d.meshGroupFactory.containers.Socrates;
 	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
 	import com.jonrowe.away3d.model.SceneProxy;
 	import com.jonrowe.away3d.view.event.EntityEvent;
@@ -11,16 +11,16 @@ package com.jonrowe.away3d.view
 	import org.robotlegs.mvcs.Mediator;
 	
 	
-	public class PrimitiveMediator extends Mediator
+	public class SocratesMediator extends Mediator
 	{
 		
 		[Inject]
-		public var _view :Primitive;
+		public var _view :Socrates;
 
 		[Inject]
 		public var sceneProxy :SceneProxy;
 		
-		public function PrimitiveMediator()
+		public function SocratesMediator()
 		{
 			super();
 		}
@@ -64,7 +64,7 @@ package com.jonrowe.away3d.view
 				MeshGroupContainer3D(getViewComponent()).selected = false;
 		}
 		
-		public function get view():Primitive{
+		public function get view():Socrates{
 			return _view;
 		}
 		

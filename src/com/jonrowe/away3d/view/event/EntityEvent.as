@@ -1,7 +1,7 @@
 package com.jonrowe.away3d.view.event
 {
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
-	import com.jonrowe.away3d.productFactory.primitives.PrimitiveObjectBase;
+	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
+	import com.jonrowe.away3d.meshGroupFactory.containers.MeshGroupContainer3D;
 	
 	import flash.events.Event;
 	
@@ -11,9 +11,9 @@ package com.jonrowe.away3d.view.event
 		public static const START_DRAG :String = "entity_start_drag";
 		public static const END_DRAG :String = "entity_end_drag";
 		
-		public var primitive :IPrimitive;
+		public var primitive :IMeshGroupContainer3D;
 		
-		public function EntityEvent(type:String, primitive :IPrimitive, bubbles:Boolean=false, cancelable:Boolean=false)
+		public function EntityEvent(type:String, primitive :IMeshGroupContainer3D, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);
 			this.primitive = primitive;

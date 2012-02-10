@@ -8,6 +8,8 @@ package
 	
 	import testSuite.AutoCreatedSuite;
 	import testSuite.tests.FileServiceTests;
+	import testSuite.tests.MeshGroupFactoryTests;
+	import testSuite.tests.SceneProxyTests;
 	
 	public class FlexUnitApplication extends Sprite
 	{
@@ -28,6 +30,8 @@ package
 			var testsToRun:Array = new Array();
 			testsToRun.push(testSuite.AutoCreatedSuite);
 			testsToRun.push(testSuite.tests.FileServiceTests);
+			testsToRun.push(testSuite.tests.MeshGroupFactoryTests);
+			testsToRun.push(testSuite.tests.SceneProxyTests);
 			return testsToRun;
 		}
 	}

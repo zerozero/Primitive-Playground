@@ -1,18 +1,10 @@
 package com.jonrowe.away3d.view.component.gui
 {
-	import away3d.containers.ObjectContainer3D;
-	import away3d.primitives.Plane;
-	
-	import com.bit101.components.Component;
 	import com.bit101.components.InputText;
 	import com.bit101.components.PushButton;
-	import com.jonrowe.away3d.productFactory.interfaces.IPrimitive;
-	import com.jonrowe.away3d.productFactory.primitives.Primitive;
 	
-	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.TextEvent;
-	import flash.geom.Vector3D;
 	
 	import uk.co.soulwire.gui.SimpleGUI;
 	

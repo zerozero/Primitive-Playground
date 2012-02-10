@@ -1,4 +1,4 @@
-package com.jonrowe.away3d.productFactory
+package com.jonrowe.away3d.meshGroupFactory
 {
 	import away3d.materials.MaterialBase;
 
