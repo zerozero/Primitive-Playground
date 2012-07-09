@@ -33,7 +33,7 @@ package
 			mediatorMap.mapView(EditView, EditViewMediator);
 			mediatorMap.mapView(Primitive,PrimitiveMediator);
 			mediatorMap.mapView(Socrates,SocratesMediator);
-			mediatorMap.mapView(CreatePrimitive,CreatePrimitiveMediator,ICreatePrimitveComponent);
+			mediatorMap.mapView(CreatePrimitive,CreatePrimitiveMediator);
 			mediatorMap.mapView(Canvas3D,Canvas3DMediator);
 			
 			mediatorMap.mapView(Main,ApplicationMediator);

@@ -47,8 +47,8 @@ package com.jonrowe.away3d.view.component.gui
 			this.hasInitialized = true;
 		}
 		
-		public function createChildren():void{
-			
+		override public function createChildren():void{
+			return;
 			//top level gui - object select and make
 			gui = new SimpleGUI(this,"PP "+Main.VERSION_STRING,"P");
 			gui.addGroup("Add");
@@ -56,7 +56,7 @@ package com.jonrowe.away3d.view.component.gui
 			gui.addButton("Make", {callback:onMake});
 			gui.addButton("Duplicate", {callback:onDuplicate});
 			gui.addButton("Delete", {callback:onDelete});
-			/*gui.addButton("Socrates", {callback:onImport});*/
+			
 			gui.show();
 			
 		}

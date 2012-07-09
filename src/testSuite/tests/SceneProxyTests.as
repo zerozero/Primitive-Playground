@@ -1,11 +1,13 @@
 package testSuite.tests
 {
-	import away3d.primitives.Cube;
+	import away3d.entities.Mesh;
+	import away3d.primitives.CubeGeometry;
 	import away3d.primitives.PrimitiveBase;
 	
 	import com.jonrowe.away3d.meshGroupFactory.MeshGroupType;
 	import com.jonrowe.away3d.meshGroupFactory.containers.MeshGroupContainer3D;
 	import com.jonrowe.away3d.meshGroupFactory.containers.Primitive;
+	import com.jonrowe.away3d.meshGroupFactory.containers.TransformWidget;
 	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
 	import com.jonrowe.away3d.model.SceneProxy;
 	import com.jonrowe.away3d.view.event.*;
@@ -66,33 +68,16 @@ package testSuite.tests
 		private function CreatePrimitiveTypeMeshGroupResult( e:DisplayPrimitiveEvent, passThroughData:Object ):void{
 			var primitives :Object = sceneProxy.primitives;
 			Assert.assertTrue("type should be Primitive", e.primitive is Primitive);
-			Assert.assertTrue("mesh should be Cube", e.primitive.meshes[0] is Cube);
+			Assert.assertTrue("mesh geometry should be Cube Geometry", Mesh(e.primitive.meshes[0]).geometry is CubeGeometry);
 			Assert.assertTrue("Should be one object in the primitivesCollection ", sceneProxy.primitiveObjects.length == 1);
 		}
 		
-		
-		
-		
-		/*[Test(async, description="Duplicate Primitive")]
-		public function testDuplicatePrimitive():void{
-			//inits list of primitives if not yet defined
-			var primitives :Object = sceneProxy.primitives;
-			//create a mock primitive
-			var primitive :IMeshGroupContainer3D = MeshGroupContainer3D.create( MeshGroupType.PRIMITIVE );
-			primitive.appendMesh( new (primitives["Cube"].classname) );
-			sceneProxy.primitiveObjects.addItem(primitive);
-			//set it as the selected primitive
-			sceneProxy.selectedPrimitive = primitive;
-			//test duplication
-			var asyncHandler:Function = Async.asyncHandler( this, testDuplicatePrimitiveResult, 500, null, handleTimeout );
-			sceneProxy.eventDispatcher.addEventListener( DisplayPrimitiveEvent.DISPLAY, asyncHandler, false, 0, true );
-			sceneProxy.duplicateSelectedPrimitve( );
+		[Test]
+		public function CreateTransformWidget_ReturnTransformWidget():void{
+			var tw :TransformWidget = sceneProxy.createTransformWidget() as TransformWidget;
+			Assert.assertNotNull("should not be null",tw);
 		}
 		
-		private function testDuplicatePrimitiveResult( e:DisplayPrimitiveEvent, passThroughData:Object ):void{
-			//Assert.assertNotNull("mesh should be Cube", Cube(e.primitive.meshes[0]));
-			Assert.assertTrue("Should be two objects in the primitivesCollection ", sceneProxy.primitiveObjects.length == 2);
-		}*/
 		
 		[Test(async, description="Delete Primitive")]
 		public function testDeletePrimitive():void{
@@ -102,7 +87,7 @@ package testSuite.tests
 			
 			sceneProxy.createMeshGroup("Cube");
 			//set it as the selected primitive
-			sceneProxy.selectedPrimitive = sceneProxy.primitiveObjects.getItemAt(0) as IMeshGroupContainer3D;
+			sceneProxy.selectedPrimitive = sceneProxy.primitiveObjects[0] as IMeshGroupContainer3D;
 			
 			//test deletion
 			var asyncHandler:Function = Async.asyncHandler( this, testDeletePrimitiveResult, 500, null, handleTimeout );
@@ -112,7 +97,7 @@ package testSuite.tests
 		
 		private function testDeletePrimitiveResult( e:DisplayPrimitiveEvent, passThroughData:Object ):void{
 			var primitives :Object = sceneProxy.primitives;
-			Assert.assertTrue("mesh should be Cube", e.primitive.meshes[0] is Cube);
+			Assert.assertTrue("mesh geometry should be Cube Geometry", Mesh(e.primitive.meshes[0]).geometry is CubeGeometry);
 			Assert.assertTrue("Should be no objects in the primitivesCollection ", sceneProxy.primitiveObjects.length == 0);
 		}
 		

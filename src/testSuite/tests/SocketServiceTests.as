@@ -1,6 +1,6 @@
 package testSuite.tests
 {
-	import away3d.primitives.Cube;
+	import away3d.primitives.CubeGeometry;
 	import away3d.primitives.PrimitiveBase;
 	
 	import com.jonrowe.away3d.model.SceneProxy;
@@ -84,7 +84,7 @@ package testSuite.tests
 		{
 			var asyncHandler:Function = Async.asyncHandler( this, handleSuccess, 500, null, handleTimeout );
 			serviceDispatcher.addEventListener(SocketServiceEvent.OBJECT_CREATED, asyncHandler, false, 0, true );
-			var init :PrimitiveInit = new PrimitiveInit("Cube", "Cube-1", Cube, MeshGroupContainer3D.DEFAULT_MATERIAL, {} );
+			var init :PrimitiveInit = new PrimitiveInit("CubeGeometry", "CubeGeometry-1", CubeGeometry, MeshGroupContainer3D.DEFAULT_MATERIAL, {} );
 			socket.createObject(init);
 			
 		}

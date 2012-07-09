@@ -1,35 +1,25 @@
 package com.jonrowe.away3d.view.component.gui
 {
-	import away3d.entities.Mesh;
 	import away3d.materials.ColorMaterial;
-	import away3d.materials.MaterialBase;
-	import away3d.primitives.Plane;
-	
-	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
-	
-	import flash.display.Sprite;
 	
 	import uk.co.soulwire.gui.SimpleGUI;
 	
-	public class EditMaterials extends Sprite
+	public class EditMaterials extends BaseGUI
 	{
-		private var primitive :IMeshGroupContainer3D;
 		private var gui :SimpleGUI;
 		public var color :int = 0x6666cc;
 		public var colorAlpha :Number = 0.8;
 		public var bothsides :Boolean;
 		
-		public function EditMaterials(primitive :IMeshGroupContainer3D)
+		public function EditMaterials()
 		{
 			super();
-			this.primitive = primitive;
-			createChildren();
 		}
 		
-		private function createChildren():void{
+		override public function createChildren():void{
 			gui = new SimpleGUI(this, null, "o");
 			
-			gui.addGroup(primitive.primitiveName);
+			gui.addGroup("whats this?");
 			
 			gui.addColour("color");
 			gui.addToggle("bothsides",{label:"both sides"});
@@ -40,9 +30,9 @@ package com.jonrowe.away3d.view.component.gui
 		
 		private function onApplyColor():void{
 			
-			primitive.applyMaterial( new ColorMaterial(color,colorAlpha));
+			meshGroup.applyMaterial( new ColorMaterial(color,colorAlpha));
 			
-			/*var mesh :Mesh = Mesh(primitive.object3D) ;
+			/*var mesh :Mesh = Mesh(meshGroup.object3D) ;
 			if (!mesh)
 				return;
 			var mat :MaterialBase = mesh.material;

@@ -1,14 +1,10 @@
 package com.jonrowe.away3d.view
 {
-	import com.jonrowe.away3d.model.SceneProxy;
-	import com.jonrowe.away3d.model.event.CreatePrimitiveEvent;
-	import com.jonrowe.away3d.meshGroupFactory.PrimitiveInit;
+	import com.jonrowe.away3d.meshGroupFactory.containers.event.MeshGroupEvent;
 	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
-	import com.jonrowe.away3d.view.component.EditGUI;
+	import com.jonrowe.away3d.model.SceneProxy;
 	import com.jonrowe.away3d.view.component.EditView;
 	import com.jonrowe.away3d.view.component.gui.*;
-	import com.jonrowe.away3d.view.event.DuplicatePrimitiveEvent;
-	import com.jonrowe.away3d.view.event.EntityEvent;
 	import com.jonrowe.away3d.view.event.StageResizeEvent;
 	
 	import flash.events.Event;
@@ -30,7 +26,7 @@ package com.jonrowe.away3d.view
 		}
 		
 		override public function onRegister():void{
-			addContextListener(EntityEvent.ENTITY_SELECT, onSelectEntity);
+			addContextListener(MeshGroupEvent.MESH_GROUP_CLICK, onSelectEntity);
 			addContextListener(StageResizeEvent.STAGE_RESIZE, onStageResize);
 			view.addEventListener( EditPosition.CHANGE_PLANE, onChangePlane, true );
 			view.addEventListener( EditPosition.CHANGE_GLOBAL_LOCAL, onChangeGlobalLocalPlane, true );
@@ -38,8 +34,8 @@ package com.jonrowe.away3d.view
 			/*view.addEventListener( CreatePrimitive.MAKE, onMake, true );*/
 		}
 		
-		private function onSelectEntity( e:EntityEvent ):void{
-			view.createGUI(e.primitive);
+		private function onSelectEntity( e:MeshGroupEvent ):void{
+			view.createGUI(IMeshGroupContainer3D(e.meshGroup));
 			/*if (!view.hasEventListener(CreatePrimitive.DUPLICATE))
 				view.addEventListener(CreatePrimitive.DUPLICATE, onDuplicate, true);*/
 		}

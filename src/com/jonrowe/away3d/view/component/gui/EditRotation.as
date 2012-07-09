@@ -10,9 +10,8 @@ package com.jonrowe.away3d.view.component.gui
 	
 	import uk.co.soulwire.gui.SimpleGUI;
 	
-	public class EditRotation extends Sprite
+	public class EditRotation extends BaseGUI
 	{
-		public var primitive :IMeshGroupContainer3D;
 		
 		private var gui :SimpleGUI;
 		private var rotateToParams :InputText;
@@ -21,20 +20,18 @@ package com.jonrowe.away3d.view.component.gui
 		
 		private static const MAX_WIDTH : int = 126;
 		
-		public function EditRotation(primitive :IMeshGroupContainer3D)
+		public function EditRotation()
 		{
 			super();
-			this.primitive = primitive;
-			createChildren();
 		}
 		
 		
-		private function createChildren():void{
+		override public function createChildren():void{
 			gui = new SimpleGUI(this, null, "o");
 			
-			gui.addStepper("primitive.rotationX", int.MIN_VALUE, int.MAX_VALUE,{label:"rotation x", step:5, width:MAX_WIDTH-38});
-			gui.addStepper("primitive.rotationY", int.MIN_VALUE, int.MAX_VALUE,{label:"rotation y", step:5, width:MAX_WIDTH-38});
-			gui.addStepper("primitive.rotationZ", int.MIN_VALUE, int.MAX_VALUE,{label:"rotation z", step:5, width:MAX_WIDTH-38});
+			gui.addStepper("meshGroup.rotationX", int.MIN_VALUE, int.MAX_VALUE,{label:"rotation x", step:5, width:MAX_WIDTH-38});
+			gui.addStepper("meshGroup.rotationY", int.MIN_VALUE, int.MAX_VALUE,{label:"rotation y", step:5, width:MAX_WIDTH-38});
+			gui.addStepper("meshGroup.rotationZ", int.MIN_VALUE, int.MAX_VALUE,{label:"rotation z", step:5, width:MAX_WIDTH-38});
 			
 			gui.addStepper("pitch", -180, 180,{label:"pitch", step:5, width:MAX_WIDTH-38});
 			gui.addStepper("roll", -180, 180,{label:"roll", step:5, width:MAX_WIDTH-38});
@@ -56,7 +53,7 @@ package com.jonrowe.away3d.view.component.gui
 			
 			var componentValues :Array = rotateToParams.text.split(",");
 			if (componentValues.length == 3){
-				ObjectContainer3D(primitive).rotateTo(componentValues[0],componentValues[1],componentValues[2]);
+				ObjectContainer3D(meshGroup).rotateTo(componentValues[0],componentValues[1],componentValues[2]);
 			}
 		}
 		
@@ -64,7 +61,7 @@ package com.jonrowe.away3d.view.component.gui
 			
 			var componentValues :Array = lookAtParams.text.split(",");
 			if (componentValues.length == 3){
-				ObjectContainer3D(primitive).lookAt(new Vector3D(componentValues[0],componentValues[1],componentValues[2]));
+				ObjectContainer3D(meshGroup).lookAt(new Vector3D(componentValues[0],componentValues[1],componentValues[2]));
 			}
 		}
 		
@@ -72,7 +69,7 @@ package com.jonrowe.away3d.view.component.gui
 			
 			var componentValues :Array = movePivotParams.text.split(",");
 			if (componentValues.length == 3){
-				IMeshGroupContainer3D(primitive).pivotPoint = new Vector3D(componentValues[0],componentValues[1],componentValues[2]);
+				IMeshGroupContainer3D(meshGroup).pivotPoint = new Vector3D(componentValues[0],componentValues[1],componentValues[2]);
 			}
 		}
 		
@@ -81,7 +78,7 @@ package com.jonrowe.away3d.view.component.gui
 		public function set pitch( amount :Number):void{
 			var increment :Number = amount - _pitch;
 			_pitch= amount;
-			ObjectContainer3D(primitive).pitch(increment);
+			ObjectContainer3D(meshGroup).pitch(increment);
 		}
 		
 		public function get pitch():Number{
@@ -93,7 +90,7 @@ package com.jonrowe.away3d.view.component.gui
 		public function set roll( amount :Number):void{
 			var increment :Number = amount - _roll;
 			_roll = amount;
-			ObjectContainer3D(primitive).roll(increment);
+			ObjectContainer3D(meshGroup).roll(increment);
 		}
 		
 		public function get roll():Number{
@@ -105,7 +102,7 @@ package com.jonrowe.away3d.view.component.gui
 		public function set yaw( amount :Number):void{
 			var increment :Number = amount - _yaw;
 			_yaw = amount;
-			ObjectContainer3D(primitive).yaw(increment);
+			ObjectContainer3D(meshGroup).yaw(increment);
 		}
 		
 		public function get yaw():Number{

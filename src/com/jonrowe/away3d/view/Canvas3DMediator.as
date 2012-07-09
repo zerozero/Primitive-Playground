@@ -1,10 +1,11 @@
 package com.jonrowe.away3d.view
 {
+	import com.jonrowe.away3d.meshGroupFactory.containers.TransformWidget;
+	import com.jonrowe.away3d.meshGroupFactory.containers.event.MeshGroupEvent;
 	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
 	import com.jonrowe.away3d.model.SceneProxy;
 	import com.jonrowe.away3d.view.component.Canvas3D;
 	import com.jonrowe.away3d.view.event.DisplayPrimitiveEvent;
-	import com.jonrowe.away3d.view.event.EntityEvent;
 	
 	import flash.events.Event;
 	
@@ -28,38 +29,92 @@ package com.jonrowe.away3d.view
 		override public function onRegister():void{
 			
 			view.addEventListener(Canvas3D.SCENE_READY, onSceneReady);
+			
 			addContextListener(DisplayPrimitiveEvent.DISPLAY, onDisplayPrimitive);
 			addContextListener(DisplayPrimitiveEvent.REMOVE, onRemovePrimitive);
-			addContextListener(EntityEvent.START_DRAG, onEntityStartDrag);
-			addContextListener(EntityEvent.END_DRAG, onEntityEndDrag);
 		}
 		
-		
-		
+		/**
+		 * scene is ready  
+		 * @param e
+		 * 
+		 */		
 		protected function onSceneReady( e:Event ):void{
+			view.view3D.scene.addEventListener(MeshGroupEvent.MESH_GROUP_CLICK, onMeshGroupClick);
+			view.view3D.scene.addEventListener(MeshGroupEvent.MESH_GROUP_MOUSE_DOWN, onMeshGroupMouseDown);
+			view.view3D.scene.addEventListener(MeshGroupEvent.MESH_GROUP_MOUSE_UP, onMeshGroupMouseUp);
+			view.view3D.scene.addEventListener(MeshGroupEvent.MESH_GROUP_SELECT, onMeshGroupSelect);
+			
 			sceneProxy.createDefaultObject();
 		}
 		
-		protected function onEntityStartDrag( e:EntityEvent ):void{
-			view.startDragging( e.primitive, sceneProxy.dragPlane, sceneProxy.useGlobalPlane );
-		}
-		
-		protected function onEntityEndDrag( e:EntityEvent ):void{
-			view.endDragging( e.primitive );			
-		}
-		
+		/**
+		 * display a newly created meshGroup 
+		 * @param e
+		 * 
+		 */		
 		protected function onDisplayPrimitive( e:DisplayPrimitiveEvent ):void{
 			mediatorMap.createMediator(IMeshGroupContainer3D(e.primitive));
-			view.displayPrimitive( e.primitive );
+			view.addMeshGroup( e.primitive );
 		}
 		
+		/**
+		 * remove a meshGroup 
+		 * @param e
+		 * 
+		 */		
 		protected function onRemovePrimitive( e:DisplayPrimitiveEvent ):void{
 			mediatorMap.removeMediatorByView(e.primitive);
-			view.removePrimitive(e.primitive);
+			view.removeMeshGroup(e.primitive);
 		}
+		
+		/**
+		 * mouseDown on meshGroup 
+		 * @param e
+		 * 
+		 */		
+		protected function onMeshGroupMouseDown( e:MeshGroupEvent):void{
+			dispatch(e.clone());					
+		}
+		
+		/**
+		 * mouseup on meshGroup 
+		 * @param e
+		 * 
+		 */		
+		protected function onMeshGroupMouseUp( e:MeshGroupEvent ):void{
+			dispatch(e.clone());			
+		}
+		
+		/**
+		 * this entity was clicked 
+		 * @param e
+		 * 
+		 */		
+		protected function onMeshGroupClick( e:MeshGroupEvent ):void{
+			dispatch(e.clone());
+		}
+		
+		/**
+		 * meshGroup was selected 
+		 * display a transform widget
+		 * @param e
+		 * 
+		 */		
+		protected function onMeshGroupSelect( e:MeshGroupEvent ):void{
+			dispatch(e.clone());
+			if (!view.transformWidget)
+				view.transformWidget = sceneProxy.createTransformWidget() as TransformWidget;
+			view.displayTransformWidget(e.meshGroup);
+		}
+		
 		
 		public function get view():Canvas3D{
 			return _view;
+		}
+		
+		public function set view(canvas:Canvas3D):void{
+			_view = canvas;
 		}
 		
 	}

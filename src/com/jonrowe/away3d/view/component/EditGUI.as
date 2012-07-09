@@ -13,12 +13,15 @@ package com.jonrowe.away3d.view.component
 	{
 		
 		private var accordion :EditPrimitiveAccordion;
-		public var primitive :IMeshGroupContainer3D;
+		private var editPosition  :EditPosition;
+		private var editRotation :EditRotation;
+		private var editScale :EditScale;
+		private var editMaterials :EditMaterials;
+		private var meshGroup :IMeshGroupContainer3D;
 		
-		public function EditGUI(primitive :IMeshGroupContainer3D)
+		public function EditGUI()
 		{
 			super();
-			this.primitive = primitive;
 			createChildren();
 		}
 		
@@ -26,14 +29,27 @@ package com.jonrowe.away3d.view.component
 			accordion.setSize(w,h);
 		}
 		
+		public function set activeMeshGroup( meshGroup :IMeshGroupContainer3D ):void{
+			this.meshGroup = meshGroup;
+			editPosition.meshGroup = meshGroup;
+			editRotation.meshGroup = meshGroup;
+			editScale.meshGroup = meshGroup;
+			editMaterials.meshGroup = meshGroup;
+		}
+		
 		private function createChildren():void{
 			
 			accordion = new EditPrimitiveAccordion(this);
 			accordion.addSection("Create", new CreatePrimitive(),false);
-			accordion.addSection("Position", new EditPosition(primitive));
-			accordion.addSection("Rotation", new EditRotation(primitive));
-			accordion.addSection("Scale", new EditScale(primitive));
-			accordion.addSection("Materials", new EditMaterials(primitive));
+			
+			editPosition = new EditPosition();
+			accordion.addSection("Position", editPosition);
+			editRotation = new EditRotation();
+			accordion.addSection("Rotation", editRotation);
+			editScale = new EditScale();
+			accordion.addSection("Scale", editScale);
+			editMaterials = new EditMaterials();
+			accordion.addSection("Materials", editMaterials);
 			
 			
 		}

@@ -15,7 +15,7 @@ package com.jonrowe.away3d.view
 	{
 		
 		[Inject]
-		public var _view :ICreatePrimitveComponent;
+		public var _view :CreatePrimitive;
 		
 		[Inject]
 		public var sceneProxy :SceneProxy;
@@ -39,10 +39,10 @@ package com.jonrowe.away3d.view
 			if (!view.hasInitialized){
 				view.initialize(sceneProxy.primitives);
 				view.createChildren();
-				Sprite(view).addEventListener( CreatePrimitive.MAKE, onMake );
-				Sprite(view).addEventListener(CreatePrimitive.DUPLICATE, onDuplicate);
-				Sprite(view).addEventListener(CreatePrimitive.DELETE, onDelete);
-				Sprite(view).addEventListener(CreatePrimitive.IMPORT, onImport);
+				view.addEventListener( CreatePrimitive.MAKE, onMake );
+				view.addEventListener(CreatePrimitive.DUPLICATE, onDuplicate);
+				view.addEventListener(CreatePrimitive.DELETE, onDelete);
+				view.addEventListener(CreatePrimitive.IMPORT, onImport);
 			}
 			
 		}
@@ -60,14 +60,19 @@ package com.jonrowe.away3d.view
 			if (view.selected){
 				sceneProxy.primitiveListSelection = view.selected;
 				sceneProxy.createMeshGroup( sceneProxy.primitiveListSelection );
+				dispatch(e.clone());
 			}
 		}
 		
 		private function onImport( e:Event ):void{
 		}
 		
-		public function get view():ICreatePrimitveComponent{
+		public function get view():CreatePrimitive{
 			return _view;
+		}
+		
+		public function set view( component:CreatePrimitive ):void{
+			_view = component;
 		}
 	}
 }

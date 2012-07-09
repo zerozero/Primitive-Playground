@@ -6,9 +6,9 @@ package testSuite
 	[RunWith("org.flexunit.runners.Suite")]
 	public class SampleSuite
 	{
-		public var t1:TestCase1;
-		public var t2:TestAsync;
-		public var t3:TestAsyncSetup;
-		public var t4:TestSequences;
+		public var t1:TestCaseBoilerplate;
+		public var t2:TestAsyncBoilerplate;
+		public var t3:TestAsyncSetupBoilerplate;
+		public var t4:TestSequencesBoilerplate;
 	}
 }

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testrun name="" >
 <testsuite  name="Default Test Suite" project="Primitives_AS">
-<testsuite name="testSuite:AutoCreatedSuite" type="testsuiteclass"/>
 <testsuite name="testSuite.tests:FileServiceTests" type="testcaseclass"/>
 <testsuite name="testSuite.tests:MeshGroupFactoryTests" type="testcaseclass"/>
 <testsuite name="testSuite.tests:SceneProxyTests" type="testcaseclass"/>
+<testsuite name="testSuite.tests:SocketServiceTests" type="testcaseclass"/>
+<testsuite name="testSuite.tests:TestAsync" type="testcaseclass"/>
+<testsuite name="testSuite.tests:TestAsyncSetup" type="testcaseclass"/>
+<testsuite name="testSuite.tests:TestCase1" type="testcaseclass"/>
+<testsuite name="testSuite.tests:TestSequences" type="testcaseclass"/>
 </testsuite>
+<portNumber value="8765" />
 </testrun>

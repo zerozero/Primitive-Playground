@@ -28,6 +28,9 @@ package testSuite.tests
 		[After]
 		public function tearDown():void
 		{
+			FileService(files).eventDispatcher = null;
+			files = null;
+			AssetLibrary.removeAllAssets(true);
 		}
 		
 		[BeforeClass]

@@ -1,6 +1,7 @@
 package testSuite.tests
 {
-	import away3d.primitives.Capsule;
+	import away3d.entities.Mesh;
+	import away3d.primitives.CapsuleGeometry;
 	
 	import com.jonrowe.away3d.meshGroupFactory.MeshGroupFactory;
 	import com.jonrowe.away3d.meshGroupFactory.MeshGroupFactoryError;
@@ -40,14 +41,14 @@ package testSuite.tests
 		
 		[Test(description="Create a primitive type Mesh Group, init with string")]
 		public function CreatePrimtiveMeshGroup_InitWithString_PrimitiveNotNull():void{
-			var type :String = "Capsule";
+			var type :String = "CapsuleGeometry";
 			var meshGroup :IMeshGroupContainer3D = new MeshGroupFactory( new MeshGroupTypeMap() ).getProduct( Primitive.hasType( type ) ? MeshGroupType.PRIMITIVE : type );
 			meshGroup.type = type;
 			
 			Assert.assertNotNull("Should not be null",meshGroup);
 			Assert.assertTrue("Should be Primitive", meshGroup is Primitive);
-			Assert.assertTrue("Type should be Capsule "+meshGroup.type,meshGroup.type == "Capsule");
-			Assert.assertNotNull("Mesh should be capsule", Capsule(meshGroup.meshes[0]));
+			Assert.assertTrue("Type should be CapsuleGeometry "+meshGroup.type,meshGroup.type == "CapsuleGeometry");
+			Assert.assertNotNull("Mesh should be capsule", CapsuleGeometry(Mesh(meshGroup.meshes[0]).geometry));
 		}
 		
 		
@@ -78,7 +79,7 @@ package testSuite.tests
 		[Test(description="Create a Mesh Group, meshes not present in AssetLib", expects="com.jonrowe.away3d.meshGroupFactory.MeshGroupFactoryError")]
 		public function CreateLoadedMeshGroup_ModelNotImported_MeshGroupFactoryError():void{
 			var type :String = MeshGroupType.SOCRATES;
-			var meshGroup :IMeshGroupContainer3D = new MeshGroupFactory( new MeshGroupTypeMap() ).getProduct( Primitive.hasType( type ) ? MeshGroupType.PRIMITIVE : type );
+			var meshGroup :IMeshGroupContainer3D = new MeshGroupFactory( new MeshGroupTypeMap() ).getProduct( type );
 			Assert.assertFalse("A MeshGroupFactoryError was expected but not thrown");
 		}
 		

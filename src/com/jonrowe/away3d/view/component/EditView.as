@@ -39,30 +39,33 @@ package com.jonrowe.away3d.view.component
 		
 		
 		public function createChildren():void{
+			editGUI = new EditGUI();
+			addChild(editGUI );
 			
 			
 		}
 		
 		
 		
-		public function createGUI(primitive :IMeshGroupContainer3D ):void{
-			
-			hideGUIs();
+		public function createGUI(meshGroup :IMeshGroupContainer3D ):void{
+			editGUI.activeMeshGroup = meshGroup;
+			/*hideGUIs();
 			
 			if (dictionary[primitive]){
 				editGUI = dictionary[primitive];
 			}else{
-				editGUI = new EditGUI(primitive);
+				
 				dictionary[primitive] = editGUI;
 			}
-			addChild(editGUI );
-			resize();
+			
+			resize();*/
 		}
 		
 		public function resize():void{
-			for each( editGUI in dictionary ){
+			editGUI.setSize(158, stage.stageHeight - 2);
+/*			for each( editGUI in dictionary ){
 				editGUI.setSize(158, stage.stageHeight - 2);
-			}
+			}*/
 		}
 
 		/*		PRIVATE		*/

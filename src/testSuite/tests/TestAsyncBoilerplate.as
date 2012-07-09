@@ -6,7 +6,7 @@ package testSuite.tests
 	import org.flexunit.Assert;
 	import org.flexunit.async.Async;
 	
-	public class TestAsync
+	public class TestAsyncBoilerplate
 	{
 		private var timer :Timer;
 		

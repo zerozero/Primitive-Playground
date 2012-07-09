@@ -2,7 +2,7 @@ package testSuite.tests
 {
 	import org.flexunit.Assert;
 
-	public class TestCase1
+	public class TestCaseBoilerplate
 	{
 		private var count :int = 0;
 		

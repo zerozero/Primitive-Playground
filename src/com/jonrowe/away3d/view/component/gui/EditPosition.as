@@ -5,6 +5,7 @@ package com.jonrowe.away3d.view.component.gui
 	import com.bit101.components.Component;
 	import com.bit101.components.InputText;
 	import com.bit101.components.RadioButton;
+	import com.jonrowe.away3d.meshGroupFactory.containers.MeshGroupContainer3D;
 	import com.jonrowe.away3d.meshGroupFactory.interfaces.IMeshGroupContainer3D;
 	
 	import flash.display.DisplayObject;
@@ -15,9 +16,9 @@ package com.jonrowe.away3d.view.component.gui
 	
 	import uk.co.soulwire.gui.SimpleGUI;
 	
-	public class EditPosition extends Sprite
+	public class EditPosition extends BaseGUI
 	{
-		public var primitive :IMeshGroupContainer3D;
+		
 		public var plane :String = "XZ";
 		
 		private var gui :SimpleGUI;
@@ -30,21 +31,23 @@ package com.jonrowe.away3d.view.component.gui
 		public static const CHANGE_PLANE :String = "change_plane";
 		public static const CHANGE_GLOBAL_LOCAL :String = "change_global_local";
 		
-		public function EditPosition(primitive :IMeshGroupContainer3D)
+		public function EditPosition()
 		{
 			super();
-			this.primitive = primitive;
-			createChildren();
+			
 		}
 		
 		
-		private function createChildren():void{
+		
+		
+		
+		override public function createChildren():void{
 			gui = new SimpleGUI(this, null, "o");
 			
 			//gui.addGroup("Position");
-			gui.addStepper("primitive.x", int.MIN_VALUE, int.MAX_VALUE,{label:"x", step:10, width:MAX_WIDTH});
-			gui.addStepper("primitive.y", int.MIN_VALUE, int.MAX_VALUE,{label:"y", step:10, width:MAX_WIDTH});
-			gui.addStepper("primitive.z", int.MIN_VALUE, int.MAX_VALUE,{label:"z", step:10, width:MAX_WIDTH});
+			gui.addStepper("meshGroup.x", int.MIN_VALUE, int.MAX_VALUE,{label:"x", step:10, width:MAX_WIDTH});
+			gui.addStepper("meshGroup.y", int.MIN_VALUE, int.MAX_VALUE,{label:"y", step:10, width:MAX_WIDTH});
+			gui.addStepper("meshGroup.z", int.MIN_VALUE, int.MAX_VALUE,{label:"z", step:10, width:MAX_WIDTH});
 			
 			gui.addStepper("moveForward", int.MIN_VALUE, int.MAX_VALUE,{label:"forward/back", step:10, width:MAX_WIDTH-54});
 			gui.addStepper("moveLeft", int.MIN_VALUE, int.MAX_VALUE,{label:"left/right", step:10, width:MAX_WIDTH-35});
@@ -83,7 +86,7 @@ package com.jonrowe.away3d.view.component.gui
 			
 			var componentValues :Array = moveToParams.text.split(",");
 			if (componentValues.length == 3){
-				ObjectContainer3D(primitive).moveTo(componentValues[0],componentValues[1],componentValues[2]);
+				ObjectContainer3D(meshGroup).moveTo(componentValues[0],componentValues[1],componentValues[2]);
 			}
 		}
 		
@@ -92,7 +95,7 @@ package com.jonrowe.away3d.view.component.gui
 			var componentValues :Array = translateParams.text.split(",");
 			var distance :Number = Number(translateDistance.text);
 			if (componentValues.length == 3){ 
-				ObjectContainer3D(primitive).translate(new Vector3D(componentValues[0],componentValues[1],componentValues[2]),distance);
+				ObjectContainer3D(meshGroup).translate(new Vector3D(componentValues[0],componentValues[1],componentValues[2]),distance);
 			}
 		}
 		
@@ -111,7 +114,7 @@ package com.jonrowe.away3d.view.component.gui
 		public function set moveForward( amount :Number):void{
 			var increment :Number = amount - _moveForward;
 			_moveForward = amount;
-			ObjectContainer3D(primitive).moveForward(increment);
+			ObjectContainer3D(meshGroup).moveForward(increment);
 		}
 		
 		public function get moveForward():Number{
@@ -123,7 +126,7 @@ package com.jonrowe.away3d.view.component.gui
 		public function set moveBackward( amount :Number):void{
 			var increment :Number = amount - _moveBackward;
 			_moveBackward = amount;
-			ObjectContainer3D(primitive).moveBackward(increment);
+			ObjectContainer3D(meshGroup).moveBackward(increment);
 		}
 		
 		public function get moveBackward():Number{
@@ -135,7 +138,7 @@ package com.jonrowe.away3d.view.component.gui
 		public function set moveLeft( amount :Number):void{
 			var increment :Number = amount - _moveLeft;
 			_moveLeft = amount;
-			ObjectContainer3D(primitive).moveLeft(increment);
+			ObjectContainer3D(meshGroup).moveLeft(increment);
 		}
 		
 		public function get moveLeft():Number{
@@ -147,7 +150,7 @@ package com.jonrowe.away3d.view.component.gui
 		public function set moveRight( amount :Number):void{
 			var increment :Number = amount - _moveRight;
 			_moveRight = amount;
-			ObjectContainer3D(primitive).moveRight(increment);
+			ObjectContainer3D(meshGroup).moveRight(increment);
 		}
 		
 		public function get moveRight():Number{
@@ -159,7 +162,7 @@ package com.jonrowe.away3d.view.component.gui
 		public function set moveUp( amount :Number):void{
 			var increment :Number = amount - _moveUp;
 			_moveUp = amount;
-			ObjectContainer3D(primitive).moveUp(increment);
+			ObjectContainer3D(meshGroup).moveUp(increment);
 		}
 		
 		public function get moveUp():Number{
@@ -171,7 +174,7 @@ package com.jonrowe.away3d.view.component.gui
 		public function set moveDown( amount :Number):void{
 			var increment :Number = amount - _moveDown;
 			_moveDown = amount;
-			ObjectContainer3D(primitive).moveDown(increment);
+			ObjectContainer3D(meshGroup).moveDown(increment);
 		}
 		
 		public function get moveDown():Number{

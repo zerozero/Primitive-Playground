@@ -16,19 +16,24 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>[source path] AwayUtility-src</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/AwayUtility/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] PrimitivesCommon-src</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/PrimitivesCommon/src</locationURI>
+		</link>
+		<link>
 			<name>[source path] SwiftSuspenders-v1.6.0-src</name>
 			<type>2</type>
 			<locationURI>DOCUMENTS/libs/SwiftSuspenders-v1.6.0/src</locationURI>
 		</link>
 		<link>
-			<name>[source path] away3d-away3d-core-fp11-f71921f-src</name>
+			<name>[source path] away3d-core-fp11-src</name>
 			<type>2</type>
-			<locationURI>DOCUMENTS/libs/away3d-away3d-core-fp11-f71921f/src</locationURI>
-		</link>
-		<link>
-			<name>[source path] fluint4</name>
-			<type>2</type>
-			<locationURI>DOCUMENTS/libs/fluint4</locationURI>
+			<locationURI>DOCUMENTS/libs/away3d-core-fp11/src</locationURI>
 		</link>
 		<link>
 			<name>[source path] minimalcomps-src</name>

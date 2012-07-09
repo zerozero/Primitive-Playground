@@ -3,7 +3,7 @@ package
 	
 	
 	
-	import com.adobe.viewsource.ViewSource;
+	//import com.adobe.viewsource.ViewSource;
 	import com.jonrowe.away3d.view.component.Canvas3D;
 	import com.jonrowe.away3d.view.component.EditView;
 	
@@ -18,8 +18,6 @@ package
 		
 		public static const VERSION_STRING :String = "version 0.0.1";
 		
-		
-		private var context :PrimitivesContext;
 		private var asView3D :Canvas3D;
 		
 		
@@ -38,7 +36,7 @@ package
 		public function createChildren():void{
 			createGUI();
 			create3DView();
-			ViewSource.addMenuItem(this, "srcview/index.html"); 
+			//ViewSource.addMenuItem(this, "srcview/index.html"); 
 			visible = true;
 			onStageResize();
 		}
@@ -51,9 +49,6 @@ package
 			dispatchEvent( new Event( RESIZE ));
 		}
 		
-		private function createContext():void{
-			context = new PrimitivesContext( this );
-		}
 		
 		private function create3DView():void{
 			

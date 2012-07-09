@@ -9,7 +9,7 @@ package testSuite.tests
 	import org.flexunit.async.Async;
 	import org.fluint.uiImpersonation.UIImpersonator;
 	
-	public class TestAsyncSetup
+	public class TestAsyncSetupBoilerplate
 	{
 		public var textInput :InputText;
 		
